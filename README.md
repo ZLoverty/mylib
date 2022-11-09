@@ -1,2 +1,2 @@
 # mylib
- Manage my python modules to a separate repo!
+ Manage my python modules in a separate repo!
