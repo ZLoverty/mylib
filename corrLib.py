@@ -11,19 +11,24 @@ import pdb
 from numpy.polynomial.polynomial import polyvander
 
 def corrS(X, Y, U, V):
-    """Compute the spatial autocorrelations of a velocity field.
-    Args:
-    X, Y, U, V -- the result of PIV analysis. Each is a 2D array.
-                    Use pivLib.read_piv to construct thses arrays from PIV data files.
-    Returns:
-    x, y, CA, CV -- The angle autocorrelation (CA) and velocity autocorrelation (CV).
-                    x, y are the associated distances.
-                    Note that we only consider half of the length in each dimension, so x, y are different from the input X, Y.
-    EDIT
-    ====
-    Dec 13, 2021 -- i) Replace all the `mean()` function to nanmean, to handle masked PIV data. ii) Add doc string.
-    Dec 15, 2021 -- if norm `vsqrt` is 0, set it to np.nan to avoid divided by zero warning!
-    Dec 16, 2021 -- Shift the output X, Y origin to 0, 0, so that 0 distance will have the correlation function = 1. More intuitive.
+    """
+    Compute the spatial autocorrelations of a velocity field.
+
+    :param X,Y,U,V: the result of PIV analysis. Each is a 2D array. Use :py:func:`pivLib.read_piv` to construct thses arrays from PIV data files.
+    :type X,Y,U,V: 2d arrays
+    :return: x, y, CA, CV -- The angle autocorrelation (CA) and velocity autocorrelation (CV). x, y are the associated distances.
+
+    .. note::
+
+        We only consider half of the length in each dimension, so x, y are different from the input X, Y.
+
+    .. container::
+
+        **Edit**
+
+        * Dec 13, 2021 -- i) Replace all the `mean()` function to nanmean, to handle masked PIV data. ii) Add doc string.
+        * Dec 15, 2021 -- if norm `vsqrt` is 0, set it to np.nan to avoid divided by zero warning!
+        * Dec 16, 2021 -- Shift the output X, Y origin to 0, 0, so that 0 distance will have the correlation function = 1. More intuitive.
     """
     row, col = X.shape
     r = int(row/2)
@@ -45,6 +50,18 @@ def corrS(X, Y, U, V):
     return X[0:r, 0:c] - X[0, 0], Y[0:r, 0:c] - Y[0, 0], CA, CV
 
 def corrI(X, Y, I):
+    """
+    Compute pixel intensity spatial autocorrelation of an image.
+
+    :param X: x coordinates of image pixels
+    :type X: 2d array
+    :param Y: y coordinates of image pixels
+    :type Y: 2d array
+    :param I: image
+    :type I: 2d array
+    :return: XI, YI, CI, where CI is the autocorrelation map and XI and YI are the corresponding coordinates.
+    :rtype: 2d arrays
+    """
     row, col = I.shape
     I = I - I.mean()
     # CI = np.ones(I.shape)
@@ -64,6 +81,18 @@ def corrI(X, Y, I):
 
 
 def divide_windows(img, windowsize=[20, 20], step=10):
+    """
+    Divide an image into windows with specified size and step. Size and step can be different, so that we generate a downsampled image with either overlap or gaps.
+
+    :param img: image
+    :type img: 2d array
+    :param windowsize: window size in x and y
+    :type windowsize: list(int)
+    :param step: distance between the centers of adjacent windows
+    :type step: int
+    :return: X,Y,I -- I is the downsampled image, while X, Y are the corresponding coordinates in x an y
+    :rtype: 2d arrays
+    """
     row, col = img.shape
     windowsize[0] = int(windowsize[0])
     windowsize[1] = int(windowsize[1])
@@ -93,74 +122,34 @@ def distance_corr(X, Y, C):
         r_corr = pd.DataFrame({'R': (X**2 + Y**2) ** 0.5, 'C': C}).sort_values(by='R')
     return r_corr
 
-def corrIseq(folder, **kwargs):
-    # Default window settings
-    wsize = [100, 100]
-    step = 100
-    # Process kwargs
-    for kw in kwargs:
-        if kw == 'windowsize':
-            wsize = kwargs[kw]
-        if kw == 'step':
-            step = kwargs[kw]
-    data_seq = pd.DataFrame()
-    fileList = readseq(folder)
-    for num, i in fileList.iterrows():
-        # print('Processing frame {:04}'.format(num))
-        imgDir = i.Dir
-        img = io.imread(imgDir)
-        X, Y, I = divide_windows(img, windowsize=wsize, step=step)
-        C = corrI(X, Y, I)
-#         A = distance_corr(X, Y, C)
-        row, col = C.shape
-        X = X.reshape(1, row*col).squeeze()
-        Y = Y.reshape(1, row*col).squeeze()
-        I = I.reshape(1, row*col).squeeze()
-        C = C.reshape(1, row*col).squeeze()
-        data_1 = pd.DataFrame(data=np.array([X, Y, I, C]).T, columns=['X', 'Y', 'I', 'C'])
-        data_1 = data_1.assign(R=(data_1.X**2+data_1.Y**2)**.5, frame=num)
-        data_seq = data_seq.append(data_1)
-    return data_seq
-
-def readseq(folder):
-    imgDirs = dirrec(folder, '*.tif')
-    nameList = []
-    dirList = []
-    for imgDir in imgDirs:
-        path, file = os.path.split(imgDir)
-        name, ext = os.path.splitext(file)
-        nameList.append(name)
-        dirList.append(imgDir)
-    fileList = pd.DataFrame()
-    fileList = fileList.assign(Name=nameList, Dir=dirList)
-    fileList = fileList.sort_values(by=['Name'])
-    return fileList
-
-def boxsize_effect_spatial(img, boxsize, mpp):
-    # img: the image to be tested, array-like
-    # boxsize: a list of boxsize to be tested, list-like
-    # mpp: microns per pixel, float
-    data = {}
-    for bs in boxsize:
-        X, Y, I = divide_windows(img, windowsize=[bs, bs], step=bs)
-        CI = corrI(X, Y, I)
-        dc = distance_corr(X, Y, CI)
-        bsm = bs * mpp # boxsize in microns
-        dc.R = dc.R * mpp
-        data['{0:.1f}'.format(bsm)] = dc
-    for kw in data:
-        dc = data[kw]
-        length = len(dc)
-        smooth_length = int(np.ceil(length/20)*2+1)
-        plt.plot(dc.R, savgol_filter(dc.C, smooth_length, 3), label=kw)
-    plt.legend()
-    return data
-
 def match_hist(im1, im2):
-    # match the histogram of im1 to that of im2
+    """
+    Match the histogram of im1 to that of im2
+
+    :param im1: image
+    :type im1: 2d array
+    :param im2: image
+    :type im2: 2d array
+    :return: a modified version of im1, that matches im2's histogram
+    :rtype: 2d array
+    """
     return (abs(((im1 - im1.mean()) / im1.std() * im2.std() + im2.mean()))+1).astype('uint8')
 
 def density_fluctuation(img8):
+    """
+    This is the first attempt to calculate density fluctuations in bacterial suspensions. There exists 2 methods: i) compute the spatial variation in each image, with respect to various box size, then average over time; ii) compute temporal variation in at different spot, with respect to various box size, then average over space.
+
+    Method implemented in this function is the first one. It turned out that even for a static video, we can easily measure a very strong density fluctuation, which cannot be true. We later realize that, this is due to the intrinsic spatial light variation of the bright field microscopy.
+
+    One way to solve this problem is to subtract the intrinsic variation from the raw images. However, at that time we did not succeed in doing it (as I am writing this document, I konw better how to do it). So we chose the second way: to use method (ii) for the density fluctuation calculation. Different from method (i), method (ii) is not sensitive to the spatial variation in each image, but considers how the intensities evolve over time. Therefore, we can get density fluctuations that make sense.
+
+    Currently, we deprecate this method.
+
+    :param img8: 8-bit grayscale image
+    :type img8: 2d array
+    :return: density fluctuation data, a 2-column table containing the box size (area) "n" and the intensity standard deviation over time "d"
+
+    """
     row, col = img8.shape
     l = min(row, col)
     size_min = 5
@@ -176,8 +165,7 @@ def density_fluctuation(img8):
     # Igor Aranson commented on the averaging methods saying that in a spatially
     # homogeneous system (small spatial temporal correlation) two methods should match.
     # This suggests that I need to test both methods.
-    # bp = bpass(img8, 3, 100)
-    # img8_mh = match_hist(bp, img8)
+
     NList = []
     dNList = []
     for bs in boxsize:

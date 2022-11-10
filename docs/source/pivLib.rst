@@ -1,2 +1,5 @@
-pivLib
+﻿pivLib
 ======
+
+.. automodule:: pivLib
+  :members:

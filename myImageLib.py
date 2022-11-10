@@ -15,16 +15,18 @@ from nd2reader import ND2Reader
 
 def dirrec(path, filename):
     """
-    Recursively look for all the directories of files with name <filename>.
-    ---
-    *args
-        path ... the directory where you want to look for files.
-        filename ... name of the files you want to look for.
-    Return
-        dirList ... a list of full directories of files with name <filename>
-    Note
-        <filename> can be partially specified, e.g. '*.py' to search for all the
-        .py files or 'track*' to search for all files starting with 'track'.
+     Recursively look for all the directories of files with name *filename*.
+
+     :param path: the directory where you want to look for files.
+     :type path: str
+     :param filename: name of the files you want to look for.
+     :type filename: str
+     :return: a list of full directories of files with name *filename*
+     :rtype: list[str]
+
+     .. note::
+
+       :code:`filename` can be partially specified, e.g. :code:`*.py` to search for all the files that end with *.py*. Similarly, setting :code:`filename` as :code:`*track*` will search for all files starting with *track*.
     """
     dirList = []
     for r, d, f in os.walk(path):
@@ -42,9 +44,15 @@ def dirrec(path, filename):
             elif file == filename:
                 dirList.append(os.path.join(r, file))
     return dirList
+
 def to8bit(img16):
     """
-    Enhance contrast and convert to 8-bit
+    Enhance contrast and convert to 8-bit.
+
+      :param img: mono image of any dtype
+      :type img: 2d array
+      :return: 8-bit image
+      :rtype: uint8 2d array
     """
     # if img16.dtype != 'uint16':
         # raise ValueError('16-bit grayscale image is expected')
@@ -52,7 +60,20 @@ def to8bit(img16):
     minn = img16.min()
     img8 = (img16 - minn) / (maxx - minn) * 255
     return img8.astype('uint8')
+
 def bpass(*args):
+    """
+    Apply bandpass filter on images. Useful when raw images have long wavelength intensity gradient.
+
+      :param img: 8-bit image
+      :type img: 2d array
+      :param low: lower limit wavelength
+      :type low: int
+      :param high: upper limit wavelength
+      :type high: int
+      :return: processed image with low and high wavelength signals filtered
+      :rtype: 2d array
+    """
     img8 = args[0]
     low = args[1]
     high = args[2]
@@ -73,21 +94,46 @@ def bpass(*args):
     im_new = im_new - im_new.min()
     im_new = np.floor_divide(im_new, (im_new.max()+1)/256)
     return im_new.astype('uint8')
+
 def bestcolor(n):
+    """
+      Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_.
+
+      :param n: integer from 0 to 9, specifying the index of the color in the list
+      :type n: int
+      :return: the hex code of the specified color
+      :rtype: str
+    """
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
               '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
     return colors[n]
+
 def wowcolor(n):
+    """
+      WOW class color scheme, used in my density fluctuations paper. I used to think these colors are aesthetically pleasing, but now I feel they are too saturated and cause eye fatigue easily. Therefore I would avoid using these colors in future publications.
+
+      :param n: integer from 0 to 9, specifying the index of the color in the list
+      :type n: int
+      :return: the hex code of the specified color
+      :rtype: str
+    """
     colors = ['#C41F3B', '#A330C9', '#FF7D0A', '#A9D271', '#40C7EB',
               '#00FF96', '#F58CBA', '#FFF569', '#0070DE', '#8787ED',
               '#C79C6E', '#BBBBBB', '#1f77b4', '#ff7f0e', '#2ca02c',
               '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
               '#bcbd22', '#17becf']
     return colors[n]
+
 def matlab_style_gauss2D(shape=(3,3),sigma=0.5):
     """
-    2D gaussian mask - should give the same result as MATLAB's
-    fspecial('gaussian',[shape],[sigma])
+    Generate a 2D gaussian mask - should give the same result as MATLAB's :code:`fspecial('gaussian',[shape],[sigma])`.
+
+    :param shape: shape of the mask, default to (3,3)
+    :type shape: tuple
+    :param simga: standard deviation of the mask, default to 0.5
+    :type sigma: float
+    :return: a gaussian mask
+    :rtype: 2d array
     """
     m,n = [(ss-1.)/2. for ss in shape]
     y,x = np.ogrid[-m:m+1,-n:n+1]
@@ -97,7 +143,18 @@ def matlab_style_gauss2D(shape=(3,3),sigma=0.5):
     if sumh != 0:
         h /= sumh
     return h
+
 def FastPeakFind(data):
+    """
+    Detect peak in 2D images.
+
+    I rewrote a `Matlab function <https://github.com/uw-cmg/MATLAB-loop-detection/blob/master/FastPeakFind.m>`_ with the same name in Python. The function, in my opinion, is unnecessarily complex, with thresholding, filtering, edge excluding etc. in the same function, making it very long and not easy to read. Moreover, it sometimes fails obviously simple tasks. Therefore, I would use :code:`skimage.feature.peak_local_max` for the same purpose, whenever possible.
+
+    :param data: 2d images to find peaks in
+    :type data: 2d array
+    :return: coordinates of peaks in an Nx2 array
+    :rtype: 2d array
+    """
     if str(data.dtype) != 'float32':
         data = data.astype('float32')
     mf = medfilt2d(data, kernel_size=3)
@@ -129,6 +186,7 @@ def FastPeakFind(data):
             cent.append(xy)
     cent = np.asarray(cent).transpose()
     return cent
+
 def minimal_peakfind(img):
     edg = 3
     shape = img.shape
@@ -149,6 +207,7 @@ def minimal_peakfind(img):
             cent.append(xy)
     cent = np.asarray(cent).transpose()
     return cent
+
 def maxk(array, num_max):
     array = np.asarray(array)
     length = array.size
@@ -156,6 +215,7 @@ def maxk(array, num_max):
     idx = np.argsort(array)
     idx2 = np.flip(idx)
     return idx2[0, 0: num_max]
+
 def track_spheres_dt(img, num_particles):
     def gauss1(x,a,x0,sigma):
         return a*exp(-(x-x0)**2/(2*sigma**2))
@@ -183,8 +243,10 @@ def track_spheres_dt(img, num_particles):
             max_coor[:, num] = max_coor_tmp[:, num]
             continue
     return max_coor, pk_value
+
 def gauss1(x,a,x0,sigma,b):
     return a*exp(-(x-x0)**2/(2*sigma**2)) + b
+
 def show_progress(progress, label='', bar_length=60):
     """ Display a progress bar
     Args:
@@ -201,6 +263,7 @@ def show_progress(progress, label='', bar_length=60):
     N_finish = int(progress*bar_length)
     N_unfinish = bar_length - N_finish
     print('{0} [{1}{2}] {3:.1f}%'.format(label, '#'*N_finish, '-'*N_unfinish, progress*100), end="\r")
+
 def readdata(folder, ext='csv'):
     """
     Read data files with given extensions in a folder.

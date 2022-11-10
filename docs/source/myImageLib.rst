@@ -8,54 +8,49 @@ File reading, image processing and plotting
 
 .. py:function:: myImageLib.dirrec(path, filename)
 
-  Recursively look for all the directories of files with name *filename*.
 
- :param path: the directory where you want to look for files.
- :type path: str
- :param filename: name of the files you want to look for.
- :type filename: str
- :return: a list of full directories of files with name *filename*
- :rtype: list[str]
 
- .. note::
-
-   *filename* can be partially specified, e.g. '\*.py' to search for all the
-       .py files or 'track\*' to search for all files starting with 'track'.
 
 .. py:function:: myImageLib.to8bit(img)
 
-  Enhance contrast and convert to 8-bit.
-
-  :param img: mono image of any dtype
-  :type img: 2d array
-  :return: 8-bit image
-  :rtype: uint8 2d array
 
 .. py:function:: myImageLib.bpass(img, low, high)
 
-  Apply bandpass filter on images. Useful when raw images have long wavelength intensity gradient.
 
-  :param img: 8-bit image
-  :type img: 2d array
-  :param low: lower limit wavelength
-  :type low: int
-  :param high: upper limit wavelength
-  :type high: int
-  :return: processed image with low and high wavelength signals filtered
-  :rtype: 2d array
 
 .. py:function:: myImageLib.bestcolor(n)
 
-  Default plot color scheme of Matplotlib and Matlab, "tab10" colormap
+
 
 .. py:function:: myImageLib.wowcolor(n)
 
-  WOW class color scheme, used in my density fluctuations paper. I used to think these colors are aesthetically pleasing, but now I feel they are too saturated and cause eye fatigue easily. Therefore I would avoid using these colors in future publications.
+
 
 .. py:function:: myImageLib.readdata(folder, ext="csv")
 
-  Wrapper of :py:func:`dirrec`, return DataFrame of ("Name", "Dir")
+  Wrapper of :py:func:`dirrec`, but easier to use when reading one type of files in a given folder. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
+
+  :param folder: the folder to read files from
+  :type folder: str
+  :param ext: optional param, default to "csv", specifies the extension of files to be read
+  :type ext: str
+  :return: a 2-column table containing file names and the corresponding full directories
+  :rtype: pandas.DataFrame
 
 .. py:function:: myImageLib.show_progress(progress, label='', bar_length=60)
 
-  Show progress in command line as [##############-----------] xx%. This is a useful tool for batch processing on a server.
+  Display a progress bar in command line environment, which looks like
+
+  .. code-block:: console
+
+    label [##############-----------] 62%
+
+  This is a useful tool for tracking work progress in a batch processing task on a server.
+
+  :param progress: the progress of the work. It is a number between 0 and 1, where 0 is start and 1 is finish
+  :type progress: float
+  :param label: a string to put before the progress bar. It can be the name of the work, or the actual number of files that have been processed, and so on. Default to :code:`''`.
+  :type label: str
+  :param bar_length: length of the progress bar, in the unit of characters. Default to :code:`60`.
+  :type bar_length: int
+  :return: None
