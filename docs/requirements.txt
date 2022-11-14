@@ -1,2 +1,8 @@
 sphinx-book-theme
-corrLib
+numpy
+pandas
+scipy
+scikit-image
+nd2reader
+matplotlib
+openpiv
