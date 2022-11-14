@@ -6,3 +6,4 @@ scikit-image
 nd2reader
 matplotlib
 openpiv
+psutil
