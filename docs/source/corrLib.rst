@@ -3,48 +3,55 @@
 
 .. automodule:: corrLib
 
-   
-   
-   
 
-   
-   
-   .. rubric:: Functions
+
+
+
+   .. rubric:: Autocorrelation functions
 
    .. autosummary::
-   
-      autocorr1d
-      compute_energy_density
-      compute_wavenumber_field
-      convection
+      :toctree: corrLib
+
       corrI
       corrS
+      distance_corr
+      autocorr1d
+      vacf_piv
+
+   .. rubric:: Density fluctuations
+
+   .. autosummary::
+     :toctree: corrLib
+
       density_fluctuation
       df2
       df2_
-      distance_corr
+      plot_gnf
+      local_df
+
+   .. rubric:: Energy spectra
+
+   .. autosummary::
+     :toctree: corrLib
+
+      compute_energy_density
+      compute_wavenumber_field
+      energy_spectrum
+
+   .. rubric:: Flow field analysis
+
+   .. autosummary::
+     :toctree: corrLib
+
       div_field
       divergence
-      divide_stack
-      divide_windows
-      energy_spectrum
-      local_df
-      match_hist
-      plot_gnf
-      readdata
-      vacf_piv
       vorticity
-      xy_bin
-   
-   
+      convection
 
-   
-   
-   
+   .. rubric:: Misc
 
-   
-   
-   
-
-
-
+   .. autosummary::
+     :toctree: corrLib
+     
+      divide_windows
+      divide_stack

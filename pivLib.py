@@ -5,11 +5,19 @@ import matplotlib.pyplot as plt
 from skimage import io
 import pandas as pd
 from scipy.signal import medfilt2d
-from corrLib import divide_windows, readdata, autocorr1d, corrS, distance_corr, xy_bin
+from myImageLib import readdata, xy_bin
+from corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
 # %% codecell
 def PIV1(I0, I1, winsize, overlap, dt, smooth=True):
+    """
+    Wrapper of :py:func:`openpiv.pyprocess.extended_search_area_piv`, with an option to smooth the resulting velocity field.
+
+    .. deprecated:: 1.0
+
+        This function does not have the frequently required validation and outlier replacing routine, and is replaced permanently by :py:func:`pivLib.PIV`.
+    """
     u0, v0 = pyprocess.extended_search_area_piv(I0.astype(np.int32), I1.astype(np.int32), window_size=winsize, overlap=overlap, dt=dt, search_area_size=winsize)
     x, y = pyprocess.get_coordinates(image_size=I0.shape, search_area_size=winsize, window_size=winsize, overlap=overlap)
     if smooth == True:
@@ -22,9 +30,14 @@ def PIV1(I0, I1, winsize, overlap, dt, smooth=True):
 
 def read_piv(pivDir):
     """
-    Read piv data from pivDir as X, Y, U, V
+    Read piv data from pivDir as X, Y, U, V. pivDir contains *\*.csv* files, which store PIV data of each image pair in a separated file. The data are organized in 4-column tables, (x, y, u, v). This function reconstructs the 2D data, by inferring the dimensions from data.
 
-    X, Y, U, V = read_piv(pivDir)
+    :param pivDir: directory of the folder hosting PIV data.
+    :return: X, Y, U, V -- 2D PIV data.
+
+    .. rubric:: TEST
+
+    >>> X, Y, U, V = read_piv(pivDir)
     """
     pivData = pd.read_csv(pivDir)
     row = len(pivData.y.drop_duplicates())
@@ -36,7 +49,18 @@ def read_piv(pivDir):
     return X, Y, U, V
 
 def PIV(I0, I1, winsize, overlap, dt):
-    """ Normal PIV """
+    """
+    Standard PIV, consisting of replacing outliers, validate signal to noise ratio, and a smoothing with median filter of kernal shape (3, 3).
+
+    :param I0: The first image
+    :param I1: The second iamge
+    :param winsize: interrogation window size
+    :param step: distance between two windows, usually set to half of window size
+    :param dt: time interval between two images, in seconds
+    :return:
+        * x, y -- coordinates of windows
+        * u, v -- velocities in each window
+    """
     u0, v0, sig2noise = pyprocess.extended_search_area_piv(
         I0.astype(np.int32),
         I1.astype(np.int32),
@@ -72,37 +96,42 @@ def PIV(I0, I1, winsize, overlap, dt):
 
 def PIV_masked(I0, I1, winsize, overlap, dt, mask):
     """Apply PIV analysis on masked images
-    Args:
-    I0, I1 -- adjacent images in a sequence
-    winsize, overlap, dt -- PIV parameters
-    mask -- a boolean array, False marks masked region and True marks the region of interest
-    mask_procedure -- the option chosen to apply the mask, used for testing, remove in the future.
-    Returns:
-    frame_data -- x, y, u, v DataFrame, here x, y is wrt original image, (u, v) are in px/s
 
-    This function is rewritten based on the PIV_droplet() function in piv_droplet.py script.
+    :param I0: the first image
+    :param I1: the second image
+    :param winsize: same as :py:func:`pivLib.PIV`
+    :param overlap: same as :py:func:`pivLib.PIV`
+    :param dt: same as :py:func:`pivLib.PIV`
+    :param mask: a binary image, that will be convert to a boolean array to mask on PIV data. False marks masked region and True marks the region of interest.
+    :return: x, y, u, v -- DataFrame, here x, y is wrt original image, (u, v) are in px/s
+
+    This function is rewritten based on the :py:func:`PIV_droplet()` function in ``piv_droplet.py`` script.
     The intended usage is just to pass one additional `mask` parameter, on top of conventional parameter set.
 
-    EDIT
-    ====
-    Dec 14, 2021 -- Initial commit.
-    Dec 15, 2021 -- After testing 2 masking procedure, option 1 is better.
-                    Two procedures produce similar results, but option 1 is faster.
-                    So this function temporarily uses option 1, until a better procedure comes.
-    Jan 07, 2022 -- Change mask threshold from 1 to 0.5, this will include more velocities.
+    .. rubric:: EDIT
 
-    MASKING PROCEDURE
-    =================
-    Option 1:
-    i) Mask on raw image: I * mask, perform PIV
-    ii) Divide mask into windows: mask_w
-    iii) use mask_w to mask resulting velocity field: u[~mask_w] = np.nan
-    ---
-    Option 2:
-    i) Perform PIV on raw images
-    ii) Divide mask into windows:mask_w
-    iii) use mask_w to mask resulting velocity field: u[~mask_w] = np.nan
-    ---
+    :12142021: Initial commit.
+    :12152021:
+        * After testing 2 masking procedure, option 1 is better.
+        * Two procedures produce similar results, but option 1 is faster.
+        * So this function temporarily uses option 1, until a better procedure comes.
+    :01072022: Change mask threshold from 1 to 0.5, this will include more velocities.
+
+    .. rubric:: Masking procedure
+
+    * Option 1:
+        i) Mask on raw image: I * mask, perform PIV
+        ii) Divide mask into windows: mask_w
+        iii) use mask_w to mask resulting velocity field: u[~mask_w] = np.nan
+
+    * Option 2:
+        i) Perform PIV on raw images
+        ii) Divide mask into windows:mask_w
+        iii) use mask_w to mask resulting velocity field: u[~mask_w] = np.nan
+
+    .. note::
+
+        This method is specific to ``openpiv`` PIV data. In other PIV methods, the x, y coordinates of windows may be different, and the shape of downsampled mask by :py:func:`corrLib.divide_windows` may not match the PIV results from other methods. Therefore, this method should not be used in the future. Consider to use :py:func:`pivLib.PIV` together with :py:func:`pivLib.apply_mask`.
     """
     assert(mask.shape==I0.shape)
     mask = mask >= mask.mean() # convert mask to boolean array
@@ -115,31 +144,13 @@ def PIV_masked(I0, I1, winsize, overlap, dt, mask):
     v[~mask_w] = np.nan
     return x, y, u, v
 
-def read_piv_stack(folder, cutoff=None):
-    """Read PIV data in given folder and stack the velocity data
-    Args:
-    folder -- PIV data folder
-    Returns:
-    ustack, vstack -- 3D arrays of (t, x, y)"""
-    l = readdata(folder, "csv")
-    u_list = []
-    v_list = []
-    for num, i in l.iterrows():
-        x, y, u, v = read_piv(i.Dir)
-        u_list.append(u)
-        v_list.append(v)
-        if cutoff is not None:
-            if num > cutoff:
-                break
-    return np.stack(u_list, axis=0), np.stack(v_list, axis=0)
-
 def tangent_unit(point, center):
-    """Compute tangent unit vector based on point coords and center coords.
-    Args:
-    point -- 2-tuple
-    center -- 2-tuple
-    Returns:
-    tu -- tangent unit vector
+    """
+    Compute tangent unit vector based on point coords and center coords.
+
+    :param point: coordinates of the point of interest, 2-tuple
+    :param center: coordinates of circle center, 2-tuple
+    :return: tangent unit vector
     """
     point = np.array(point)
     # center = np.array(center)
@@ -167,6 +178,11 @@ class piv_data:
         self.dt = 2 / fps # time between two data files
         self.stack = self.load_stack(cutoff=cutoff)
     def load_stack(self, cutoff=None):
+        """
+        Load PIV data in 3D numpy.array.
+
+        :return: U, V -- PIV data stacked in 3D, with the first axis as time.
+        """
         u_list = []
         v_list = []
         for num, i in self.piv_sequence.iterrows():
@@ -255,8 +271,7 @@ class piv_data:
             plt.colorbar()
         return X, Y, CV_mean
     def corrS1d(self, mode="sample", n=10, xlim=None, plot=False):
-        """Compute 2d correlation and convert to 1d. 1d correlation will be represented
-        as pd.DataFrame of (R, C)."""
+        """Compute 2d correlation and convert to 1d. 1d correlation will be represented as pd.DataFrame of (R, C)."""
         X, Y, CV = self.corrS2d(mode=mode, n=n)
         dc = distance_corr(X, Y, CV)
         if plot == True:
@@ -286,6 +301,9 @@ class piv_data:
             ax.set_ylabel("mean velocity (px/s)")
         return pd.DataFrame({"t": np.arange(len(vm_list))*self.dt, "v_mean": vm_list})
     def order_parameter(self, center, mode="wioland"):
+        """
+        Compute order parameter of a velocity field. We currently have two definitions of order parameters, from Wioland 2013 and Hamby 2018, respectively. This function implements the calculations of both definitions.
+        """
         def wioland2013(pivData, center):
             """Compute order parameter with PIV data and droplet center coords using the method from wioland2013.
             Args:

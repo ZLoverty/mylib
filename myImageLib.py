@@ -49,10 +49,10 @@ def to8bit(img16):
     """
     Enhance contrast and convert to 8-bit.
 
-      :param img: mono image of any dtype
-      :type img: 2d array
-      :return: 8-bit image
-      :rtype: uint8 2d array
+    :param img: mono image of any dtype
+    :type img: 2d array
+    :return: 8-bit image
+    :rtype: uint8 2d array
     """
     # if img16.dtype != 'uint16':
         # raise ValueError('16-bit grayscale image is expected')
@@ -65,14 +65,14 @@ def bpass(*args):
     """
     Apply bandpass filter on images. Useful when raw images have long wavelength intensity gradient.
 
-      :param img: 8-bit image
-      :type img: 2d array
-      :param low: lower limit wavelength
-      :type low: int
-      :param high: upper limit wavelength
-      :type high: int
-      :return: processed image with low and high wavelength signals filtered
-      :rtype: 2d array
+    :param img: 8-bit image
+    :type img: 2d array
+    :param low: lower limit wavelength
+    :type low: int
+    :param high: upper limit wavelength
+    :type high: int
+    :return: processed image with low and high wavelength signals filtered
+    :rtype: 2d array
     """
     img8 = args[0]
     low = args[1]
@@ -97,12 +97,12 @@ def bpass(*args):
 
 def bestcolor(n):
     """
-      Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_.
+    Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_.
 
-      :param n: integer from 0 to 9, specifying the index of the color in the list
-      :type n: int
-      :return: the hex code of the specified color
-      :rtype: str
+    :param n: integer from 0 to 9, specifying the index of the color in the list
+    :type n: int
+    :return: the hex code of the specified color
+    :rtype: str
     """
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
               '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -110,12 +110,12 @@ def bestcolor(n):
 
 def wowcolor(n):
     """
-      WOW class color scheme, used in my density fluctuations paper. I used to think these colors are aesthetically pleasing, but now I feel they are too saturated and cause eye fatigue easily. Therefore I would avoid using these colors in future publications.
+    WOW class color scheme, used in my density fluctuations paper. I used to think these colors are aesthetically pleasing, but now I feel they are too saturated and cause eye fatigue easily. Therefore I would avoid using these colors in future publications.
 
-      :param n: integer from 0 to 9, specifying the index of the color in the list
-      :type n: int
-      :return: the hex code of the specified color
-      :rtype: str
+    :param n: integer from 0 to 9, specifying the index of the color in the list
+    :type n: int
+    :return: the hex code of the specified color
+    :rtype: str
     """
     colors = ['#C41F3B', '#A330C9', '#FF7D0A', '#A9D271', '#40C7EB',
               '#00FF96', '#F58CBA', '#FFF569', '#0070DE', '#8787ED',
@@ -188,6 +188,14 @@ def FastPeakFind(data):
     return cent
 
 def minimal_peakfind(img):
+    """
+    Minimal version of :py:func:`myImageLib.FastPeakFind`. Remove all the preprocessings, such as median filter, gauss filter and thresholding. Only keep the essential peak finding functionality.
+
+    :param img: input image
+    :type img: 2-d array
+    :return: coordinates of peaks in an Nx2 array
+    :rtype: 2d array
+    """
     edg = 3
     shape = img.shape
     idx = np.nonzero(img[edg-1: shape[0]-edg-1, edg-1: shape[1]-edg-1])
@@ -209,6 +217,16 @@ def minimal_peakfind(img):
     return cent
 
 def maxk(array, num_max):
+    """
+    Sort a numerical array and return the maximum :code:`num_max` elements.
+
+    :param array: input array
+    :type array: 1-d numerical array
+    :param num_max: number of maximal elements to return
+    :type num_max: int
+    :return: index of maximal elements
+    :rtype: int array
+    """
     array = np.asarray(array)
     length = array.size
     array = array.reshape((1, length))
@@ -217,6 +235,9 @@ def maxk(array, num_max):
     return idx2[0, 0: num_max]
 
 def track_spheres_dt(img, num_particles):
+    """
+    Use correlation tracking method to find spheres in an image.
+    """
     def gauss1(x,a,x0,sigma):
         return a*exp(-(x-x0)**2/(2*sigma**2))
     cent = FastPeakFind(img)
@@ -245,20 +266,28 @@ def track_spheres_dt(img, num_particles):
     return max_coor, pk_value
 
 def gauss1(x,a,x0,sigma,b):
+    """
+    1-d gaussian function. Usually used for fitting.
+    """
     return a*exp(-(x-x0)**2/(2*sigma**2)) + b
 
 def show_progress(progress, label='', bar_length=60):
-    """ Display a progress bar
-    Args:
-    progress -- float between 0 and 1
-    label -- a string displayed before the progress bar
-    bar_length -- the length of the progress bar
+    """
+    Display a progress bar in command line environment, which looks like
 
-    Returns:
-    None
+    .. code-block:: console
 
-    Test:
-    >>> show_progress(0.7, label='0812-data')
+      label [##############-----------] 62%
+
+    This is a useful tool for tracking work progress in a batch processing task on a server.
+
+    :param progress: the progress of the work. It is a number between 0 and 1, where 0 is start and 1 is finish
+    :type progress: float
+    :param label: a string to put before the progress bar. It can be the name of the work, or the actual number of files that have been processed, and so on. Default to :code:`''`.
+    :type label: str
+    :param bar_length: length of the progress bar, in the unit of characters. Default to :code:`60`.
+    :type bar_length: int
+    :return: None
     """
     N_finish = int(progress*bar_length)
     N_unfinish = bar_length - N_finish
@@ -266,17 +295,14 @@ def show_progress(progress, label='', bar_length=60):
 
 def readdata(folder, ext='csv'):
     """
-    Read data files with given extensions in a folder.
+    Wrapper of :py:func:`dirrec`, but easier to use when reading one type of files in a given folder. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
 
-    Args:
-    folder -- the folder to search in
-    ext -- (optional) file extension of data files looked for, default to 'csv'
-
-    Returns:
-    fileList -- a DataFrame with columns 'Name' and 'Dir'
-
-    Edit:
-    11302020 -- reset the index of fileList, so that further trimming of data by index gets easier
+    :param folder: the folder to read files from
+    :type folder: str
+    :param ext: optional param, default to "csv", specifies the extension of files to be read
+    :type ext: str
+    :return: a 2-column table containing file names and the corresponding full directories
+    :rtype: pandas.DataFrame
     """
     dataDirs = dirrec(folder, '*.' + ext)
     nameList = []
@@ -291,12 +317,111 @@ def readdata(folder, ext='csv'):
     fileList = fileList.sort_values(by=['Name']).reset_index(drop=True)
     return fileList
 
+def normxcorr2(template, image, mode="full"):
+    """
+    Compute normalized cross-correlation map between an image and a template. Input arrays should be floating point numbers.
+
+    :param template: N-D array, of template or filter you are using for cross-correlation. Must be less or equal dimensions to image. Length of each dimension must be less than length of image.
+    :type template: float array
+    :param image: N-D array
+    :type image: float array
+    :param mode: Options, "full", "valid", "same". full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs. Output size will be image size + 1/2 template size in each dimension. valid: The output consists only of those elements that do not rely on the zero-padding. same: The output is the same size as image, centered with respect to the ‘full’ output.
+    :return: N-D array of same dimensions as image. Size depends on mode parameter.
+    :rtype: float array
+    """
+
+    # If this happens, it is probably a mistake
+    if np.ndim(template) > np.ndim(image) or \
+            len([i for i in range(np.ndim(template)) if template.shape[i] > image.shape[i]]) > 0:
+        print("normxcorr2: TEMPLATE larger than IMG. Arguments may be swapped.")
+
+    template = template - np.mean(template)
+    image = image - np.mean(image)
+
+    a1 = np.ones(template.shape)
+    # Faster to flip up down and left right then use fftconvolve instead of scipy's correlate
+    ar = np.flipud(np.fliplr(template))
+    out = fftconvolve(image, ar.conj(), mode=mode)
+
+    image = fftconvolve(np.square(image), a1, mode=mode) - \
+            np.square(fftconvolve(image, a1, mode=mode)) / (np.prod(template.shape))
+
+    # Remove small machine precision errors after subtraction
+    image[np.where(image < 0)] = 0
+
+    template = np.sum(np.square(template))
+    out = out / np.sqrt(image * template)
+
+    # Remove any divisions by 0 or very close to 0
+    out[np.where(np.logical_not(np.isfinite(out)))] = 0
+
+    return out
+
+def match_hist(im1, im2):
+    """
+    Match the histogram of im1 to that of im2
+
+    :param im1: image
+    :type im1: 2d array
+    :param im2: image
+    :type im2: 2d array
+    :return: a modified version of im1, that matches im2's histogram
+    :rtype: 2d array
+
+    .. rubric:: EDIT
+
+    :11142022: Move from ``corrLib`` to ``myImageLib``.
+    """
+    return (abs(((im1 - im1.mean()) / im1.std() * im2.std() + im2.mean()))+1).astype('uint8')
+
+def xy_bin(xo, yo, n=100, mode='log', bins=None):
+    """
+    Bin x, y data on log or linear scale
+
+
+    :param xo: input x
+    :param yo: input y
+    :param n: points after binning
+    :param mode: "lin" or "log", scale to bin the data
+    :param bins: set the bins to bin data together
+
+    :return:
+        * x: binned x
+        * y: means in bins
+
+    .. rubric: Edit
+
+    :11042020: Change function name to xy_bin, to incorporate the mode parameter, so that the function can do both log space binning and linear space binning.
+    :11172020: add bins kwarg, allow user to enter custom bins.
+    :12162021: fix divided by 0 issue.
+    :11142022: Move from ``corrLib`` to ``myImageLib``.
+    """
+    assert(len(xo)==len(yo))
+    if bins is None:
+        if mode == 'log':
+            x = np.logspace(np.log10(xo[xo>0].min()), np.log10(xo.max()), n+1)
+        elif mode == 'lin':
+            x = np.linspace(xo.min(), xo.max(), n+1)
+    else:
+        x = np.sort(bins)
+    top = np.histogram(xo, x, weights=yo)[0]
+    bot = np.histogram(xo, x)[0]
+    ind = bot > 0
+    xb = ((x[1:] + x[:-1]) / 2)[ind]
+    yb = top[ind] / bot[ind]
+    return xb, yb
 # %% codecell
 
 class rawImage:
-    """Implement raw image converting schemes."""
+    """
+    This class converts raw images to tif sequences. Throughout my research, I have mostly worked with two raw image formats: *\*.nd2* and *\*.raw*. Typically, they are tens of GB large, and are not feasible to load into the memory of a PC as a whole. Therefore, the starting point of my workflow is to convert raw images into sequences of *\*.tif* images. """
+
     def __init__(self, file_dir):
+        """
+        Construct rawImage object using the file directory.
+        """
         self.file = file_dir
+
     def extract_tif(self):
         """Wrapper of all format-specific extractors."""
         file, ext = os.path.splitext(self.file)
@@ -307,10 +432,9 @@ class rawImage:
         else:
             raise ValueError("Unrecognized image format {}".format(ext))
     def extract_raw(self, cutoff=None):
-        """Extract .tif sequence from .raw file.
-        cutoff -- number of images extracted.
-        Edit:
-        Mar 14, 2022 -- Initial commit."""
+        """Extract tif sequence from *\*.raw* file.
+        :param cutoff: number of images to extract
+        """
         # read info from info_file
         folder, file = os.path.split(self.file)
         info_file = os.path.join(folder, "RawImageInfo.txt")
@@ -382,14 +506,21 @@ class rawImage:
                 if cutoff is not None:
                     if num > cutoff:
                         return None
+
     def read_raw_image_info(self, info_file):
-        """Read image info, such as fps and image dimensions, from RawImageInfo.txt.
-        Helper function of extract_raw()."""
+        """
+        Read image info, such as fps and image dimensions, from *\*.RawImageInfo.txt*.
+        Helper function of :py:func:`myImageLib.rawImage.extract_raw`.
+        """
         with open(info_file, 'r') as f:
             a = f.read()
         fps, h, w = a.split('\n')[0:3]
         return int(fps), int(h), int(w)
+
     def extract_nd2(self):
+        """
+        Extract tif sequence from *\*.nd2* file.
+        """
         # check disk
         if self._disk_capacity_check() == False:
             raise SystemError("No enough disk capacity!")
@@ -410,6 +541,7 @@ class rawImage:
                 io.imsave(os.path.join(saveDir, '%05d.tif' % num), image, check_contrast=False)
                 t1 = time.monotonic() - t0
                 show_progress(num / n_images, label="{:.1f} frame/s".format(num/t1))
+
     def _disk_capacity_check(self):
         """Check if the capacity of disk is larger than twice of the file size.
         Args:
