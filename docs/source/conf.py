@@ -23,7 +23,7 @@ copyright = '2022, Zhengyang Liu'
 author = 'Zhengyang Liu'
 
 # The full version, including alpha/beta/rc tags
-release = '1.00'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------

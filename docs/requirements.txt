@@ -6,6 +6,6 @@ scikit-image
 nd2reader
 matplotlib
 openpiv
-sphinx.ext.doctest
-sphinx.ext.autodoc
-sphinx.ext.autosummary
+corrLib
+myImageLib
+pivLib
