@@ -504,7 +504,7 @@ derivative fields, energy, enstrophy, energy spectrum, etc.</p>
 <td><p>Compute order parameter of a velocity field.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vacf</span></code>([mode, smooth_method, smooth_window, ...])</p></td>
-<td><p>Compute averaged vacf from PIV data. This is a wrapper of function autocorr1d(), adding the averaging over all the velocity spots. Args: mode -- the averaging method, can be &quot;direct&quot; or &quot;weighted&quot;. &quot;weighted&quot; will use mean velocity as the averaging weight, whereas &quot;direct&quot; uses 1. smooth_window -- window size for gaussian smoothing in time xlim -- xlim for plotting the VACF, does not affect the return value Returns: corrData -- DataFrame of (t, corrx, corry) Edit: Mar 23, 2022 -- add smoothn smoothing option.</p></td>
+<td><p>Compute averaged vacf from PIV data. This is a wrapper of function autocorr1d(), adding the averaging over all the velocity spots. Args: mode -- the averaging method, can be &quot;direct&quot; or &quot;weighted&quot;. &quot;weighted&quot; will use mean velocity as the averaging weight, whereas &quot;direct&quot; uses 1. smooth_window -- window size for gaussian smoothing in time xlim -- xlim for plotting the VACF, does not affect the return value Returns: corrData -- DataFrame of (t, corrx, corry) Edit: Mar 23, 2022 -- add smoothn smoothing option Nov 15, 2022 -- Fix inconsistency with <a class="reference internal" href="../corrLib/corrLib.autocorr1d.html#corrLib.autocorr1d" title="corrLib.autocorr1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">corrLib.autocorr1d()</span></code></a>.</p></td>
 </tr>
 </tbody>
 </table>
