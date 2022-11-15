@@ -293,7 +293,7 @@ def show_progress(progress, label='', bar_length=60):
     N_unfinish = bar_length - N_finish
     print('{0} [{1}{2}] {3:.1f}%'.format(label, '#'*N_finish, '-'*N_unfinish, progress*100), end="\r")
 
-def readdata(folder, ext='csv'):
+def readdata(folder, ext='csv', mode="i"):
     """
     Wrapper of :py:func:`dirrec`, but easier to use when reading one type of files in a given folder. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
 
@@ -301,13 +301,27 @@ def readdata(folder, ext='csv'):
     :type folder: str
     :param ext: optional param, default to "csv", specifies the extension of files to be read
     :type ext: str
+    :param mode: "i" for immediate, "r" for recursive. Default to "i"
+    :type mode: str
     :return: a 2-column table containing file names and the corresponding full directories
     :rtype: pandas.DataFrame
+
+    .. rubric:: EDIT
+
+    :11152022: Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.
     """
     dataDirs = dirrec(folder, '*.' + ext)
+    dataDirsCopy = dataDirs.copy()
+    if mode == "i":
+        for dataDir in dataDirsCopy:
+            print(dataDir)
+            relpath = dataDir.replace(folder, "").strip(os.sep)
+            if os.sep in relpath:
+                dataDirs.remove(dataDir)
     nameList = []
     dirList = []
     for dataDir in dataDirs:
+        print(dataDir)
         path, file = os.path.split(dataDir)
         name, ext = os.path.splitext(file)
         nameList.append(name)
