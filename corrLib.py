@@ -589,7 +589,6 @@ def energy_spectrum(pivData, d=25*0.33):
 def autocorr1d(x, t):
     """Compute the temporal autocorrelation of a 1-D signal.
 
-
     :param x: 1-D signal,
     :param t: the corresponding time of the signal, should be np.array 1d
     :return:

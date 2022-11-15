@@ -210,6 +210,7 @@ class piv_data:
         corrData -- DataFrame of (t, corrx, corry)
         Edit:
         Mar 23, 2022 -- add smoothn smoothing option
+        Nov 15, 2022 -- Fix inconsistency with :py:func:`corrLib.autocorr1d`
         """
         # rearrange vstack from (f, h, w) to (f, h*w), then transpose
         corr_components = []
@@ -228,12 +229,12 @@ class piv_data:
                 if np.isnan(x[0]) == False: # masked out part has velocity as nan, which cannot be used for correlation computation
                     if mode == "weighted":
                         weight = abs(x).mean()
-                    corr = autocorr1d(x) * weight
+                    corr, lagt = autocorr1d(x, np.arange(len(x))*self.dt) * weight
                     if np.isnan(corr.sum()) == False:
                         normalizer += weight
                         corr_list.append(corr)
             corr_mean = np.nansum(np.stack(corr_list, axis=0), axis=0) / normalizer
-            corr_components.append(pd.DataFrame({"c": corr_mean, "t": np.arange(len(corr_mean)) * self.dt}).set_index("t").rename(columns={"c": name}))
+            corr_components.append(pd.DataFrame({"c": corr_mean, "t": lagt}).set_index("t").rename(columns={"c": name}))
         ac = pd.concat(corr_components, axis=1)
         # plot autocorrelation functions
         if plot == True:
