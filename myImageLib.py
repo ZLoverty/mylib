@@ -318,7 +318,6 @@ def readdata(folder, ext='csv', mode="i"):
     dataDirsCopy = dataDirs.copy()
     if mode == "i":
         for dataDir in dataDirsCopy:
-            print(dataDir)
             relpath = dataDir.replace(folder, "").strip(os.sep)
             if os.sep in relpath:
                 dataDirs.remove(dataDir)
