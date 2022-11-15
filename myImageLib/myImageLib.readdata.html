@@ -470,13 +470,14 @@ title="Print to PDF"
 <h1>myImageLib.readdata<a class="headerlink" href="#myimagelib-readdata" title="Permalink to this headline">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="myImageLib.readdata">
-<span class="sig-prename descclassname"><span class="pre">myImageLib.</span></span><span class="sig-name descname"><span class="pre">readdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'csv'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#myImageLib.readdata" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">myImageLib.</span></span><span class="sig-name descname"><span class="pre">readdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'i'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#myImageLib.readdata" title="Permalink to this definition">#</a></dt>
 <dd><p>Wrapper of <a class="reference internal" href="myImageLib.dirrec.html#myImageLib.dirrec" title="myImageLib.dirrec"><code class="xref py py-func docutils literal notranslate"><span class="pre">dirrec()</span></code></a>, but easier to use when reading one type of files in a given folder. Instead of returning a list of directories as <a class="reference internal" href="myImageLib.dirrec.html#myImageLib.dirrec" title="myImageLib.dirrec"><code class="xref py py-func docutils literal notranslate"><span class="pre">dirrec()</span></code></a> does, <a class="reference internal" href="#myImageLib.readdata" title="myImageLib.readdata"><code class="xref py py-func docutils literal notranslate"><span class="pre">readdata()</span></code></a> puts the file names and corresponding full directories in a <code class="code docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the <code class="code docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, compared to the list of strings returned by <a class="reference internal" href="myImageLib.dirrec.html#myImageLib.dirrec" title="myImageLib.dirrec"><code class="xref py py-func docutils literal notranslate"><span class="pre">dirrec()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>folder</strong> (<em>str</em>) – the folder to read files from</p></li>
 <li><p><strong>ext</strong> (<em>str</em>) – optional param, default to “csv”, specifies the extension of files to be read</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – “i” for immediate, “r” for recursive. Default to “i”</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -484,6 +485,12 @@ title="Print to PDF"
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">EDIT</p>
+<dl class="field-list simple">
+<dt class="field-odd">11152022</dt>
+<dd class="field-odd"><p>Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.</p>
 </dd>
 </dl>
 </dd></dl>
