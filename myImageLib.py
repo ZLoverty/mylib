@@ -15,25 +15,29 @@ from nd2reader import ND2Reader
 
 def dirrec(path, filename):
     """
-     Recursively look for all the directories of files with name *filename*.
+    Recursively look for all the directories of files with name *filename*.
 
-     :param path: the directory where you want to look for files.
-     :type path: str
-     :param filename: name of the files you want to look for.
-     :type filename: str
-     :return: a list of full directories of files with name *filename*
-     :rtype: list[str]
+    :param path: the directory where you want to look for files.
+    :type path: str
+    :param filename: name of the files you want to look for.
+    :type filename: str
+    :return: a list of full directories of files with name *filename*
+    :rtype: list[str]
 
-     .. note::
+    .. note::
 
        :code:`filename` can be partially specified, e.g. :code:`*.py` to search for all the files that end with *.py*. Similarly, setting :code:`filename` as :code:`*track*` will search for all files starting with *track*.
+
+    .. rubric:: EDIT
+
+    :11152022: Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
     """
     dirList = []
     for r, d, f in os.walk(path):
-        for dir in d:
-            tmp = dirrec(dir, filename)
-            if tmp:
-                dirList.append(tmp)
+        # for dir in d:
+        #     tmp = dirrec(dir, filename)
+        #     if tmp:
+        #         dirList.append(tmp)
         for file in f:
             if filename.startswith('*'):
                 if file.endswith(filename[1:]):
@@ -321,7 +325,6 @@ def readdata(folder, ext='csv', mode="i"):
     nameList = []
     dirList = []
     for dataDir in dataDirs:
-        print(dataDir)
         path, file = os.path.split(dataDir)
         name, ext = os.path.splitext(file)
         nameList.append(name)
