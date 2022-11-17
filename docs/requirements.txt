@@ -7,3 +7,4 @@ nd2reader
 matplotlib
 openpiv
 psutil
+opencv-python
