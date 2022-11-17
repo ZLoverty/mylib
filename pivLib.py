@@ -60,6 +60,12 @@ def PIV(I0, I1, winsize, overlap, dt):
     :return:
         * x, y -- coordinates of windows
         * u, v -- velocities in each window
+
+    .. rubric:: Edit
+
+    :Nov 17, 2022:
+    * Turn off median filter. If needed, do it on the outcome, outside this function.
+    * Update the use of :py:func:`openpiv.pyprocess.get_coordinates`.
     """
     u0, v0, sig2noise = pyprocess.extended_search_area_piv(
         I0.astype(np.int32),
@@ -74,8 +80,7 @@ def PIV(I0, I1, winsize, overlap, dt):
     x, y = pyprocess.get_coordinates(
         image_size=I0.shape,
         search_area_size=winsize,
-        overlap=overlap,
-        window_size=winsize
+        overlap=overlap
     )
     u1, v1, mask_s2n = validation.sig2noise_val(
         u0, v0,
@@ -90,9 +95,9 @@ def PIV(I0, I1, winsize, overlap, dt):
         kernel_size=3,
     )
     # median filter smoothing
-    u3 = medfilt2d(u2, 3)
-    v3 = medfilt2d(v2, 3)
-    return x, y, u3, v3
+    # u3 = medfilt2d(u2, 3)
+    # v3 = medfilt2d(v2, 3)
+    return x, y, u2, v2
 
 def PIV_masked(I0, I1, winsize, overlap, dt, mask):
     """Apply PIV analysis on masked images
