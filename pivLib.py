@@ -9,6 +9,7 @@ from myImageLib import readdata, xy_bin
 from corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
+import cv2
 # %% codecell
 def PIV1(I0, I1, winsize, overlap, dt, smooth=True):
     """
@@ -38,8 +39,27 @@ def read_piv(pivDir):
     .. rubric:: TEST
 
     >>> X, Y, U, V = read_piv(pivDir)
+
+    .. rubric:: Edit
+
+    :Nov 17, 2022: Separate functions in two parts, and implement :py:func:`to_matrix`.
     """
     pivData = pd.read_csv(pivDir)
+
+    return to_matrix(pivData)
+
+def to_matrix(pivData):
+    """
+    Convert PIV data from DataFrame of (x, y, u, v) to four 2D matrices x, y, u, v.
+
+    :param pivData: PIV data
+    :type pivData: pandas.DataFrame
+    :return: x, y, u, v -- 2D matrices
+
+    .. rubric:: Edit
+
+    :Nov 17, 2022: Initial commit.
+    """
     row = len(pivData.y.drop_duplicates())
     col = len(pivData.x.drop_duplicates())
     X = np.array(pivData.x).reshape((row, col))
@@ -172,6 +192,49 @@ def tangent_unit(point, center):
     y1[r[1]!=0] = np.divide(x1 * r[0], r[1], where=r[1]!=0)[r[1]!=0]
     length = (x1**2 + y1**2) ** 0.5
     return np.divide(np.array([x1, y1]), length, out=np.zeros_like(np.array([x1, y1])), where=length!=0)
+
+def apply_mask(pivData, mask, erode=1):
+    """
+    Apply a mask on PIV data, by replacing all the masked velocity as ``np.nan``.
+
+    :param pivData: PIV data (x, y, u, v)
+    :type pivData: pandas.DataFrame
+    :param mask: an image, preferrably binary, where large value denotes valid data and small value denote invalid data. The image will be converted to a boolean array by ``mask = mask > mask.mean()``.
+    :type mask: 2D array
+    :param erode: sometimes, we want to exclude more boundary data, to make sure we don't have artifacts from boundary. ``erode`` makes this possible by applying a erode morphological transformation to the boolean mask, effectively reduces the True region (by half of the erode size). Default to 1, which does not modify the mask.
+
+    .. note::
+
+       ``erode`` is used to generate an erode kernel ``np.ones((erode, erode))``, if ``erode=0``, no kernel will be generated and the function will then use a default kernel ``np.ones((3, 3))``.
+
+    :type erode: int
+    :return: masked PIV data.
+    :rtype: pandas.DataFrame
+
+    .. rubric:: Test
+
+    .. code-block:: python
+
+       pivData = pd.read_csv("test_files/piv-test.csv")
+       mask = io.imread("test_files/mask.tif")
+       mpiv = apply_mask(pivData, mask)
+
+       fig, ax = plt.subplots(nrows=1, ncols=2)
+       ax[0].imshow(mask, cmap="gray")
+       ax[0].quiver(pivData.x, pivData.y, pivData.u, pivData.v, color="red")
+       ax[1].imshow(mask, cmap="gray")
+       ax[1].quiver(mpiv.x, mpiv.y, mpiv.u, mpiv.v, color="red")
+
+    .. rubric:: Edit
+
+    :Nov 17, 2022: Initial commit.
+    """
+    mask = cv2.erode(mask.astype("uint8"), np.ones((erode, erode), dtype="uint8"))
+    mask = mask > mask.mean()
+    ind = mask[pivData.y.astype("int"), pivData.x.astype("int")]
+    p = pivData.copy() # avoid setting values to the original copy
+    p.loc[~ind, ["u", "v"]] = np.nan
+    return p
 
 # %% codecell
 class piv_data:
