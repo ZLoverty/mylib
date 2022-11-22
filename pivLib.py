@@ -105,7 +105,7 @@ def PIV(I0, I1, winsize, overlap, dt):
     u1, v1, mask_s2n = validation.sig2noise_val(
         u0, v0,
         sig2noise,
-        threshold = 1.05,
+        threshold = 1.,
     )
     # replace_outliers
     u2, v2 = filters.replace_outliers(
