@@ -32,8 +32,6 @@
     <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pivLib.PIV1" href="pivLib.PIV1.html" />
-    <link rel="prev" title="pivLib" href="../pivLib.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -80,7 +78,7 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../usage.html">
    Usage
@@ -290,47 +288,10 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 current active has-children">
+ <li class="toctree-l1">
   <a class="reference internal" href="../pivLib.html">
    pivLib
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     pivLib.PIV
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="pivLib.PIV1.html">
-     pivLib.PIV1
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="pivLib.PIV_masked.html">
-     pivLib.PIV_masked
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="pivLib.read_piv.html">
-     pivLib.read_piv
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="pivLib.tangent_unit.html">
-     pivLib.tangent_unit
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="pivLib.piv_data.html">
-     pivLib.piv_data
-    </a>
-   </li>
-  </ul>
  </li>
 </ul>
 
@@ -468,39 +429,6 @@ title="Print to PDF"
                 
   <div class="section" id="pivlib-piv">
 <h1>pivLib.PIV<a class="headerlink" href="#pivlib-piv" title="Permalink to this headline">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="pivLib.PIV">
-<span class="sig-prename descclassname"><span class="pre">pivLib.</span></span><span class="sig-name descname"><span class="pre">PIV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">I0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">winsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pivLib.PIV" title="Permalink to this definition">#</a></dt>
-<dd><p>Standard PIV, consisting of replacing outliers, validate signal to noise ratio, and a smoothing with median filter of kernal shape (3, 3).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>I0</strong> – The first image</p></li>
-<li><p><strong>I1</strong> – The second iamge</p></li>
-<li><p><strong>winsize</strong> – interrogation window size</p></li>
-<li><p><strong>step</strong> – distance between two windows, usually set to half of window size</p></li>
-<li><p><strong>dt</strong> – time interval between two images, in seconds</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>x, y – coordinates of windows</p></li>
-<li><p>u, v – velocities in each window</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-<p class="rubric">Edit</p>
-<dl class="field-list simple">
-<dt class="field-odd">Nov 17, 2022</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-<ul class="simple">
-<li><p>Turn off median filter. If needed, do it on the outcome, outside this function.</p></li>
-<li><p>Update the use of <code class="xref py py-func docutils literal notranslate"><span class="pre">openpiv.pyprocess.get_coordinates()</span></code>.</p></li>
-</ul>
-</dd></dl>
-
 </div>
 
 
@@ -511,20 +439,6 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../pivLib.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">pivLib</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="pivLib.PIV1.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pivLib.PIV1</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
 </div>
             </footer>
         </div>
