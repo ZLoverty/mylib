@@ -10,6 +10,7 @@ from corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
 import cv2
+from scipy.io import savemat
 # %% codecell
 def PIV1(I0, I1, winsize, overlap, dt, smooth=True):
     """
@@ -415,6 +416,71 @@ class piv_data:
                 OP = hamby2018(pivData, center)
                 OP_list.append(OP)
         return pd.DataFrame({"t": np.arange(len(OP_list)) * self.dt, "OP": OP_list})
+
+class compact_PIV:
+    """
+    Compact PIV data structure. Enable easy retrieving by index.
+    """
+    def __init__(self, data):
+        """
+        Initialize compact_PIV object from data.
+
+        :param data: can be dict or pandas.DataFrame. If it's dict, set the value directly to self.data. If it's DataFrame, construct a dict from the DataFrame (filelist).
+        """
+        if isinstance(data, dict):
+            self.data = data
+        elif isinstance(data, pd.DataFrame):
+            if "Name" in data and "Dir" in data:
+                self.data = self._from_filelist(data)
+            else:
+                raise ValueError
+    def get_frame(self, i, by="index"):
+        if by == "index":
+            ind = i
+        elif by == "filename":
+            ind = self.get_labels().index(i)
+        u, v = self.data["u"][ind], self.data["v"][ind]
+        if "mask" in self.data.keys():
+            u[~self.data["mask"].astype("bool")] = np.nan
+            v[~self.data["mask"].astype("bool")] = np.nan
+        return self.data["x"], self.data["y"], u, v
+    def __repr__(self):
+        return str(self.data)
+    def __getitem__(self, indices):
+        return self.data[indices]
+    def _from_filelist(self, filelist):
+        """
+        Construct dict data from filelist of conventional PIV data.
+
+        :param filelist: return value of readdata.
+        """
+        compact_piv = {}
+        pivData = pd.read_csv(filelist.at[0, "Dir"])
+        x, y, u, v = to_matrix(pivData)
+        # set x, y values
+        compact_piv["x"] = x
+        compact_piv["y"] = y
+        # set mask value, if exists
+        if "mask" in pivData:
+            mask_bool = np.reshape(np.array(pivData["mask"]), x.shape)
+            compact_piv["mask"] = mask_bool
+        # set u, v values and label value
+        ul, vl = [], []
+        label = []
+        for num, i in filelist.iterrows():
+            label.append(i.Name)
+            pivData = pd.read_csv(i.Dir)
+            x, y, u, v = to_matrix(pivData)
+            ul.append(u)
+            vl.append(v)
+        compact_piv["u"] = np.stack(ul)
+        compact_piv["v"] = np.stack(vl)
+        compact_piv["labels"] = label
+        return compact_piv
+    def get_labels(self): # filenames originally used for constructing this data
+        return list(self.data["labels"])
+    def to_mat(self, fname):
+        savemat(fname, self.data)
 # %% codecell
 if __name__ == '__main__':
     # %% codecell
