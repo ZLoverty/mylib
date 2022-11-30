@@ -229,13 +229,13 @@ def apply_mask(pivData, mask, erode=1):
     .. rubric:: Edit
 
     :Nov 17, 2022: Initial commit.
+    :Nov 30, 2022: Instead of replacing invalid data with ``np.nan``, add an additional column, where the validity of data is specified.
     """
     mask = cv2.erode(mask.astype("uint8"), np.ones((erode, erode), dtype="uint8"))
     mask = mask > mask.mean()
     ind = mask[pivData.y.astype("int"), pivData.x.astype("int")]
-    p = pivData.copy() # avoid setting values to the original copy
-    p.loc[~ind, ["u", "v"]] = np.nan
-    return p
+    pivData["mask"] = ind
+    return pivData
 
 # %% codecell
 class piv_data:
