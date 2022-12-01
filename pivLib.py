@@ -231,8 +231,8 @@ def apply_mask(pivData, mask, erode=1):
 
     :Nov 17, 2022: Initial commit.
     :Nov 30, 2022: Instead of replacing invalid data with ``np.nan``, add an additional column, where the validity of data is specified.
+    :Dec 01, 2022: Remove the erosion step, since it is very obsecure to include this step here. If we want the mask to be more conservative (include less region to be sure that we are free from boundary effect), we can modify the mask in ImageJ and apply again on the PIV data.
     """
-    mask = cv2.erode(mask.astype("uint8"), np.ones((erode, erode), dtype="uint8"))
     mask = mask > mask.mean()
     ind = mask[pivData.y.astype("int"), pivData.x.astype("int")]
     pivData["mask"] = ind
@@ -419,7 +419,7 @@ class piv_data:
 
 class compact_PIV:
     """
-    Compact PIV data structure. Enable easy retrieving by index.
+    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries ("x", "y", "labels", "u", "v", "mask"). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
     """
     def __init__(self, data):
         """
