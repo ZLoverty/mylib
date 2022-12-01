@@ -32,6 +32,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pivLib.tangent_unit" href="pivLib.tangent_unit.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -78,7 +79,7 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../usage.html">
    Usage
@@ -288,10 +289,47 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../pivLib.html">
    pivLib
   </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.PIV.html">
+     pivLib.PIV
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.PIV1.html">
+     pivLib.PIV1
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.PIV_masked.html">
+     pivLib.PIV_masked
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.read_piv.html">
+     pivLib.read_piv
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.tangent_unit.html">
+     pivLib.tangent_unit
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     pivLib.piv_data
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -429,6 +467,49 @@ title="Print to PDF"
                 
   <div class="section" id="pivlib-piv-data">
 <h1>pivLib.piv_data<a class="headerlink" href="#pivlib-piv-data" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pivLib.piv_data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pivLib.</span></span><span class="sig-name descname"><span class="pre">piv_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pivLib.piv_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Tools for PIV data downstream analysis, such as correlation, mean velocity,
+derivative fields, energy, enstrophy, energy spectrum, etc.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pivLib.piv_data.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pivLib.piv_data.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>file_list: return value of readdata</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pivLib.piv_data.__init__" title="pivLib.piv_data.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(file_list[, fps, cutoff])</p></td>
+<td><p>file_list: return value of readdata</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">corrS1d</span></code>([mode, n, xlim, plot])</p></td>
+<td><p>Compute 2d correlation and convert to 1d.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">corrS2d</span></code>([mode, n, plot])</p></td>
+<td><p>Spatial correlation of velocity field. mode -- &quot;sample&quot; or &quot;full&quot;         &quot;sample&quot; will sample n frames to compute the correlation         &quot;full&quot; will sample all available frames to compute the correlation (could be computationally expensive) n -- number of frames to sample.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_stack</span></code>([cutoff])</p></td>
+<td><p>Load PIV data in 3D numpy.array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_velocity</span></code>([mode, plot])</p></td>
+<td><p>Mean velocity time series.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_parameter</span></code>(center[, mode])</p></td>
+<td><p>Compute order parameter of a velocity field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vacf</span></code>([mode, smooth_method, smooth_window, ...])</p></td>
+<td><p>Compute averaged vacf from PIV data. This is a wrapper of function autocorr1d(), adding the averaging over all the velocity spots. Args: mode -- the averaging method, can be &quot;direct&quot; or &quot;weighted&quot;. &quot;weighted&quot; will use mean velocity as the averaging weight, whereas &quot;direct&quot; uses 1. smooth_window -- window size for gaussian smoothing in time xlim -- xlim for plotting the VACF, does not affect the return value Returns: corrData -- DataFrame of (t, corrx, corry) Edit: Mar 23, 2022 -- add smoothn smoothing option Nov 15, 2022 -- Fix inconsistency with <a class="reference internal" href="../corrLib/corrLib.autocorr1d.html#corrLib.autocorr1d" title="corrLib.autocorr1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">corrLib.autocorr1d()</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -439,6 +520,13 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="pivLib.tangent_unit.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">pivLib.tangent_unit</p>
+        </div>
+    </a>
 </div>
             </footer>
         </div>

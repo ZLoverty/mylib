@@ -32,6 +32,7 @@
     <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pivLib.PIV" href="pivLib/pivLib.PIV.html" />
     <link rel="prev" title="corrLib.divide_stack" href="corrLib/corrLib.divide_stack.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -289,10 +290,47 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 current active">
+ <li class="toctree-l1 current active has-children">
   <a class="current reference internal" href="#">
    pivLib
   </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.PIV.html">
+     pivLib.PIV
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.PIV1.html">
+     pivLib.PIV1
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.PIV_masked.html">
+     pivLib.PIV_masked
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.read_piv.html">
+     pivLib.read_piv
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.tangent_unit.html">
+     pivLib.tangent_unit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib/pivLib.piv_data.html">
+     pivLib.piv_data
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -428,8 +466,44 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="section" id="pivlib">
-<h1>pivLib<a class="headerlink" href="#pivlib" title="Permalink to this headline">#</a></h1>
+  <div class="section" id="module-pivLib">
+<span id="pivlib"></span><h1>pivLib<a class="headerlink" href="#module-pivLib" title="Permalink to this headline">#</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pivLib/pivLib.PIV.html#pivLib.PIV" title="pivLib.PIV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIV</span></code></a>(I0, I1, winsize, overlap, dt)</p></td>
+<td><p>Standard PIV, consisting of replacing outliers, validate signal to noise ratio, and a smoothing with median filter of kernal shape (3, 3).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pivLib/pivLib.PIV1.html#pivLib.PIV1" title="pivLib.PIV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIV1</span></code></a>(I0, I1, winsize, overlap, dt[, smooth])</p></td>
+<td><p>Wrapper of <code class="xref py py-func docutils literal notranslate"><span class="pre">openpiv.pyprocess.extended_search_area_piv()</span></code>, with an option to smooth the resulting velocity field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pivLib/pivLib.PIV_masked.html#pivLib.PIV_masked" title="pivLib.PIV_masked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIV_masked</span></code></a>(I0, I1, winsize, overlap, dt, mask)</p></td>
+<td><p>Apply PIV analysis on masked images</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pivLib/pivLib.read_piv.html#pivLib.read_piv" title="pivLib.read_piv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_piv</span></code></a>(pivDir)</p></td>
+<td><p>Read piv data from pivDir as X, Y, U, V.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pivLib/pivLib.tangent_unit.html#pivLib.tangent_unit" title="pivLib.tangent_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tangent_unit</span></code></a>(point, center)</p></td>
+<td><p>Compute tangent unit vector based on point coords and center coords.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pivLib/pivLib.piv_data.html#pivLib.piv_data" title="pivLib.piv_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">piv_data</span></code></a>(file_list[, fps, cutoff])</p></td>
+<td><p>Tools for PIV data downstream analysis, such as correlation, mean velocity, derivative fields, energy, enstrophy, energy spectrum, etc.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -446,6 +520,13 @@ title="Print to PDF"
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">corrLib.divide_stack</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="pivLib/pivLib.PIV.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pivLib.PIV</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>
