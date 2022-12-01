@@ -411,7 +411,7 @@ class piv_data:
 
 class compact_PIV:
     """
-    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries ("x", "y", "labels", "u", "v", "mask"). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see :ref:`compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
+    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries ("x", "y", "labels", "u", "v", "mask"). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
     """
     def __init__(self, data):
         """
