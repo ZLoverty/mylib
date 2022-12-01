@@ -19,7 +19,7 @@
       PIV_masked
       read_piv
       tangent_unit
-
+      apply_mask
 
 
 
@@ -30,3 +30,4 @@
      :toctree: pivLib
 
       piv_data
+      compact_PIV

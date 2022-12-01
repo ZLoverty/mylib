@@ -326,8 +326,18 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.apply_mask.html">
+     pivLib.apply_mask
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="pivLib.piv_data.html">
      pivLib.piv_data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pivLib.compact_PIV.html">
+     pivLib.compact_PIV
     </a>
    </li>
   </ul>
@@ -528,7 +538,7 @@ The intended usage is just to pass one additional <cite>mask</cite> parameter, o
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method is specific to <code class="docutils literal notranslate"><span class="pre">openpiv</span></code> PIV data. In other PIV methods, the x, y coordinates of windows may be different, and the shape of downsampled mask by <a class="reference internal" href="../corrLib/corrLib.divide_windows.html#corrLib.divide_windows" title="corrLib.divide_windows"><code class="xref py py-func docutils literal notranslate"><span class="pre">corrLib.divide_windows()</span></code></a> may not match the PIV results from other methods. Therefore, this method should not be used in the future. Consider to use <a class="reference internal" href="pivLib.PIV.html#pivLib.PIV" title="pivLib.PIV"><code class="xref py py-func docutils literal notranslate"><span class="pre">pivLib.PIV()</span></code></a> together with <code class="xref py py-func docutils literal notranslate"><span class="pre">pivLib.apply_mask()</span></code>.</p>
+<p>This method is specific to <code class="docutils literal notranslate"><span class="pre">openpiv</span></code> PIV data. In other PIV methods, the x, y coordinates of windows may be different, and the shape of downsampled mask by <a class="reference internal" href="../corrLib/corrLib.divide_windows.html#corrLib.divide_windows" title="corrLib.divide_windows"><code class="xref py py-func docutils literal notranslate"><span class="pre">corrLib.divide_windows()</span></code></a> may not match the PIV results from other methods. Therefore, this method should not be used in the future. Consider to use <a class="reference internal" href="pivLib.PIV.html#pivLib.PIV" title="pivLib.PIV"><code class="xref py py-func docutils literal notranslate"><span class="pre">pivLib.PIV()</span></code></a> together with <a class="reference internal" href="pivLib.apply_mask.html#pivLib.apply_mask" title="pivLib.apply_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">pivLib.apply_mask()</span></code></a>.</p>
 </div>
 </dd></dl>
 
