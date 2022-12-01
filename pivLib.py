@@ -194,7 +194,7 @@ def tangent_unit(point, center):
     length = (x1**2 + y1**2) ** 0.5
     return np.divide(np.array([x1, y1]), length, out=np.zeros_like(np.array([x1, y1])), where=length!=0)
 
-def apply_mask(pivData, mask, erode=1):
+def apply_mask(pivData, mask):
     """
     Apply a mask on PIV data, by replacing all the masked velocity as ``np.nan``.
 
@@ -202,13 +202,6 @@ def apply_mask(pivData, mask, erode=1):
     :type pivData: pandas.DataFrame
     :param mask: an image, preferrably binary, where large value denotes valid data and small value denote invalid data. The image will be converted to a boolean array by ``mask = mask > mask.mean()``.
     :type mask: 2D array
-    :param erode: sometimes, we want to exclude more boundary data, to make sure we don't have artifacts from boundary. ``erode`` makes this possible by applying a erode morphological transformation to the boolean mask, effectively reduces the True region (by half of the erode size). Default to 1, which does not modify the mask.
-
-    .. note::
-
-       ``erode`` is used to generate an erode kernel ``np.ones((erode, erode))``, if ``erode=0``, no kernel will be generated and the function will then use a default kernel ``np.ones((3, 3))``.
-
-    :type erode: int
     :return: masked PIV data.
     :rtype: pandas.DataFrame
 
