@@ -1,6 +1,7 @@
+# %% codecell
 import os
 import numpy as np
-from scipy import fftpack
+from scipy import fft
 from scipy.signal import medfilt2d, convolve2d, fftconvolve
 from scipy.optimize import curve_fit
 from scipy import exp
@@ -91,10 +92,10 @@ def bpass(*args):
         filt[(dist>low)&(dist<=high)] = 1
         return filt
     filt = gen_filter(img8, low, high)
-    filt = fftpack.ifftshift(filt)
-    im_fft = fftpack.fft2(img8)
+    filt = fft.ifftshift(filt)
+    im_fft = fft.fft2(img8)
     im_fft_filt = im_fft * filt
-    im_new = fftpack.ifft2(im_fft_filt).real
+    im_new = fft.ifft2(im_fft_filt).real
     im_new = im_new - im_new.min()
     im_new = np.floor_divide(im_new, (im_new.max()+1)/256)
     return im_new.astype('uint8')
@@ -437,17 +438,28 @@ class rawImage:
         Construct rawImage object using the file directory.
         """
         self.file = file_dir
-
+        self.type = os.path.splitext(self.file)[1]
+        if self.type == ".nd2":
+            with ND2Reader(self.file) as images:
+                self.images = images
+        elif self.type == ".raw":
+            print("raw image handling is pending implementation.")
+        else:
+            raise ValueError
+    def __repr__(self):
+        """Ideally, I can see some general informations about this image. For example, the number of frames and the frame size. Frame rate would also be helpful."""
+        repr_str = "source file: {0}\nimage shape: {1}".format(self.file, self.images.shape)
+        return repr_str
     def extract_tif(self):
         """Wrapper of all format-specific extractors."""
         file, ext = os.path.splitext(self.file)
         if ext == ".raw":
-            self.extract_raw()
+            self._extract_raw()
         elif ext == ".nd2":
-            self.extract_nd2()
+            self._extract_nd2()
         else:
             raise ValueError("Unrecognized image format {}".format(ext))
-    def extract_raw(self, cutoff=None):
+    def _extract_raw(self, cutoff=None):
         """Extract tif sequence from *\*.raw* file.
         :param cutoff: number of images to extract
         """
@@ -533,7 +545,7 @@ class rawImage:
         fps, h, w = a.split('\n')[0:3]
         return int(fps), int(h), int(w)
 
-    def extract_nd2(self):
+    def _extract_nd2(self):
         """
         Extract tif sequence from *\*.nd2* file.
         """
@@ -556,7 +568,7 @@ class rawImage:
                 io.imsave(os.path.join(saveDir8, '{:05d}.tif'.format(num)), to8bit(image))
                 io.imsave(os.path.join(saveDir, '%05d.tif' % num), image, check_contrast=False)
                 t1 = time.monotonic() - t0
-                show_progress(num / n_images, label="{:.1f} frame/s".format(num/t1))
+                show_progress((num+1) / n_images, label="{:.1f} frame/s".format(num/t1))
 
     def _disk_capacity_check(self):
         """Check if the capacity of disk is larger than twice of the file size.
@@ -569,11 +581,3 @@ class rawImage:
         ds = shutil.disk_usage(d)[2] / 2**30
         print("File size {0:.1f} GB, Disk size {1:.1f} GB".format(fs, ds))
         return ds > 2 * fs
-# %% codecell
-
-if __name__=="__main__":
-    # %% codecell
-    # test rawImage class
-    file = r"D:\swimming_droplets\2022-03-11_09h55m01s\RawImage.raw"
-    raw = rawImage(file)
-    raw.extract_raw()
