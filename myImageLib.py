@@ -4,9 +4,7 @@ import numpy as np
 from scipy import fft
 from scipy.signal import medfilt2d, convolve2d, fftconvolve
 from scipy.optimize import curve_fit
-from scipy import exp
 import pandas as pd
-import sys
 import psutil
 from skimage import io
 import time
@@ -244,7 +242,7 @@ def track_spheres_dt(img, num_particles):
     Use correlation tracking method to find spheres in an image.
     """
     def gauss1(x,a,x0,sigma):
-        return a*exp(-(x-x0)**2/(2*sigma**2))
+        return a*np.exp(-(x-x0)**2/(2*sigma**2))
     cent = FastPeakFind(img)
     num_particles = min(num_particles, cent.shape[1])
     peaks = img[cent[0], cent[1]]
@@ -274,7 +272,7 @@ def gauss1(x,a,x0,sigma,b):
     """
     1-d gaussian function. Usually used for fitting.
     """
-    return a*exp(-(x-x0)**2/(2*sigma**2)) + b
+    return a*np.exp(-(x-x0)**2/(2*sigma**2)) + b
 
 def show_progress(progress, label='', bar_length=60):
     """
