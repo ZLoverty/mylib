@@ -1,7 +1,6 @@
 # a set of functions for the circle fitting GUI
 import numpy as np
 import matplotlib.pyplot as plt
-from corrLib import readdata
 import os
 from nd2reader import ND2Reader
 from skimage import io
