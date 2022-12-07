@@ -462,6 +462,10 @@ class rawImage:
     def _extract_raw(self, cutoff=None):
         """Extract tif sequence from *\*.raw* file.
         :param cutoff: number of images to extract
+
+        .. rubric:: Edit
+
+        * Dec 07, 2022: fix progress bar error.
         """
         # read info from info_file
         folder, file = os.path.split(self.file)
@@ -529,7 +533,7 @@ class rawImage:
                 io.imsave(os.path.join(save_folder, 'raw', '{:05d}.tif'.format(num)), img, check_contrast=False)
                 io.imsave(os.path.join(save_folder, '8-bit', '{:05d}.tif'.format(num)), to8bit(img), check_contrast=False)
                 t1 = time.monotonic() - t0
-                show_progress(num / n_images, label="{:.1f} frame/s".format(num / t1))
+                show_progress((num+1 / n_images), label="{:.1f} frame/s".format(num / t1))
                 num += 1
                 if cutoff is not None:
                     if num > cutoff:
