@@ -1,7 +1,11 @@
 # mylib
  Manage my python modules in a separate repo!
 
-## Milestones v1.1 
+## Milestones v1.2 
+
+1. Reorganize the repo as a PyPI package and publish on PyPI.
+
+## Milestones v1.1 (all met)
 
 1. All the functions and scripts that output PIV data should put PIV in a .mat container, which only save x, y, mask, labels in formation once, and save u, v as 3D arrays. 
 

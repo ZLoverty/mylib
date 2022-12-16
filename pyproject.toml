@@ -1,0 +1,31 @@
+[build-system]
+requires = [
+    "hatchling",
+    "numpy",
+    "matplotlib",
+    "scikit-image",
+    "pandas",
+    "scipy",
+    "nd2reader",
+    "openpiv"
+    ]
+build-backend = "hatchling.build"
+
+[project]
+name = "myimagelib"
+version = "1.2"
+authors = [
+  { name="Zhengyang Liu", email="liuzy19911112@gmail.com" },
+]
+description = "Image IO, correlation, PIV, particle tracking tools collection."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://https://zloverty.github.io/mylib/"
+"Bug Tracker" = "https://github.com/ZLoverty/mylib/issues"
