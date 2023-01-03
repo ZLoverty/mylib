@@ -1,19 +1,10 @@
 [build-system]
-requires = [
-    "hatchling",
-    "numpy",
-    "matplotlib",
-    "scikit-image",
-    "pandas",
-    "scipy",
-    "nd2reader",
-    "openpiv"
-    ]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "myimagelib"
-version = "1.2"
+version = "1.2.2"
 authors = [
   { name="Zhengyang Liu", email="liuzy19911112@gmail.com" },
 ]
@@ -25,7 +16,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+  "numpy",
+  "matplotlib",
+  "scikit-image",
+  "pandas",
+  "scipy",
+  "nd2reader",
+  "openpiv",
+]
 
 [project.urls]
-"Homepage" = "https://https://zloverty.github.io/mylib/"
+"Homepage" = "https://zloverty.github.io/mylib/"
 "Bug Tracker" = "https://github.com/ZLoverty/mylib/issues"
+
