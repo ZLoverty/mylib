@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from skimage import io
 import pandas as pd
 from scipy.signal import medfilt2d
-from myImageLib import readdata, xy_bin
-from corrLib import divide_windows, autocorr1d, corrS, distance_corr
+from myimagelib.myImageLib import readdata, xy_bin
+from myimagelib.corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
 from scipy.io import savemat

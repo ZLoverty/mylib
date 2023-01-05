@@ -11,8 +11,8 @@ from matplotlib.patches import Ellipse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from skimage import io
-from myImageLib import readdata
-from pivLib import read_piv, PIV, PIV_masked
+from myimagelib.myImageLib import readdata
+from myimagelib.pivLib import read_piv, PIV, PIV_masked
 import corrTrack
 import os
 import trackpy as tp

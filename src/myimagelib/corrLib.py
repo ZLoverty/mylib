@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from myImageLib import dirrec, bpass
-from miscLib import label_slope
+from myimagelib.myImageLib import dirrec, bpass
 from skimage import io, util
 import os
 import pandas as pd
@@ -26,6 +25,7 @@ def corrS(X, Y, U, V):
     * Dec 13, 2021 -- i) Replace all the `mean()` function to nanmean, to handle masked PIV data. ii) Add doc string.
     * Dec 15, 2021 -- if norm `vsqrt` is 0, set it to np.nan to avoid divided by zero warning!
     * Dec 16, 2021 -- Shift the output X, Y origin to 0, 0, so that 0 distance will have the correlation function = 1. More intuitive.
+    * Jan 05, 2023 -- Adapt myimagelib import style.
     """
     row, col = X.shape
     r = int(row/2)
