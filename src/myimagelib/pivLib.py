@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from skimage import io
 import pandas as pd
 from scipy.signal import medfilt2d
-from myImageLib import readdata, xy_bin
-from corrLib import divide_windows, autocorr1d, corrS, distance_corr
+from myimagelib.myImageLib import readdata, xy_bin
+from myimagelib.corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
 from scipy.io import savemat
@@ -198,7 +198,7 @@ def tangent_unit(point, center):
 
 def apply_mask(pivData, mask):
     """
-    Apply a mask on PIV data, by replacing all the masked velocity as ``np.nan``.
+    Apply a mask on PIV data, by adding a boolean column "mask" to the original x, y, u, v data file. Valid velocities are labeled ``True`` while invalid velocities are labeled ``False``.
 
     :param pivData: PIV data (x, y, u, v)
     :type pivData: pandas.DataFrame
@@ -223,9 +223,10 @@ def apply_mask(pivData, mask):
 
     .. rubric:: Edit
 
-    :Nov 17, 2022: Initial commit.
-    :Nov 30, 2022: Instead of replacing invalid data with ``np.nan``, add an additional column, where the validity of data is specified.
-    :Dec 01, 2022: Remove the erosion step, since it is very obsecure to include this step here. If we want the mask to be more conservative (include less region to be sure that we are free from boundary effect), we can modify the mask in ImageJ and apply again on the PIV data.
+    * Nov 17, 2022 -- Initial commit.
+    * Nov 30, 2022 -- Instead of replacing invalid data with ``np.nan``, add an additional column, where the validity of data is specified.
+    * Dec 01, 2022 -- Remove the erosion step, since it is very obsecure to include this step here. If we want the mask to be more conservative (include less region to be sure that we are free from boundary effect), we can modify the mask in ImageJ and apply again on the PIV data.
+    * Dec 19, 2022 -- Modify docstring to be consistent with code action.
     """
     mask = mask > mask.mean()
     ind = mask[pivData.y.astype("int"), pivData.x.astype("int")]

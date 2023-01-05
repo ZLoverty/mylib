@@ -2,14 +2,12 @@ import numpy as np
 from skimage import io
 from scipy.optimize import curve_fit
 from scipy.stats import norm
-from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from xcorr_funcs import normxcorr2, FastPeakFind, maxk, gauss1
 from scipy import exp
 import time
-import pdb
 
 def track_spheres(img, mask, num_particles, subpixel=True):
     def gauss1(x,a,x0,sigma):
