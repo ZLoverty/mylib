@@ -1,6 +1,0 @@
-﻿pivLib.apply\_mask
-==================
-
-.. currentmodule:: pivLib
-
-.. autofunction:: apply_mask
