@@ -38,6 +38,10 @@ The result is:
 
 ## Milestones
 
+#### v1.3 
+
+1. Fix the documentation. Due to the folder structure change, autodoc does not work correctly, and all the documentations currently are not working. Fix it in the next release. 
+
 #### v1.2 (all met)
 
 1. Reorganize the repo as a PyPI package and publish on PyPI.

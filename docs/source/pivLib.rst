@@ -1,7 +1,7 @@
 ﻿pivLib
 ======
 
-.. automodule:: pivLib
+.. automodule:: myimagelib.pivLib
 
 
 
