@@ -9,6 +9,8 @@ jobs:
     - uses: actions/checkout@v3
 #     - name: install ffmpeg
 #       run: sudo apt-get install ffmpeg libsm6 libxext6 -y
+    - name: Download press theme
+      run: pip install sphinx-press-theme
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
     - name: Upload artifacts
