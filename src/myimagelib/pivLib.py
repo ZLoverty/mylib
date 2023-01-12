@@ -83,12 +83,9 @@ def PIV(I0, I1, winsize, overlap, dt):
 
     .. rubric:: Edit
 
-    :Nov 17, 2022:
-
-    * Turn off median filter. If needed, do it on the outcome, outside this function.
-    * Update the use of :py:func:`openpiv.pyprocess.get_coordinates`.
-
-    :Dec 06, 2022: Update syntax per the changes in the openpiv module. Copy from tutorial.
+    * Nov 17, 2022 -- (i) Turn off median filter. If needed, do it on the outcome, outside this function. (ii) Update the use of :py:func:`openpiv.pyprocess.get_coordinates`.
+    * Dec 06, 2022 -- Update syntax per the changes in the openpiv module. Copy from tutorial.
+    * Jan 12, 2023 -- Change s2n ration threshold to 1.
     """
     u0, v0, sig2noise = pyprocess.extended_search_area_piv(
         I0.astype(np.int32),
@@ -107,7 +104,7 @@ def PIV(I0, I1, winsize, overlap, dt):
     )
     invalid_mask = validation.sig2noise_val(
         sig2noise,
-        threshold = 1.05,
+        threshold = 1.0,
     )
     # replace_outliers
     u2, v2 = filters.replace_outliers(

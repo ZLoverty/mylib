@@ -1,7 +1,7 @@
 ﻿myImageLib
 ==========
 
-.. automodule:: myImageLib
+.. automodule:: myimagelib.myImageLib
 
 
 
