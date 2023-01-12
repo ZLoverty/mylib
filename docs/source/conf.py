@@ -21,12 +21,12 @@ sys.path.insert(0, os.path.abspath(os.path.join("..", "..", "src")))
 
 # -- Project information -----------------------------------------------------
 
-project = 'mylib'
-copyright = '2022, Zhengyang Liu'
+project = 'myimagelib'
+copyright = '2022-2023, Zhengyang Liu'
 author = 'Zhengyang Liu'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = '1.3'
 
 
 # -- General configuration ---------------------------------------------------

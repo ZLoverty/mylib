@@ -1,7 +1,7 @@
 ﻿corrLib
 =======
 
-.. automodule:: corrLib
+.. automodule:: myimagelib.corrLib
 
 
 
