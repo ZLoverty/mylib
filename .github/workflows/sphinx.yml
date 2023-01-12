@@ -10,7 +10,7 @@ jobs:
 #     - name: install ffmpeg
 #       run: sudo apt-get install ffmpeg libsm6 libxext6 -y
     - name: Download press theme
-      run: pip install sphinx_press_theme
+      run: pip install sphinx_press_theme==0.5.1
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
     - name: Upload artifacts
