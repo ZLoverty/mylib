@@ -434,7 +434,7 @@ class compact_PIV:
     def get_frame(self, i, by="index"):
         if by == "index":
             ind = i
-        elif by == "filename":
+        elif by == "label":
             ind = self.get_labels().index(i)
         u, v = self.data["u"][ind], self.data["v"][ind]
         if "mask" in self.data.keys():
@@ -485,6 +485,14 @@ class compact_PIV:
         mask = mask_img > mask_img.mean()
         ind = mask[self.data["y"].astype("int"), self.data["x"].astype("int")].reshape(self.data["x"].shape)
         self.data["mask"] = ind
+    def to_csv(self, folder):
+        """
+        Save as .csv files to given folder. This is the reverse of the condensing process. It is intended to complete partially finished .mat data.
+        """
+        for label in self.get_labels():
+            x, y, u, v = self.get_frame(label, by="label")
+            data = pd.DataFrame({"x": x.flatten(), "y": y.flatten(), "u": u.flatten(), "v": v.flatten()})
+            data.to_csv(os.path.join(folder, "{}.csv".format(label)), index=False)
 
 if __name__ == '__main__':
     folder = r"test_images\moving_mask_piv\piv_result"
