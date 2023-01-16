@@ -32,26 +32,3 @@ The result is:
 
 
 
-
-
-
-
-## Milestones
-
-#### v1.3 
-
-1. Fix the documentation. Due to the folder structure change, autodoc does not work correctly, and all the documentations currently are not working. Fix it in the next release. 
-
-#### v1.2 (all met)
-
-1. Reorganize the repo as a PyPI package and publish on PyPI.
-
-#### v1.1 (all met)
-
-1. All the functions and scripts that output PIV data should put PIV in a .mat container, which only save x, y, mask, labels in formation once, and save u, v as 3D arrays. 
-
-2. The operations that based on \*.tif images should be transformed to work on raw images. The affected operations are: 
-
-- PIV
-- gen_preview
-- remove_background
