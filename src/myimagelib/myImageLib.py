@@ -27,9 +27,21 @@ def dirrec(path, filename):
 
        :code:`filename` can be partially specified, e.g. :code:`*.py` to search for all the files that end with *.py*. Similarly, setting :code:`filename` as :code:`*track*` will search for all files starting with *track*.
 
+    .. testsetup::
+       
+       from myimagelib.myImageLib import *
+
+    .. testcode::
+
+       print(1+1)
+
+    .. testoutput::
+       
+       3
+       
     .. rubric:: EDIT
 
-    :11152022: Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
+    * 11152022 -- Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
     """
     dirList = []
     for r, d, f in os.walk(path):
