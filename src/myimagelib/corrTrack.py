@@ -5,7 +5,7 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
-from xcorr_funcs import normxcorr2, FastPeakFind, maxk, gauss1
+from myimagelib.xcorr_funcs import normxcorr2, FastPeakFind, maxk, gauss1
 from scipy import exp
 import time
 

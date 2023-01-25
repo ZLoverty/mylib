@@ -13,7 +13,7 @@ from matplotlib.figure import Figure
 from skimage import io
 from myimagelib.myImageLib import readdata
 from myimagelib.pivLib import read_piv, PIV, PIV_masked
-import corrTrack
+import myimagelib.corrTrack
 import os
 import trackpy as tp
 

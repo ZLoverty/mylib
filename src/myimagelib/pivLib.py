@@ -10,7 +10,6 @@ from myimagelib.corrLib import divide_windows, autocorr1d, corrS, distance_corr
 import os
 import scipy
 from scipy.io import savemat
-# %% codecell
 def PIV1(I0, I1, winsize, overlap, dt, smooth=True):
     """
     Wrapper of :py:func:`openpiv.pyprocess.extended_search_area_piv`, with an option to smooth the resulting velocity field.
@@ -230,7 +229,7 @@ def apply_mask(pivData, mask):
     pivData["mask"] = ind
     return pivData
 
-# %% codecell
+# %% piv_data
 class piv_data:
     """Tools for PIV data downstream analysis, such as correlation, mean velocity,
     derivative fields, energy, enstrophy, energy spectrum, etc."""
@@ -408,10 +407,14 @@ class piv_data:
                 OP = hamby2018(pivData, center)
                 OP_list.append(OP)
         return pd.DataFrame({"t": np.arange(len(OP_list)) * self.dt, "OP": OP_list})
-
+# %% compact_PIV
 class compact_PIV:
     """
     Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries ("x", "y", "labels", "u", "v", "mask"). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
+
+    .. rubric:: Edit
+
+    * Jan 13, 2023 -- Add :py.func:`update_mask`. The idea is that the original mask may include regions where image quality is bad, e.g. the bottom shadow region of droplet xz images. In this case, we usually realize the problem after performing the PIV. And to refine the PIV data, we want to update the mask to make it more conservative (i.e. mask out the bad quality region). Therefore, a method is needed to update the "mask" entry in a compact_PIV object. 
     """
     def __init__(self, data):
         """
@@ -421,15 +424,17 @@ class compact_PIV:
         """
         if isinstance(data, dict):
             self.data = data
+            
         elif isinstance(data, pd.DataFrame):
             if "Name" in data and "Dir" in data:
                 self.data = self._from_filelist(data)
             else:
                 raise ValueError
+        self.keys = self.data.keys()
     def get_frame(self, i, by="index"):
         if by == "index":
             ind = i
-        elif by == "filename":
+        elif by == "label":
             ind = self.get_labels().index(i)
         u, v = self.data["u"][ind], self.data["v"][ind]
         if "mask" in self.data.keys():
@@ -473,19 +478,33 @@ class compact_PIV:
         return list(self.data["labels"])
     def to_mat(self, fname):
         savemat(fname, self.data)
-# %% codecell
+    def update_mask(self, mask_img):
+        """
+        mask_img -- the binary image of the same size as raw images. Large values denote valid region.
+        """
+        mask = mask_img > mask_img.mean()
+        ind = mask[self.data["y"].astype("int"), self.data["x"].astype("int")].reshape(self.data["x"].shape)
+        self.data["mask"] = ind
+    def to_csv(self, folder):
+        """
+        Save as .csv files to given folder. This is the reverse of the condensing process. It is intended to complete partially finished .mat data.
+        """
+        for label in self.get_labels():
+            x, y, u, v = self.get_frame(label, by="label")
+            data = pd.DataFrame({"x": x.flatten(), "y": y.flatten(), "u": u.flatten(), "v": v.flatten()})
+            data.to_csv(os.path.join(folder, "{}.csv".format(label)), index=False)
+
 if __name__ == '__main__':
-    # %% codecell
     folder = r"test_images\moving_mask_piv\piv_result"
     l = readdata(folder, "csv")
     piv = piv_data(l, fps=50)
-    # %% codecell
+
     vacf = piv.vacf(smooth_window=2, xlim=[0, 0.1])
     # autocorr1d(np.array([1,1,1]))
-    # %% codecell
+
     corr1d = piv.corrS1d(n=600, xlim=[0, 170], plot=True)
-    # %% codecell
+
     piv.mean_velocity(plot=True)
-    # %% codecell
+
     op = piv.order_parameter((87, 87), mode="hamby")
     op
