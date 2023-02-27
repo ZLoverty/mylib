@@ -7,6 +7,7 @@
 - Remove GitHub action that automatically builds docs. Instead build docs manually and upload to the "gh-pages" branch. See code notes for procedures.
 - Add `update_mask` to `compact_PIV`.
 - Add `to_csv` to `compact_PIV`.
+- Handle NaN values in `to8bit`.
 
 #### v1.3 
 
