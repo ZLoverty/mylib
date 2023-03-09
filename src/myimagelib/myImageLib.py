@@ -456,7 +456,7 @@ class rawImage:
             with ND2Reader(self.file) as images:
                 self.images = images
         elif self.type == ".raw":
-            print("raw image handling is pending implementation.")
+            pass
         else:
             raise ValueError
     def __repr__(self):
