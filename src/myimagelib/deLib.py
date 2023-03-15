@@ -10,14 +10,14 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from skimage import io
+from skimage import io, draw, filters
 from myimagelib.myImageLib import readdata
 from myimagelib.pivLib import read_piv, PIV, PIV_masked
+from scipy.ndimage import gaussian_filter1d
+from myimagelib.fit_circle_utils import fit_circle
 import myimagelib.corrTrack
 import os
 import trackpy as tp
-
-# %% codecell
 
 class droplet_image:
     """Container of functions related to confocal droplet images"""
@@ -234,9 +234,6 @@ class droplet_image:
             # save figure
             fig.savefig(os.path.join(out_folder, name + '.jpg'), dpi=dpi)
 
-
-
-# %% codecell
 class fixed_mask_PIV:
     def PIV_masked_1(self, I0, I1, winsize, overlap, dt, mask):
         """Test different masking procedures.
@@ -729,30 +726,6 @@ class de_data():
             ax.loglog()
         return ax
 
-# %% codecell
-if __name__=="__main__":
-    # test de_data class
-    # %% codecell
-    # make all the plots
-    log_dir = r"C:\Users\liuzy\Documents\Github\DE\Data\structured_log_DE.ods"
-    log = pd.read_excel(io=log_dir, sheet_name="main")
-    data = de_data(log)
-    # %% codecell
-    data.parameter_space(highlight_Chile_data=True) # 1
-    data.plot_MSD_model_Cristian() # 3
-    data.scatter_0(mode="log", highlight_Chile_data=True) # 2
-    data.plot_0(nbins=5, overlap=0, mode="log") # 4
-    data.scatter_1(mode="log", highlight_Chile_data=True) # 5
-    data.plot_1(nbins=5, overlap=0, mode="log") # 6
-    data.Rinf2_tau() # 7
-    data.Rinf2_over_tau() # 8
-    data.rescale_Rinf_OD() # 9
-    data.rescale_Rinf_freespace() # 10
-    # %% codecell
-    # generate_msd_repo method generates .jpg images, and take longer time to run
-    # (several minutes), use caution when running this block
-    data.generate_msd_repo(component="y", data_dir=r"C:\Users\liuzy\Documents\Github\DE\Data\traj")
-# %% codecell
 class drop_data:
     """Droplet data plotting tool."""
     def __init__(self, data):
@@ -886,97 +859,122 @@ class drop_data:
         ax.set_ylabel("mean velocity")
         ax.legend()
 
-if __name__=="__main__":
-    # %% codecell
-    # Test droplet_image class
-    # %% codecell
-    # create object
-    folder = "test_images/moving_mask_piv/raw"
-    l = readdata(folder, "tif")
-    DI = droplet_image(l, 50, 0.33)
-    # %% codecell
-    # test __repr__
-    DI
-    # %% codecell
-    # test droplet_traj()
-    mask_dir = r"test_images\moving_mask_piv\mask.tif"
-    mask = io.imread(mask_dir)
-    xy0 = (178, 161)
-    traj = DI.droplet_traj(mask, xy0)
-    traj
-    # %% codecell
-    # test check_traj()
-    mask_shape = (174, 174)
-    DI.check_traj(traj, mask_shape, n=8)
-    # %% codecell
-    img = DI.get_image(0)
-    plt.imshow(img)
-    # %% codecell
-    mask_shape = (174, 174)
-    img = DI.get_cropped_image(0, traj, mask_shape)
-    plt.imshow(img)
-    # %% codecell
-    # test moving_mask_piv()
-    save_folder = r"test_images\moving_mask_piv\piv_result"
-    winsize = 20
-    overlap = 10
-    dt = 0.02
-    mask_dir = r"test_images\moving_mask_piv\mask.tif"
-    xy0 = (178, 161)
-    mask_shape = (174, 174)
-    DI.moving_mask_piv(save_folder, winsize, overlap, dt, mask_dir, xy0, mask_shape)
-    # %% codecell
-    # test piv_overlay_moving()
-    piv_folder = r"test_images\moving_mask_piv\piv_result"
-    out_folder = r"test_images\moving_mask_piv\piv_overlay_moving"
-    traj = pd.read_json(os.path.join(piv_folder, "droplet_traj.json"))
-    with open(os.path.join(piv_folder, "piv_params.json"), "r") as f:
-        piv_params = json.load(f)
-    DI.piv_overlay_moving(piv_folder, out_folder, traj, piv_params, sparcity=1)
-    # %% codecell
-    # output cropped images for note figure
-    out_folder = r"test_images\moving_mask_piv\cropped_images"
-    if os.path.exists(out_folder) == False:
-        os.makedirs(out_folder)
-    dpi = 300
-    figscale = 1
-    for i in DI.sequence.index:
-        img = DI.get_cropped_image(i, traj, (174, 174))
-        w, h = img.shape[1] / dpi, img.shape[0] / dpi
-        fig = Figure(figsize=(w*figscale, h*figscale)) # on some server `plt` is not supported
-        canvas = FigureCanvas(fig) # necessary?
-        ax = fig.add_axes([0, 0, 1, 1])
-        ax.imshow(img, cmap='gray')
-        ax.axis("off")
-        fig.savefig(os.path.join(out_folder, "{}.jpg".format(DI.get_image_name(i))))
-    # %% codecell
-    # test fixed_mask_piv()
-    winsize = 20
-    overlap = 10
-    dt = 0.02
-    mask_dir = "test_images/moving_mask_piv/mask.tif"
-    piv, params = DI.fixed_mask_piv(winsize, overlap, mask_dir)
-    params
-    # %% codecell
-    # test piv_overlay_fixed()
-    piv_folder = r"test_images\fixed_mask_piv\piv_result"
-    out_folder = r"test_images\fixed_mask_piv\piv_overlay_fixed"
-    sparcity = 1
-    DI.piv_overlay_fixed(piv_folder, out_folder, sparcity=sparcity)
+def subpixel_correction(original_circle, raw_img, range_factor=0.5, plot=False, thres=5, method="gaussian", sample=5, sample_range=(0, 2*np.pi), ax=None):
+    """Use gaussian fitting of cross-boundary pixel intensities to give circle detections subpixel accuracy. 
+    Args:
+    original_circle -- dict of {"x", "y", "r"}
+    raw_img -- raw image where circles are detected
+    range_factor -- the range of the cross-boundary pixel intensity profile to be fitted.
+                    For example, 0.6 means 0.6*r on both sides of the boundary pixel (in and out of the circle, 1.2*r in total)".
+    Returns:
+    corrected_circle -- dict of {"x", "y", "r"}
+    Edit:
+    06152022 -- Initial commit.
+    06162022 -- If the peak value is too far away from the original one, drop it.
+    06172022 -- 1) add boundary protection,
+                2) use gaussian smoothing, instead of savgol
+                3) convert pixel data type to "float64" to avoid memory overflow
+                4) put fitting part together
+                5) merge gaussian and minimum fitting in the same function, adding "method" argument, change name to subpixel_correction
+    06212022 -- Sample more profiles for more accurate correction.
+                Note that sometimes more profiles does not mean more accuracy.
+                If the outer droplet boundary is very dark, 
+                and some profiles contain the outer droplet boundary,
+                significant deviation will result.
+    06282022 -- Add argument "sample_range".
+                In most DE images, the upper boundary of inner and outer droplets overlap.
+                As a result, when sampling across the upper boundaries, the profile will likely include both boundaries.
+                This leads to big error for the "minimum" method.
+                Therefore, it is desired to sample bottom boundaries.
+                sample_range allows specifying the range of boundary samples (in terms of angle).
+                The x-axis corresponds to 0 in sample_range. Then it increases in the CW direction.
+                Up to 2*np.pi where it comes back to the x-axis.
+    07132022 -- Use linear method for circle fitting, for better efficiency and less susceptibility to outliers.
+    07192022 -- i) Back to "naive" fitting
+                ii) Add cross-boundary lines, chosen peaks on the profiles, fitted corrected circles to plot
+                iii) add argument ax for making subplots outside the function
+                iv) set default of plot param to False
+    """
+    
+    
+    if ax == None and plot:
+        fig, ax = plt.subplots(dpi=150)
+    if plot:
+        ax.imshow(raw_img, cmap="gray")
+        
+    x0, y0, r0 = original_circle["x"], original_circle["y"], original_circle["r"]
+    # samples
+    new_points = []
+    for t in np.linspace(*sample_range, sample, endpoint=True):
+        xc = x0 + r0 * np.cos(t)
+        yc = y0 + r0 * np.sin(t)
+        x1 = xc - r0 * range_factor * np.cos(t)
+        x2 = xc + r0 * range_factor * np.cos(t)
+        y1 = yc - r0 * range_factor * np.sin(t)
+        y2 = yc + r0 * range_factor * np.sin(t)
+        x1 = int(np.round(x1))
+        x2 = int(np.round(x2))
+        y1 = int(np.round(y1))
+        y2 = int(np.round(y2))
+        
+        y, x = draw.line(y1, x1, y2, x2)
+        if plot:
+            ax.plot(x, y, color="yellow")
+        indx = (x >= 0) & (x < raw_img.shape[1])
+        indy = (y >= 0) & (y < raw_img.shape[0])
+        ind = indx * indy
+        y = y[ind]
+        x = x[ind]
+        p = raw_img[y, x]
+        p_smooth = gaussian_filter1d(p, sigma=3/4)
+        if method == "minimum":
+            minind = np.argmin(p_smooth)
+            xmin, ymin = x[minind], y[minind]
+            distsq = (xmin - xc) ** 2 + (ymin - yc) ** 2 
+            if distsq > thres ** 2:
+                new_points.append((xc, yc))
+            else:
+                new_points.append((xmin, ymin))
+        elif method == "gaussian":
+            raise ValueError("Method not yet implemented")
+            
+    # fit circle
+    xy = np.array(new_points)
+    c, n_iter = fit_circle(xy[:, 0], xy[:, 1], method="naive")
+    corrected_circle = {"x": c["a"], "y": c["b"], "r": c["r"]}
+    
+    if plot:
+        points = np.array(new_points)
+        ax.scatter(points[:, 0], points[:, 1], s=10, color="red")
+        ocirc = mpatch.Circle((x0, y0), r0, fill=False, color="red", lw=1)
+        ax.add_patch(ocirc)
+        ccirc = mpatch.Circle((c["a"], c["b"]), c["r"], fill=False, color="green", lw=1)
+        ax.add_patch(ccirc)
+        
+    return corrected_circle
 
-
-
-    # %% codecell
-    # test drop_data class
-    # create drop_data object
-    log_dir = r"..\Data\structured_log.ods"
-    log = pd.read_excel(io=log_dir, sheet_name="main")
-    dd = drop_data(log)
-    dd.parameter_space()
-    dd.find_lifetime_data()
-    dd.plot_mean_velocity_evolution(n=6, mode="log")
-    dd.plot_droplet_size_evolution(n=6, mode="log")
-    # %% codecell
-    dd.plot_volume_fraction_evolution(n=6, mode="lin")
-    # %% codecell
-    dd.plot_velocity_volume_fraction_correlation(time_bins=6)
+def circle_quality_std(raw_img, circle):
+    """Quantify circle detection quality by computing boundary pixel standard deviation.
+    Args:
+    raw_img -- raw image
+    circle -- dict of {"x", "y", "r"}
+    distsq_thres -- distance threshold for determining if a pixel is on a circle or not
+    Returns:
+    quality -- 1 - (circle pixel std) / (image pixel std)
+                The idea is to normalize the results from images of different contrast,
+                and larger quality value means better tracking.
+    Edit:
+    06282022 -- use skimage.draw to get circle perimeter pixel coords
+    """
+    x, y, r = circle["x"], circle["y"], circle["r"]
+    # 1. make X, Y coordinates of all image pixels
+    Y, X = np.mgrid[0:raw_img.shape[0], 0:raw_img.shape[1]]
+    # 2. compute distance (square) matrix from each pixel to circle center
+    dist = (X-x) ** 2 + (Y-y) ** 2 - r ** 2 
+    # 3. get all the pixel intensity values on the detected circle
+    circle_pixels = raw_img[draw.circle_perimeter(int(np.round(y)), int(np.round(x)), int(np.round(r)), shape=raw_img.shape)]
+    # 4. compute standard deviation of circle_pixels
+    std = circle_pixels.std()
+    std_img = raw_img.std()
+    
+    return 1 - std / std_img
