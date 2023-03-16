@@ -60,20 +60,26 @@ def dirrec(path, filename):
                 dirList.append(os.path.join(r, file))
     return dirList
 
-def to8bit(img16):
+def to8bit(img):
     """
-    Enhance contrast and convert to 8-bit.
+    Enhance contrast and convert to 8-bit. The input image dtype does not have to be 16-bit, but can be float or int of any bit-depth.
 
     :param img: mono image of any dtype
     :type img: 2d array
     :return: 8-bit image
     :rtype: uint8 2d array
+
+    .. rubric:: Edit
+
+    * Feb 27, 2023 -- change ``img.max()`` to ``np.nanmax(img)`` to handle NaN values. 
+    * Mar 16, 2023 -- use mean and std to infer upper and lower bound. This makes the function more stable to images with spurious pixels with extremely large intensity. 
     """
-    # if img16.dtype != 'uint16':
-        # raise ValueError('16-bit grayscale image is expected')
-    maxx = img16.max()
-    minn = img16.min()
-    img8 = (img16 - minn) / (maxx - minn) * 255
+
+    mean = img.mean()
+    std = img.std()
+    maxx = min(mean + 5 * std, img.max())
+    minn = max(mean - 5 * std, 0)
+    img8 = (img - minn) / (maxx - minn) * 255
     return img8.astype('uint8')
 
 def bpass(*args):
@@ -453,7 +459,7 @@ class rawImage:
             with ND2Reader(self.file) as images:
                 self.images = images
         elif self.type == ".raw":
-            print("raw image handling is pending implementation.")
+            pass
         else:
             raise ValueError
     def __repr__(self):
