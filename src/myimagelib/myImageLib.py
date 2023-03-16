@@ -72,10 +72,13 @@ def to8bit(img):
     .. rubric:: Edit
 
     * Feb 27, 2023 -- change ``img.max()`` to ``np.nanmax(img)`` to handle NaN values. 
+    * Mar 16, 2023 -- use mean and std to infer upper and lower bound. This makes the function more stable to images with spurious pixels with extremely large intensity. 
     """
 
-    maxx = np.nanmax(img)
-    minn = np.nanmin(img)
+    mean = img.mean()
+    std = img.std()
+    maxx = min(mean + 5 * std, img.max())
+    minn = max(mean - 5 * std, 0)
     img8 = (img - minn) / (maxx - minn) * 255
     return img8.astype('uint8')
 
