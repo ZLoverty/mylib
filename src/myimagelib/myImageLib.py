@@ -73,12 +73,14 @@ def to8bit(img):
 
     * Feb 27, 2023 -- change ``img.max()`` to ``np.nanmax(img)`` to handle NaN values. 
     * Mar 16, 2023 -- use mean and std to infer upper bound. This makes the function more stable to images with spurious pixels with extremely large intensity. 
+    * Mar 17, 2023 -- using upper bound that is smaller than the maximal pixel intensity causes dark "patches" in the rescaled images due to the data type change to "uint8". The solution is to ``clip`` the images with the determined bounds first, then apply the data type conversion. In this way, the over exposed pixels will just reach the saturation value 255.
     """
 
     mean = np.nanmean(img)
     std = np.nanstd(img)
     maxx = min(mean + 5 * std, np.nanmax(img))
     minn = np.nanmin(img)
+    img.clip(minn, maxx, out=img)
     img8 = (img - minn) / (maxx - minn) * 255
     return img8.astype('uint8')
 
