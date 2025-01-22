@@ -1,6 +1,10 @@
 ### myimagelib release note
 
-##### v1.4
+#### v1.5
+
+- Lose weight project: the current package spreads very broadly. The reuse rates of most functions are quite low. Therefore, I'm planning to remove functions that are not useful any more, and figure out a focus of this package.
+
+#### v1.4
 
 - Implement doctest to test the code automatically.
 - Add release note.
