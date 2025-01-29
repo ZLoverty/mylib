@@ -1,4 +1,3 @@
-# %% codecell
 import os
 import numpy as np
 from scipy import fft
@@ -10,7 +9,6 @@ from skimage import io
 import time
 import shutil
 from nd2reader import ND2Reader
-# %% codecell
 
 def dirrec(path, filename):
     """
@@ -445,7 +443,6 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
     xb = ((x[1:] + x[:-1]) / 2)[ind]
     yb = top[ind] / bot[ind]
     return xb, yb
-# %% codecell
 
 class rawImage:
     """

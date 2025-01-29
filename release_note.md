@@ -3,6 +3,9 @@
 #### v1.5
 
 - Lose weight project: the current package spreads very broadly. The reuse rates of most functions are quite low. Therefore, I'm planning to remove functions that are not useful any more, and figure out a focus of this package.
+  - remove `xcorr_funcs.py` and `fit_circle_utils.py`
+  - add frequently used functions to `__init__.py`
+- clean up the imports
 
 #### v1.4
 
