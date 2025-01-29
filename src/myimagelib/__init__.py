@@ -1,1 +1,1 @@
-from myImageLib import readdata, show_progress, to8bit, bestcolor, rawImage
+from .myImageLib import readdata, show_progress, to8bit, bestcolor, rawImage

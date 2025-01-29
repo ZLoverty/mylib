@@ -60,7 +60,7 @@ def dirrec(path, filename):
 
 def to8bit(img):
     """
-    Enhance contrast and convert to 8-bit. The input image dtype does not have to be 16-bit, but can be float or int of any bit-depth.
+    Auto adjust the contrast of an image and convert it to 8-bit. The input image dtype can be float or int of any bit-depth. The function handles spuriously bright pixels by clipping the image with the 5-sigma rule (inspired by processing active nematics data). The function also works with images containing NaN values.
 
     :param img: mono image of any dtype
     :type img: 2d array
