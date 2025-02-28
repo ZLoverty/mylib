@@ -23,7 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install --no-cache-dir sphinx sphinx_rtd_theme
           python -c "import sphinx_rtd_theme; print(sphinx_rtd_theme.__file__)"
-
+      - name: Debug Python & Pip
+        run: |
+          which python
+          python --version
+          pip --version
+          
       - name: Verify installation
         run: pip list | grep sphinx_rtd_theme  # Debugging step
 
