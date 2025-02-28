@@ -162,7 +162,9 @@ def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     :type sensitivity: float
     :return: DataFrame with columns [x, y, r] for the centers and radii of detected circles.
     :rtype: pandas.DataFrame
+
     .. rubric:: Edit
+    
     * Feb 27, 2025 -- Initial commit.
     * Feb 28, 2025 -- (i) Add `smooth_window` argument, include the preprocessing step in this function to simplify the code on the user side; (ii) determine step size adaptively.
     """
