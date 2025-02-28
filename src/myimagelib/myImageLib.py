@@ -40,9 +40,9 @@ def dirrec(path, filename):
        
        3
        
-    .. rubric:: EDIT
+    .. rubric:: Edit
 
-    * 11152022 -- Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
+    * Nov 15, 2022 -- Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
     """
     dirList = []
     for r, d, f in os.walk(path):
@@ -163,8 +163,8 @@ def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     :return: DataFrame with columns [x, y, r] for the centers and radii of detected circles.
     :rtype: pandas.DataFrame
     .. rubric:: Edit
-    * Feb 27, 2025: Initial commit.
-    * Feb 28, 2025: (i) Add `smooth_window` argument, include the preprocessing step in this function to simplify the code on the user side; (ii) determine step size adaptively.
+    * Feb 27, 2025 -- Initial commit.
+    * Feb 28, 2025 -- (i) Add `smooth_window` argument, include the preprocessing step in this function to simplify the code on the user side; (ii) determine step size adaptively.
     """
     
     assert(img.ndim == 2), "Input image must be grayscale"
@@ -280,16 +280,16 @@ def readdata(folder, ext='csv', mode="i"):
 
     :param folder: the folder to read files from
     :type folder: str
-    :param ext: optional param, default to "csv", specifies the extension of files to be read
+    :param ext: optional param, default to ``"csv"``, specifies the extension of files to be read
     :type ext: str
-    :param mode: "i" for immediate, "r" for recursive. Default to "i"
+    :param mode: ``"i"`` for immediate, ``"r"`` for recursive. Default to ``"i"``
     :type mode: str
     :return: a 2-column table containing file names and the corresponding full directories
     :rtype: pandas.DataFrame
 
-    .. rubric:: EDIT
+    .. rubric:: Edit
 
-    :11152022: Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.
+    * Nov 15, 2022 -- Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.
     """
     dataDirs = dirrec(folder, '*.' + ext)
     dataDirsCopy = dataDirs.copy()
@@ -317,19 +317,19 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
     :param xo: input x
     :param yo: input y
     :param n: points after binning
-    :param mode: "lin" or "log", scale to bin the data
+    :param mode: ``"lin"`` or ``"log"``, scale to bin the data
     :param bins: set the bins to bin data together
 
-    :return:
-        * x: binned x
-        * y: means in bins
+    :return: binned x, and mean y in the bins.
+    :rtype: 2-tuple of array-likes
 
-    .. rubric: Edit
 
-    * Nov 04, 2020: Change function name to xy_bin, to incorporate the mode parameter, so that the function can do both log space binning and linear space binning.
-    * Nov 17, 2020: add bins kwarg, allow user to enter custom bins.
-    * Dec 16, 2021: fix divided by 0 issue.
-    * Nov 14, 2022: Move from ``corrLib`` to ``myImageLib``.
+    .. rubric:: Edit
+
+    * Nov 04, 2020 -- Change function name to ``xy_bin``, to incorporate the mode parameter, so that the function can do both log space binning and linear space binning.
+    * Nov 17, 2020 -- add bins kwarg, allow user to enter custom bins.
+    * Dec 16, 2021 -- fix divided by 0 issue.
+    * Nov 14, 2022 -- Move from ``corrLib`` to ``myImageLib``.
     """
     assert(len(xo)==len(yo))
     if bins is None:

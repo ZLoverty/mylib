@@ -408,7 +408,29 @@ class piv_data:
 # %% compact_PIV
 class compact_PIV:
     """
-    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries (x, y, labels, u, v, mask). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. For example, when doing a quiver plot, one needs to call ``quiver(x, y, u[0], v[0]``, instead of ``quiver(x, y, u, v]``. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
+    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries (x, y, labels, u, v, mask). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. For example, when doing a quiver plot, one needs to call ``quiver(x, y, u[0], v[0]``, instead of ``quiver(x, y, u, v]``. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://github.com/ZLoverty/mylib/blob/main/tests/compact_PIV.ipynb>`_. You can also download the notebook to run the code locally. Note that it requires you to download `myimagelib package <https://zloverty.github.io/mylib/usage.html>`_.
+
+    .. rubric:: Syntax
+
+    .. code-block:: python
+
+       from myimagelib import readdata, compact_PIV
+
+       # construct compact_PIV object from a folder containing PIV data
+       folder = "path/to/piv/data" # folder containing .csv files
+       l = readdata(folder, "csv")
+       cpiv = compact_PIV(l)
+
+       # get the data for one frame
+       x, y, u, v = cpiv.get_frame(0)
+
+       # save the data to a .mat file
+       cpiv.to_mat("cpiv.mat")
+
+       # Update mask
+       from skimage.io import imread
+       mask = imread("path/to/mask.tif")
+       cpiv.update_mask(mask)
 
     .. rubric:: Edit
 
@@ -430,6 +452,9 @@ class compact_PIV:
                 raise ValueError
         self.keys = self.data.keys()
     def get_frame(self, i, by="index"):
+        """
+        Get PIV data [x, y, u, v] for a specific frame. The frame can be specified by index or label. The default is by index. Index is from 0 to n-1, where n is the number of frames. Label is the filename originally used for constructing this data.
+        """
         if by == "index":
             ind = i
         elif by == "label":
@@ -472,13 +497,20 @@ class compact_PIV:
         compact_piv["v"] = np.stack(vl)
         compact_piv["labels"] = label
         return compact_piv
-    def get_labels(self): # filenames originally used for constructing this data
+    def get_labels(self): 
+        """ 
+        Returns filenames originally used for constructing this data.
+        """
         return list(self.data["labels"])
+
     def to_mat(self, fname):
+        """
+        Save the compact_PIV data to a .mat file.
+        """
         savemat(fname, self.data)
     def update_mask(self, mask_img):
         """
-        mask_img -- the binary image of the same size as raw images. Large values denote valid region.
+        Update mask in the compact_PIV object. The mask is a binary image, where large values denote valid region. This method will update the mask in the compact_PIV object, by setting the mask value to False where the mask_img value is small. If the "mask" field does not exist, create it can set the value by the provided ``mask_img``.
         """
         mask = mask_img > mask_img.mean()
         ind = mask[self.data["y"].astype("int"), self.data["x"].astype("int")].reshape(self.data["x"].shape)
@@ -492,17 +524,3 @@ class compact_PIV:
             data = pd.DataFrame({"x": x.flatten(), "y": y.flatten(), "u": u.flatten(), "v": v.flatten()})
             data.to_csv(os.path.join(folder, "{}.csv".format(label)), index=False)
 
-if __name__ == '__main__':
-    folder = r"test_images\moving_mask_piv\piv_result"
-    l = readdata(folder, "csv")
-    piv = piv_data(l, fps=50)
-
-    vacf = piv.vacf(smooth_window=2, xlim=[0, 0.1])
-    # autocorr1d(np.array([1,1,1]))
-
-    corr1d = piv.corrS1d(n=600, xlim=[0, 170], plot=True)
-
-    piv.mean_velocity(plot=True)
-
-    op = piv.order_parameter((87, 87), mode="hamby")
-    op
