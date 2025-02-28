@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install sphinx_rtd_theme==0.5.2
+          python -m pip install sphinx sphinx_rtd_theme
           python -c "import sphinx_rtd_theme; print(sphinx_rtd_theme.__file__)"
       - name: Debug Python & Pip
         run: |
