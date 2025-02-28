@@ -28,7 +28,9 @@ jobs:
           which python
           python --version
           pip --version
-          
+      - name: Verify Installed Packages
+        run: python -m pip list | tee installed_packages.txt
+
       - name: Verify installation
         run: pip list | grep sphinx_rtd_theme  # Debugging step
 
