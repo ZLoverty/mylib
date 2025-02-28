@@ -1,5 +1,3 @@
-from openpiv import pyprocess, validation, filters, scaling
-from openpiv.smoothn import smoothn
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import io
@@ -410,11 +408,11 @@ class piv_data:
 # %% compact_PIV
 class compact_PIV:
     """
-    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries ("x", "y", "labels", "u", "v", "mask"). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
+    Compact PIV data structure. Instead of saving PIV data of each frame pair in separated text files, we can save them in a more compact form, where (x, y, mask) information are only saved once and only velocity informations are kept in 3D arrays. The data will be saved in a Matlab style .mat file, and the internal structure is a Python dictionary, with entries (x, y, labels, u, v, mask). Since here x, y, u, v are no longer the same shape, accessing PIV data from a specific frame becomes less straight forward. For example, when doing a quiver plot, one needs to call ``quiver(x, y, u[0], v[0]``, instead of ``quiver(x, y, u, v]``. This class is written to enable straightforward data access and saving. For a more detailed guide of using this class, see `compact_PIV tutorial <https://zloverty.github.io/code/tutorials/compact_PIV.html>`_.
 
     .. rubric:: Edit
 
-    * Jan 13, 2023 -- Add :py.func:`update_mask`. The idea is that the original mask may include regions where image quality is bad, e.g. the bottom shadow region of droplet xz images. In this case, we usually realize the problem after performing the PIV. And to refine the PIV data, we want to update the mask to make it more conservative (i.e. mask out the bad quality region). Therefore, a method is needed to update the "mask" entry in a compact_PIV object. 
+    * Jan 13, 2023 -- Add :py:func:`update_mask()`. The idea is that the original mask may include regions where image quality is bad, e.g. the bottom shadow region of droplet xz images. In this case, we usually realize the problem after performing the PIV. And to refine the PIV data, we want to update the mask to make it more conservative (i.e. mask out the bad quality region). Therefore, a method is needed to update the "mask" entry in a compact_PIV object. 
     """
     def __init__(self, data):
         """
