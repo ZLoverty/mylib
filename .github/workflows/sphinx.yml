@@ -32,8 +32,8 @@ jobs:
         run: python -m pip list | tee installed_packages.txt
 
       - name: Build HTML
-        run: make html 
-        
+        run: sphinx-build -b html docs/source/ docs/build/html
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
