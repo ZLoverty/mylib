@@ -31,8 +31,8 @@ jobs:
       - name: Verify Installed Packages
         run: python -m pip list | tee installed_packages.txt
 
-      - name: Build Docs
-        run: sphinx-build -b html docs/ _build/html
+      - name: Build HTML
+        uses: ammaraskar/sphinx-action@master
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
