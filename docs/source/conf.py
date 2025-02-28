@@ -22,11 +22,11 @@ sys.path.insert(0, os.path.abspath(os.path.join("..", "..", "src")))
 # -- Project information -----------------------------------------------------
 
 project = 'myimagelib'
-copyright = '2022-2023, Zhengyang Liu'
+copyright = '2022-2025, Zhengyang Liu'
 author = 'Zhengyang Liu'
 
 # The full version, including alpha/beta/rc tags
-release = '1.3'
+release = '1.5'
 
 
 # -- General configuration ---------------------------------------------------
@@ -56,7 +56,7 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'press'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

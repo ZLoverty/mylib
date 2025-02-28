@@ -3,14 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to myimagelib's documentation!
-======================================
+myimagelib
+==========
 
-**myimagelib** is python library that hosts image processing and data analysis tools I developed to facilitate my PhD and postdoc research. Tools include particle tracking, PIV, file batch reading, spatiotemporal correlation analysis, etc.
-
-.. note::
-
-  This documentation is under active development.
+**myimagelib** is a Python library that hosts image processing and data analysis tools I developed to facilitate my research. Tools include file handling, image enhancement, object detection, and image format handling, etc.
 
 Contents
 --------
@@ -18,6 +14,4 @@ Contents
 .. toctree::
 
   usage
-  myImageLib
-  corrLib
-  pivLib
+  api

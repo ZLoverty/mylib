@@ -1,7 +1,7 @@
-﻿myimagelib.myImageLib.rawImage
-==============================
+﻿myimagelib.rawImage
+===================
 
-.. currentmodule:: myimagelib.myImageLib
+.. currentmodule:: myimagelib
 
 .. autoclass:: rawImage
 

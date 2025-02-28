@@ -6,6 +6,7 @@
   - remove `xcorr_funcs.py` and `fit_circle_utils.py`
   - add frequently used functions to `__init__.py`
 - clean up the imports
+- add a function `imfindcircles()` based on Atherton 1999
 
 #### v1.4
 

@@ -1,7 +1,7 @@
-﻿myimagelib.pivLib.compact\_PIV
-==============================
+﻿myimagelib.compact\_PIV
+=======================
 
-.. currentmodule:: myimagelib.pivLib
+.. currentmodule:: myimagelib
 
 .. autoclass:: compact_PIV
 
@@ -16,7 +16,9 @@
       ~compact_PIV.__init__
       ~compact_PIV.get_frame
       ~compact_PIV.get_labels
+      ~compact_PIV.to_csv
       ~compact_PIV.to_mat
+      ~compact_PIV.update_mask
    
    
 

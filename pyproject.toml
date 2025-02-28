@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "myimagelib"
-version = "1.4"
+version = "1.5"
 authors = [
   { name="Zhengyang Liu", email="liuzy19911112@gmail.com" },
 ]
@@ -23,8 +23,8 @@ dependencies = [
   "pandas",
   "scipy",
   "nd2reader",
-  "openpiv",
-  "psutil"
+  "psutil",
+  "opencv-python"
 ]
 
 [project.urls]
