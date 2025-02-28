@@ -9,6 +9,9 @@ from skimage import io
 import time
 import shutil
 from nd2reader import ND2Reader
+import cv2
+from scipy.ndimage import gaussian_filter
+from skimage.feature import peak_local_max
 
 def dirrec(path, filename):
     """
@@ -63,17 +66,19 @@ def to8bit(img):
     Auto adjust the contrast of an image and convert it to 8-bit. The input image dtype can be float or int of any bit-depth. The function handles spuriously bright pixels by clipping the image with the 5-sigma rule (inspired by processing active nematics data). The function also works with images containing NaN values.
 
     :param img: mono image of any dtype
-    :type img: 2d array
-    :return: 8-bit image
-    :rtype: uint8 2d array
+    :type img: 2D numpy.array
+    :return: 8-bit image with contrast enhanced.
+    :rtype: 2D numpy.array (uint8)
 
     .. rubric:: Edit
 
     * Feb 27, 2023 -- change ``img.max()`` to ``np.nanmax(img)`` to handle NaN values. 
     * Mar 16, 2023 -- use mean and std to infer upper bound. This makes the function more stable to images with spurious pixels with extremely large intensity. 
     * Mar 17, 2023 -- using upper bound that is smaller than the maximal pixel intensity causes dark "patches" in the rescaled images due to the data type change to "uint8". The solution is to ``clip`` the images with the determined bounds first, then apply the data type conversion. In this way, the over exposed pixels will just reach the saturation value 255.
+    * Feb 27, 2025 -- convert the image to float32 before processing, to avoid overflow when the image is of int8 type when performing clipping.
     """
 
+    img = img.astype('float32')
     mean = np.nanmean(img)
     std = np.nanstd(img)
     maxx = min(mean + 5 * std, np.nanmax(img))
@@ -145,152 +150,107 @@ def wowcolor(n):
               '#bcbd22', '#17becf']
     return colors[n]
 
-def matlab_style_gauss2D(shape=(3,3),sigma=0.5):
+def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     """
-    Generate a 2D gaussian mask - should give the same result as MATLAB's :code:`fspecial('gaussian',[shape],[sigma])`.
+    Find circles in images. The algorithm is based on Hough Transform and the idea of `Atherton and Kerbyson 1999 <https://www.sciencedirect.com/science/article/pii/S0262885698001607>`_, using the edge orientation information to improve the performance on noisy images.
 
-    :param shape: shape of the mask, default to (3,3)
-    :type shape: tuple
-    :param simga: standard deviation of the mask, default to 0.5
-    :type sigma: float
-    :return: a gaussian mask
-    :rtype: 2d array
+    :param img: Input image. Note that it has to be grayscale and 8-bit, otherwise the function will raise an error.
+    :type img: numpy array
+    :param radius: Radius of circles to detect. A list of 2 values, [minimum, maximum].
+    :type radius: list
+    :param sensitivity: Sensitivity for circle detection. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.
+    :type sensitivity: float
+    :return: DataFrame with columns [x, y, r] for the centers and radii of detected circles.
+    :rtype: pandas.DataFrame
+    .. rubric:: Edit
+    * Feb 27, 2025: Initial commit.
+    * Feb 28, 2025: (i) Add `smooth_window` argument, include the preprocessing step in this function to simplify the code on the user side; (ii) determine step size adaptively.
     """
-    m,n = [(ss-1.)/2. for ss in shape]
-    y,x = np.ogrid[-m:m+1,-n:n+1]
-    h = np.exp( -(x*x + y*y) / (2.*sigma*sigma) )
-    h[ h < np.finfo(h.dtype).eps*h.max() ] = 0
-    sumh = h.sum()
-    if sumh != 0:
-        h /= sumh
-    return h
+    
+    assert(img.ndim == 2), "Input image must be grayscale"
+    assert(img.dtype == np.uint8), "Input image must be 8-bit"
 
-def FastPeakFind(data):
-    """
-    Detect peak in 2D images.
+    s = smooth_window // 2 * 2 + 1 # make sure the window size is odd
 
-    I rewrote a `Matlab function <https://github.com/uw-cmg/MATLAB-loop-detection/blob/master/FastPeakFind.m>`_ with the same name in Python. The function, in my opinion, is unnecessarily complex, with thresholding, filtering, edge excluding etc. in the same function, making it very long and not easy to read. Moreover, it sometimes fails obviously simple tasks. Therefore, I would use :code:`skimage.feature.peak_local_max` for the same purpose, whenever possible.
+    # preprocess the image
+    # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(5, 5))
+    # img = clahe.apply(img)
+    img = cv2.GaussianBlur(img, (s, s), 0)
 
-    :param data: 2d images to find peaks in
-    :type data: 2d array
-    :return: coordinates of peaks in an Nx2 array
-    :rtype: 2d array
-    """
-    if str(data.dtype) != 'float32':
-        data = data.astype('float32')
-    mf = medfilt2d(data, kernel_size=3)
-    mf = mf.astype('float32')
-    thres = max(min(np.amax(mf,axis=0)), min(np.amax(mf,axis=1)))
-    filt = matlab_style_gauss2D()
-    conv = convolve2d(mf, filt, mode='same')
-    w_idx = conv > thres
-    bw = conv.copy()
-    bw[w_idx] = 1
-    bw[~w_idx] = 0
-    thresholded = np.multiply(bw, conv)
-    edg = 3
-    shape = data.shape
-    idx = np.nonzero(thresholded[edg-1: shape[0]-edg-1, edg-1: shape[1]-edg-1])
-    idx = np.transpose(idx)
-    cent = []
-    for xy in idx:
-        x = xy[0]
-        y = xy[1]
-        if thresholded[x, y] >= thresholded[x-1, y-1] and \
-            thresholded[x, y] > thresholded[x-1, y] and \
-            thresholded[x, y] >= thresholded[x-1, y+1] and \
-            thresholded[x, y] > thresholded[x, y-1] and \
-            thresholded[x, y] > thresholded[x, y+1] and \
-            thresholded[x, y] >= thresholded[x+1, y-1] and \
-            thresholded[x, y] > thresholded[x+1, y] and \
-            thresholded[x, y] >= thresholded[x+1, y+1]:
-            cent.append(xy)
-    cent = np.asarray(cent).transpose()
-    return cent
+    # Compute image gradients (Sobel)
+    grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
 
-def minimal_peakfind(img):
-    """
-    Minimal version of :py:func:`myImageLib.FastPeakFind`. Remove all the preprocessings, such as median filter, gauss filter and thresholding. Only keep the essential peak finding functionality.
+    # smooth the gradient images
+    grad_x = cv2.GaussianBlur(grad_x, (s, s), 0)
+    grad_y = cv2.GaussianBlur(grad_y, (s, s), 0)
 
-    :param img: input image
-    :type img: 2-d array
-    :return: coordinates of peaks in an Nx2 array
-    :rtype: 2d array
-    """
-    edg = 3
-    shape = img.shape
-    idx = np.nonzero(img[edg-1: shape[0]-edg-1, edg-1: shape[1]-edg-1])
-    idx = np.transpose(idx)
-    cent = []
-    for xy in idx:
-        x = xy[0]
-        y = xy[1]
-        if img[x, y] >= img[x-1, y-1] and \
-            img[x, y] > img[x-1, y] and \
-            img[x, y] >= img[x-1, y+1] and \
-            img[x, y] > img[x, y-1] and \
-            img[x, y] > img[x, y+1] and \
-            img[x, y] >= img[x+1, y-1] and \
-            img[x, y] > img[x+1, y] and \
-            img[x, y] >= img[x+1, y+1]:
-            cent.append(xy)
-    cent = np.asarray(cent).transpose()
-    return cent
+    # Compute gradient magnitude and direction
+    magnitude = np.sqrt(grad_x**2 + grad_y**2)
+    direction = np.arctan2(grad_y, grad_x) + np.pi
 
-def maxk(array, num_max):
-    """
-    Sort a numerical array and return the maximum :code:`num_max` elements.
+    # Normalize magnitude
+    magnitude /= (magnitude.max() + 1e-5)
+    # Thresholding for strong edges
+    strong_edges = magnitude > magnitude.mean()
 
-    :param array: input array
-    :type array: 1-d numerical array
-    :param num_max: number of maximal elements to return
-    :type num_max: int
-    :return: index of maximal elements
-    :rtype: int array
-    """
-    array = np.asarray(array)
-    length = array.size
-    array = array.reshape((1, length))
-    idx = np.argsort(array)
-    idx2 = np.flip(idx)
-    return idx2[0, 0: num_max]
+    # Create accumulator using vectorized voting
+    height, width = img.shape
+    accumulator = np.zeros_like(img, dtype=np.float32)
+    # Get indices of strong edge points
+    y_idx, x_idx = np.where(strong_edges)
+    theta = direction[y_idx, x_idx]
+    # Precompute cosine and sine values for efficiency
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    # Loop through radius values, updating accumulator
+    min_radius, max_radius = radius
+    # determine step size based on the radius range
+    step = max(1, (max_radius - min_radius) // 10)
+    for r in range(min_radius, max_radius, step):  # Step size of 5 for performance
+        x_shift = (r * cos_theta).astype(np.int32)
+        y_shift = (r * sin_theta).astype(np.int32)
+        xc = x_idx - x_shift
+        yc = y_idx - y_shift
+        # Validity check
+        valid = (xc >= 0) & (xc < width) & (yc >= 0) & (yc < height)
+        accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
 
-def track_spheres_dt(img, num_particles):
-    """
-    Use correlation tracking method to find spheres in an image.
-    """
-    def gauss1(x,a,x0,sigma):
-        return a*np.exp(-(x-x0)**2/(2*sigma**2))
-    cent = FastPeakFind(img)
-    num_particles = min(num_particles, cent.shape[1])
-    peaks = img[cent[0], cent[1]]
-    ind = maxk(peaks, num_particles)
-    max_coor_tmp = cent[:, ind]
-    max_coor = max_coor_tmp.astype('float32')
-    pk_value = peaks[ind]
-    for num in range(0, num_particles):
-        try:
-            x = max_coor_tmp[0, num]
-            y = max_coor_tmp[1, num]
-            fitx1 = np.asarray(range(x-7, x+8))
-            fity1 = np.asarray(img[range(x-7, x+8), y])
-            popt,pcov = curve_fit(gauss1, fitx1, fity1, p0=[1, x, 3])
-            max_coor[0, num] = popt[1]
-            fitx2 = np.asarray(range(y-7, y+8))
-            fity2 = np.asarray(img[x, range(y-7, y+8)])
-            popt,pcov = curve_fit(gauss1, fitx2, fity2, p0=[1, y, 3])
-            max_coor[1, num] = popt[1]
-        except:
-            print('Fitting failed')
-            max_coor[:, num] = max_coor_tmp[:, num]
-            continue
-    return max_coor, pk_value
+    # Apply Gaussian smoothing to accumulator
+    accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
+    # Find local maxima
+    centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
+    
+    # Estimate radii
+    score_thres = magnitude[strong_edges].max()
 
-def gauss1(x,a,x0,sigma,b):
-    """
-    1-d gaussian function. Usually used for fitting.
-    """
-    return a*np.exp(-(x-x0)**2/(2*sigma**2)) + b
+    radii = []
+    angles = np.linspace(0, 2*np.pi, 8) # 8 angles
+    for y, x in centers:
+        radius_votes = []
+        scores = []
+        for r in range(min_radius, max_radius, 1):
+            dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
+            if (0 <= x + dx).all() and (x + dx < width).all() \
+                and (0 <= y + dy).all and (y + dy < height).all(): # validity check
+                score = magnitude[y + dy, x + dx].mean() 
+                if score > (1-sensitivity) * score_thres: # if shifted point is strong edge
+                    radius_votes.append(r)
+                    scores.append(score)
+        if scores:
+            best_radius = radius_votes[np.argmax(scores)]
+            radii.append(best_radius)
+        else:
+            radii.append(0)
+
+    # construct the dataframe for centers and radii
+    df = pd.DataFrame(centers, columns=["y", "x"])
+    df["r"] = radii
+
+    # keep only the circles with radius > 0
+    df = df[df["r"] > 0]
+
+    return df
 
 def show_progress(progress, label='', bar_length=60):
     """
@@ -316,7 +276,7 @@ def show_progress(progress, label='', bar_length=60):
 
 def readdata(folder, ext='csv', mode="i"):
     """
-    Wrapper of :py:func:`dirrec`, but easier to use when reading one type of files in a given folder. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
+    Read all files in a folder with certain extension. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
 
     :param folder: the folder to read files from
     :type folder: str
@@ -350,67 +310,9 @@ def readdata(folder, ext='csv', mode="i"):
     fileList = fileList.sort_values(by=['Name']).reset_index(drop=True)
     return fileList
 
-def normxcorr2(template, image, mode="full"):
-    """
-    Compute normalized cross-correlation map between an image and a template. Input arrays should be floating point numbers.
-
-    :param template: N-D array, of template or filter you are using for cross-correlation. Must be less or equal dimensions to image. Length of each dimension must be less than length of image.
-    :type template: float array
-    :param image: N-D array
-    :type image: float array
-    :param mode: Options, "full", "valid", "same". full (Default): The output of fftconvolve is the full discrete linear convolution of the inputs. Output size will be image size + 1/2 template size in each dimension. valid: The output consists only of those elements that do not rely on the zero-padding. same: The output is the same size as image, centered with respect to the ‘full’ output.
-    :return: N-D array of same dimensions as image. Size depends on mode parameter.
-    :rtype: float array
-    """
-
-    # If this happens, it is probably a mistake
-    if np.ndim(template) > np.ndim(image) or \
-            len([i for i in range(np.ndim(template)) if template.shape[i] > image.shape[i]]) > 0:
-        print("normxcorr2: TEMPLATE larger than IMG. Arguments may be swapped.")
-
-    template = template - np.mean(template)
-    image = image - np.mean(image)
-
-    a1 = np.ones(template.shape)
-    # Faster to flip up down and left right then use fftconvolve instead of scipy's correlate
-    ar = np.flipud(np.fliplr(template))
-    out = fftconvolve(image, ar.conj(), mode=mode)
-
-    image = fftconvolve(np.square(image), a1, mode=mode) - \
-            np.square(fftconvolve(image, a1, mode=mode)) / (np.prod(template.shape))
-
-    # Remove small machine precision errors after subtraction
-    image[np.where(image < 0)] = 0
-
-    template = np.sum(np.square(template))
-    out = out / np.sqrt(image * template)
-
-    # Remove any divisions by 0 or very close to 0
-    out[np.where(np.logical_not(np.isfinite(out)))] = 0
-
-    return out
-
-def match_hist(im1, im2):
-    """
-    Match the histogram of im1 to that of im2
-
-    :param im1: image
-    :type im1: 2d array
-    :param im2: image
-    :type im2: 2d array
-    :return: a modified version of im1, that matches im2's histogram
-    :rtype: 2d array
-
-    .. rubric:: EDIT
-
-    :11142022: Move from ``corrLib`` to ``myImageLib``.
-    """
-    return (abs(((im1 - im1.mean()) / im1.std() * im2.std() + im2.mean()))+1).astype('uint8')
-
 def xy_bin(xo, yo, n=100, mode='log', bins=None):
     """
-    Bin x, y data on log or linear scale
-
+    Bin x, y data on log or linear scale. This is used when the data is too dense to be plotted directly. The function will bin the data and return the means in each bin.
 
     :param xo: input x
     :param yo: input y
@@ -424,10 +326,10 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
 
     .. rubric: Edit
 
-    :11042020: Change function name to xy_bin, to incorporate the mode parameter, so that the function can do both log space binning and linear space binning.
-    :11172020: add bins kwarg, allow user to enter custom bins.
-    :12162021: fix divided by 0 issue.
-    :11142022: Move from ``corrLib`` to ``myImageLib``.
+    * Nov 04, 2020: Change function name to xy_bin, to incorporate the mode parameter, so that the function can do both log space binning and linear space binning.
+    * Nov 17, 2020: add bins kwarg, allow user to enter custom bins.
+    * Dec 16, 2021: fix divided by 0 issue.
+    * Nov 14, 2022: Move from ``corrLib`` to ``myImageLib``.
     """
     assert(len(xo)==len(yo))
     if bins is None:
@@ -446,7 +348,19 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
 
 class rawImage:
     """
-    This class converts raw images to tif sequences. Throughout my research, I have mostly worked with two raw image formats: *\*.nd2* and *\*.raw*. Typically, they are tens of GB large, and are not feasible to load into the memory of a PC as a whole. Therefore, the starting point of my workflow is to convert raw images into sequences of *\*.tif* images. """
+    Convert raw images (e.g. nd2) to tif sequences. Throughout my research, I have mostly worked with two raw image formats: *\*.nd2* and *\*.raw*. Typically, they are tens of GB large, and are not feasible to load into the memory of a PC as a whole. Therefore, the starting point of my workflow is to convert raw images into sequences of *\*.tif* images. 
+    
+    This class is designed to have a unified interface for different raw image formats. The class is initialized with the directory of a raw image file, and the :py:func:`extract_tif` method will convert the raw image to tif sequences. The tif sequences are saved in a subfolder named *raw* and *8-bit* under the folder where the raw image file is located.
+    
+    .. rubric:: Syntax
+    
+    .. code-block:: python
+
+       from myimagelib import rawImage
+       file_dir = "path/to/your/file.nd2"
+       img = rawImage(file_dir)
+       img.extract_tif()
+    """
 
     def __init__(self, file_dir):
         """
@@ -466,7 +380,7 @@ class rawImage:
         repr_str = "source file: {0}\nimage shape: {1}".format(self.file, self.images.shape)
         return repr_str
     def extract_tif(self):
-        """Wrapper of all format-specific extractors."""
+        """Extract tif sequence from raw image files."""
         file, ext = os.path.splitext(self.file)
         if ext == ".raw":
             self._extract_raw()
