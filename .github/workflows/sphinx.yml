@@ -24,7 +24,7 @@ jobs:
           python -m pip install pip-tools
           pip-compile --output-file=requirements.txt pyproject.toml
           python -m pip install -r requirements.txt
-          python -m pip install sphinx sphinx_rtd_theme
+          python -m pip install sphinx sphinx_rtd_theme nbsphinx
       - name: Debug Python & Pip
         run: |
           which python
