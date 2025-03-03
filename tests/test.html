@@ -1,0 +1,831 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test &mdash; myimagelib 1.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=aaadad1f"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Find circles" href="find_circles.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            myimagelib
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compact_PIV.html">compact_PIV tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_circles.html">Find circles</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Test</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#myImageLib"><code class="docutils literal notranslate"><span class="pre">myImageLib</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#readdata"><code class="docutils literal notranslate"><span class="pre">readdata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#show_progress"><code class="docutils literal notranslate"><span class="pre">show_progress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to8bit"><code class="docutils literal notranslate"><span class="pre">to8bit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#imfindcircles"><code class="docutils literal notranslate"><span class="pre">imfindcircles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xy_bin"><code class="docutils literal notranslate"><span class="pre">xy_bin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bestcolor"><code class="docutils literal notranslate"><span class="pre">bestcolor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pivLib"><code class="docutils literal notranslate"><span class="pre">pivLib</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#PIV"><code class="docutils literal notranslate"><span class="pre">PIV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to_dataframe"><code class="docutils literal notranslate"><span class="pre">to_dataframe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apply_mask"><code class="docutils literal notranslate"><span class="pre">apply_mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to_matrix"><code class="docutils literal notranslate"><span class="pre">to_matrix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#corrLib"><code class="docutils literal notranslate"><span class="pre">corrLib</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corrS"><code class="docutils literal notranslate"><span class="pre">corrS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#divide_windows"><code class="docutils literal notranslate"><span class="pre">divide_windows</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distance_corr"><code class="docutils literal notranslate"><span class="pre">distance_corr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy_spectrum"><code class="docutils literal notranslate"><span class="pre">energy_spectrum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#autocorr1d"><code class="docutils literal notranslate"><span class="pre">autocorr1d</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">myimagelib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../examples.html">Examples</a></li>
+      <li class="breadcrumb-item active">Test</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tests/test.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Test">
+<h1>Test<a class="headerlink" href="#Test" title="Link to this heading"></a></h1>
+<p>This notebook tests the functions and classes in myimagelib.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import os
+cwd = os.getcwd()
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(cwd, &quot;..&quot;, &quot;..&quot;, &quot;..&quot;, &quot;src&quot;)))
+import requests
+import matplotlib.pyplot as plt
+from io import BytesIO
+from skimage.io import imread
+google_download_handle = &quot;https://drive.google.com/uc?export=download&amp;id={}&quot;
+import numpy as np
+import cv2
+from myimagelib import readdata, show_progress, to8bit, bestcolor, rawImage, imfindcircles, xy_bin, PIV, compact_PIV, apply_mask
+import pandas as pd
+</pre></div>
+</div>
+</div>
+<section id="myImageLib">
+<h2><code class="docutils literal notranslate"><span class="pre">myImageLib</span></code><a class="headerlink" href="#myImageLib" title="Link to this heading"></a></h2>
+<section id="readdata">
+<h3><code class="docutils literal notranslate"><span class="pre">readdata</span></code><a class="headerlink" href="#readdata" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>l = readdata(&quot;.&quot;, &quot;ipynb&quot;)
+l
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Dir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>compact_PIV</td>
+      <td>.\compact_PIV.ipynb</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>find_circles</td>
+      <td>.\find_circles.ipynb</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>test</td>
+      <td>.\test.ipynb</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="show_progress">
+<h3><code class="docutils literal notranslate"><span class="pre">show_progress</span></code><a class="headerlink" href="#show_progress" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>show_progress(0.5, label=&quot;test&quot;, bar_length=80)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+test [########################################----------------------------------------] 50.0%
+</pre></div></div>
+</div>
+</section>
+<section id="to8bit">
+<h3><code class="docutils literal notranslate"><span class="pre">to8bit</span></code><a class="headerlink" href="#to8bit" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Download the test image.</p></li>
+</ol>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
+url = google_download_handle.format(&quot;1OTTXhvSrfgPmFcqjTQEaam9e5vgSEP79&quot;)  # replace with your image URL
+response = requests.get(url, stream=True)
+img = imread(BytesIO(response.content))
+</pre></div>
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Convert to 8-bit and enhance the contrast.</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1, 2, figsize=(6, 4))
+ax[0].imshow(img, cmap=&quot;gray&quot;)
+ax[0].set_title(&quot;Raw image&quot;)
+ax[0].axis(&quot;off&quot;)
+# Convert to 8-bit and enhance contrast
+img8 = to8bit(img)
+ax[1].imshow(img8, cmap=&quot;gray&quot;)
+ax[1].set_title(&quot;8-bit image&quot;)
+ax[1].axis(&quot;off&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(-0.5, 399.5, 499.5, -0.5)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_10_1.png" src="../_images/tests_test_10_1.png" />
+</div>
+</div>
+</section>
+<section id="imfindcircles">
+<h3><code class="docutils literal notranslate"><span class="pre">imfindcircles</span></code><a class="headerlink" href="#imfindcircles" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Download the test image.</p></li>
+</ol>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
+url = google_download_handle.format(&quot;1LFRt5ozQjJ_WVrWBoPQOFVNl5ZWb8ytP&quot;)  # replace with your image URL
+response = requests.get(url, stream=True)
+img = imread(BytesIO(response.content))
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># convert to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+plt.imshow(gray, cmap=&quot;gray&quot;)
+# find circles
+circles = imfindcircles(gray, [50, 100], sensitivity=0.7, smooth_window=21)
+for _, row in circles.iterrows():
+    circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
+    plt.gca().add_patch(circ)
+plt.axis(&quot;off&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(-0.5, 3935.5, 2623.5, -0.5)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_14_1.png" src="../_images/tests_test_14_1.png" />
+</div>
+</div>
+</section>
+<section id="xy_bin">
+<h3><code class="docutils literal notranslate"><span class="pre">xy_bin</span></code><a class="headerlink" href="#xy_bin" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Generate dense data</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># craete a dense data
+s = int(1e6)
+x = np.arange(s)
+y = np.sin(0.00001*x) + np.random.rand(s)*.1
+# plot
+plt.plot(x, y, label=&quot;raw&quot;)
+xb, yb = xy_bin(x, y, n=50, mode=&quot;lin&quot;)
+plt.scatter(xb, yb, color=bestcolor(1), label=&quot;binned&quot;, zorder=10)
+plt.legend(frameon=False)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x28d80306f40&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_17_1.png" src="../_images/tests_test_17_1.png" />
+</div>
+</div>
+</section>
+<section id="bestcolor">
+<h3><code class="docutils literal notranslate"><span class="pre">bestcolor</span></code><a class="headerlink" href="#bestcolor" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for i in range(10):
+    plt.scatter(i, 0, s=100, color=bestcolor(i))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_19_0.png" src="../_images/tests_test_19_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="pivLib">
+<h2><code class="docutils literal notranslate"><span class="pre">pivLib</span></code><a class="headerlink" href="#pivLib" title="Link to this heading"></a></h2>
+<section id="PIV">
+<h3><code class="docutils literal notranslate"><span class="pre">PIV</span></code><a class="headerlink" href="#PIV" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
+url = google_download_handle.format(&quot;1lc5JlOipgvTGRtvSEavF82xe26iLyHFX&quot;)  # replace with your image URL
+response = requests.get(url, stream=True)
+I0 = imread(BytesIO(response.content))
+url = google_download_handle.format(&quot;1QXTD6glGy_MAF2sSp9tiv6KeEEeuVz1q&quot;)  # replace with your image URL
+response = requests.get(url, stream=True)
+I1 = imread(BytesIO(response.content))
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = PIV(I0, I1, 32)
+plt.imshow(I0, cmap=&quot;gray&quot;)
+plt.quiver(x, y, u, -v, color=&quot;yellow&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.quiver.Quiver at 0x28d803926d0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_23_1.png" src="../_images/tests_test_23_1.png" />
+</div>
+</div>
+</section>
+<section id="to_dataframe">
+<h3><code class="docutils literal notranslate"><span class="pre">to_dataframe</span></code><a class="headerlink" href="#to_dataframe" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.pivLib import to_dataframe
+pivData = to_dataframe(x, y, u, v)
+pivData.head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>u</th>
+      <th>v</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.0</td>
+      <td>18.0</td>
+      <td>0.004263</td>
+      <td>-0.047905</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>32.0</td>
+      <td>18.0</td>
+      <td>0.017182</td>
+      <td>-0.063848</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>48.0</td>
+      <td>18.0</td>
+      <td>0.023226</td>
+      <td>-0.040136</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>64.0</td>
+      <td>18.0</td>
+      <td>0.040622</td>
+      <td>-0.049772</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>80.0</td>
+      <td>18.0</td>
+      <td>0.117607</td>
+      <td>-0.147990</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="apply_mask">
+<h3><code class="docutils literal notranslate"><span class="pre">apply_mask</span></code><a class="headerlink" href="#apply_mask" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>url = google_download_handle.format(&quot;1r4Ry9eR-eKQoeTjxmJS9ZZ1aSaiHr-df&quot;)  # replace with your image URL
+response = requests.get(url, stream=True)
+mask = imread(BytesIO(response.content))
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pivData = to_dataframe(x, y, u, v)
+masked_pivData = apply_mask(pivData, mask)
+masked_pivData.head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>u</th>
+      <th>v</th>
+      <th>mask</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.0</td>
+      <td>18.0</td>
+      <td>0.004263</td>
+      <td>-0.047905</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>32.0</td>
+      <td>18.0</td>
+      <td>0.017182</td>
+      <td>-0.063848</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>48.0</td>
+      <td>18.0</td>
+      <td>0.023226</td>
+      <td>-0.040136</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>64.0</td>
+      <td>18.0</td>
+      <td>0.040622</td>
+      <td>-0.049772</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>80.0</td>
+      <td>18.0</td>
+      <td>0.117607</td>
+      <td>-0.147990</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="to_matrix">
+<h3><code class="docutils literal notranslate"><span class="pre">to_matrix</span></code><a class="headerlink" href="#to_matrix" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.pivLib import to_matrix
+x, y, u, v = to_matrix(masked_pivData)
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="corrLib">
+<h2><code class="docutils literal notranslate"><span class="pre">corrLib</span></code><a class="headerlink" href="#corrLib" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.corrLib import corrS, corrI, divide_windows, distance_corr, \
+    density_fluctuation, local_df, compute_energy_density, compute_wavenumber_field, \
+        energy_spectrum, autocorr1d, vacf_piv
+</pre></div>
+</div>
+</div>
+<section id="corrS">
+<h3><code class="docutils literal notranslate"><span class="pre">corrS</span></code><a class="headerlink" href="#corrS" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = to_matrix(pivData)
+X, Y, CA, CV = corrS(x, y, u, v)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1, 2, figsize=(6, 4))
+ax[0].imshow(CA), ax[0].axis(&quot;off&quot;)
+ax[1].imshow(CV), ax[1].axis(&quot;off&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;matplotlib.image.AxesImage at 0x28d8058c580&gt;, (-0.5, 11.5, 14.5, -0.5))
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_35_1.png" src="../_images/tests_test_35_1.png" />
+</div>
+</div>
+</section>
+<section id="divide_windows">
+<h3><code class="docutils literal notranslate"><span class="pre">divide_windows</span></code><a class="headerlink" href="#divide_windows" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X, Y, I = divide_windows(I0, windowsize=[32, 32])
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(I)
+plt.axis(&quot;off&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(-0.5, 36.5, 46.5, -0.5)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_38_1.png" src="../_images/tests_test_38_1.png" />
+</div>
+</div>
+</section>
+<section id="distance_corr">
+<h3><code class="docutils literal notranslate"><span class="pre">distance_corr</span></code><a class="headerlink" href="#distance_corr" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X, Y, CA, CV = corrS(x, y, u, v)
+dc = distance_corr(X, Y, CV)
+plt.plot(dc.R, dc.C)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x28d8487abb0&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_40_1.png" src="../_images/tests_test_40_1.png" />
+</div>
+</div>
+</section>
+<section id="energy_spectrum">
+<h3><code class="docutils literal notranslate"><span class="pre">energy_spectrum</span></code><a class="headerlink" href="#energy_spectrum" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>es = energy_spectrum(pivData, d=25*0.33)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(es.k, es.E)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x28d848f50d0&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_43_1.png" src="../_images/tests_test_43_1.png" />
+</div>
+</div>
+</section>
+<section id="autocorr1d">
+<h3><code class="docutils literal notranslate"><span class="pre">autocorr1d</span></code><a class="headerlink" href="#autocorr1d" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t = np.linspace(0, 10)
+x = np.sin(t)
+corr, t = autocorr1d(x, t)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(t, corr)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x28d848992e0&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_test_46_1.png" src="../_images/tests_test_46_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="find_circles.html" class="btn btn-neutral float-left" title="Find circles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2025, Zhengyang Liu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find circles &mdash; myimagelib 1.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=aaadad1f"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Test" href="test.html" />
+    <link rel="prev" title="compact_PIV tutorial" href="compact_PIV.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            myimagelib
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compact_PIV.html">compact_PIV tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Find circles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#0-Packages">0 Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#1-Step-by-step">1 Step by step</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#1.1-Preprocessing">1.1 Preprocessing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#1.2-Detect-edge">1.2 Detect edge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#1.3-Construct-accumulator">1.3 Construct accumulator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#1.4-Find-peaks-in-accumulator">1.4 Find peaks in accumulator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#1.5-Estimate-radii">1.5 Estimate radii</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2-Combine-the-steps">2 Combine the steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">Test</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">myimagelib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../examples.html">Examples</a></li>
+      <li class="breadcrumb-item active">Find circles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tests/find_circles.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Find-circles">
+<h1>Find circles<a class="headerlink" href="#Find-circles" title="Link to this heading"></a></h1>
+<p>Finding circles is crucial in my previous project of studying bacterial suspensions confined in droplets, as well as for my current project about condensation. I’ve been using the HoughCircle function in OpenCV to detect circles, but the results are always not very satisfactory. Even more annoying, Matlab has a function <code class="docutils literal notranslate"><span class="pre">imfindcircles</span></code>, always gives better results than <code class="docutils literal notranslate"><span class="pre">HoughCircle</span></code>, making a Python user very frustrated. Is there an equivalence in Python that can find circle with comparable
+performance as <code class="docutils literal notranslate"><span class="pre">imfindcircle</span></code> in Matlab?</p>
+<p>After a brief search, I conclude that such equivalence does not exist. I start to read the documentation of the Matlab function, and notice the paper based on which the Matlab function is built. The paper is <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0262885698001607">Atherton and Kerbyson 1999</a>.</p>
+<p>The key idea of this is to use the edge orientation information, besides the edge location information, to calculate the accumulator for the circle detection.</p>
+<p>I haven’t understood the full content of the paper yet, but with the key idea, I’m able to build a circle detection algorithm that improves the performance of the HoughCircle method. The new method also has comparable performance than the <code class="docutils literal notranslate"><span class="pre">imfindcircles</span></code>.</p>
+<p>In this notebook, I document the algorithm. Further development is possible.</p>
+<section id="0-Packages">
+<h2>0 Packages<a class="headerlink" href="#0-Packages" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from skimage import io
+import os
+import matplotlib
+matplotlib.rcParams[&quot;font.family&quot;] = &quot;STIXGeneral&quot;
+matplotlib.rcParams[&quot;mathtext.fontset&quot;] = &quot;stix&quot;
+matplotlib.rcParams[&quot;xtick.direction&quot;] = &quot;in&quot;
+matplotlib.rcParams[&quot;ytick.direction&quot;] = &quot;in&quot;
+plt.rcParams[&#39;xtick.major.size&#39;] = 2  # Length of major ticks
+plt.rcParams[&#39;ytick.major.size&#39;] = 2  # Length of major ticks
+plt.rcParams[&#39;xtick.minor.size&#39;] = 1  # Length of minor ticks
+plt.rcParams[&#39;ytick.minor.size&#39;] = 1  # Length of minor ticks
+from myimagelib.myImageLib import readdata
+from scipy.ndimage import gaussian_filter
+from skimage.feature import peak_local_max
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="1-Step-by-step">
+<h2>1 Step by step<a class="headerlink" href="#1-Step-by-step" title="Link to this heading"></a></h2>
+<section id="1.1-Preprocessing">
+<h3>1.1 Preprocessing<a class="headerlink" href="#1.1-Preprocessing" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[225]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># read image
+img = io.imread(&quot;test_files/find_circles.jpg&quot;)
+# convert to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+enhanced_gray = clahe.apply(gray)
+# blur the image
+blurred_frame = cv2.GaussianBlur(enhanced_gray, (11, 11), 0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[226]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(blurred_frame, cmap=&#39;gray&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[226]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e22f011c70&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_6_1.png" src="../_images/tests_find_circles_6_1.png" />
+</div>
+</div>
+</section>
+<section id="1.2-Detect-edge">
+<h3>1.2 Detect edge<a class="headerlink" href="#1.2-Detect-edge" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Compute image gradients (Sobel)
+grad_x = cv2.Sobel(blurred_frame, cv2.CV_64F, 1, 0, ksize=3)
+grad_y = cv2.Sobel(blurred_frame, cv2.CV_64F, 0, 1, ksize=3)
+
+# smooth the gradient images
+grad_x = cv2.GaussianBlur(grad_x, (21, 21), 0)
+grad_y = cv2.GaussianBlur(grad_y, (21, 21), 0)
+
+# Compute gradient magnitude and direction
+magnitude = np.sqrt(grad_x**2 + grad_y**2)
+direction = np.arctan2(grad_y, grad_x) + np.pi
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(magnitude)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e22efcc250&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_9_1.png" src="../_images/tests_find_circles_9_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(direction)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e22f13e4f0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_10_1.png" src="../_images/tests_find_circles_10_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[230]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Normalize magnitude
+magnitude /= (magnitude.max() + 1e-5)
+
+# Thresholding for strong edges
+strong_edges = magnitude &gt; magnitude.mean()
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(strong_edges)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e23cfc2940&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_12_1.png" src="../_images/tests_find_circles_12_1.png" />
+</div>
+</div>
+</section>
+<section id="1.3-Construct-accumulator">
+<h3>1.3 Construct accumulator<a class="headerlink" href="#1.3-Construct-accumulator" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[232]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Create accumulator using vectorized voting
+height, width = gray.shape
+accumulator = np.zeros_like(gray, dtype=np.float32)
+
+# Get indices of strong edge points
+y_idx, x_idx = np.where(strong_edges)
+theta = direction[y_idx, x_idx]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[233]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Precompute cosine and sine values for efficiency
+cos_theta = np.cos(theta)
+sin_theta = np.sin(theta)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[234]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Loop through radius values, updating accumulator
+min_radius, max_radius = 50, 90
+for r in range(min_radius, max_radius, 2):  # Step size of 5 for performance
+    x_shift = (r * cos_theta).astype(np.int32)
+    y_shift = (r * sin_theta).astype(np.int32)
+    xc = x_idx - x_shift
+    yc = y_idx - y_shift
+
+    # Validity check
+    valid = (xc &gt;= 0) &amp; (xc &lt; width) &amp; (yc &gt;= 0) &amp; (yc &lt; height)
+    accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[235]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(accumulator, cmap=&#39;hot&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[235]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e23ef19760&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_17_1.png" src="../_images/tests_find_circles_17_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[236]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Apply Gaussian smoothing
+accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[237]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(accumulator_smooth, cmap=&#39;hot&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[237]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1e22f5c5460&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_19_1.png" src="../_images/tests_find_circles_19_1.png" />
+</div>
+</div>
+</section>
+<section id="1.4-Find-peaks-in-accumulator">
+<h3>1.4 Find peaks in accumulator<a class="headerlink" href="#1.4-Find-peaks-in-accumulator" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[238]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Find local maxima
+centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[239]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(dpi=300)
+plt.imshow(gray, cmap=&#39;gray&#39;)
+for (x, y) in centers:
+    circ = plt.Circle((y, x), 60, color=&#39;r&#39;, fill=False)
+    plt.gca().add_patch(circ)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_22_0.png" src="../_images/tests_find_circles_22_0.png" />
+</div>
+</div>
+</section>
+<section id="1.5-Estimate-radii">
+<h3>1.5 Estimate radii<a class="headerlink" href="#1.5-Estimate-radii" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[240]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>score_thres = magnitude[strong_edges].mean()
+sensitivity = 0.8
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[241]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Estimate radii
+radii = []
+angles = np.linspace(0, 2*np.pi, 20) # 8 angles
+for y, x in centers:
+    radius_votes = []
+    scores = []
+    for r in range(min_radius, max_radius, 1):
+        dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
+        if (0 &lt;= x + dx).all() and (x + dx &lt; width).all() \
+            and (0 &lt;= y + dy).all and (y + dy &lt; height).all(): # validity check
+            score = magnitude[y + dy, x + dx].mean()
+            if score &gt; (1-sensitivity) * score_thres: # if shifted point is strong edge
+                radius_votes.append(r)
+                scores.append(score)
+    if scores:
+        best_radius = radius_votes[np.argmax(scores)]
+        radii.append(best_radius)
+    else:
+        radii.append(0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[242]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Visualize results
+fig, ax = plt.subplots(dpi=300)
+ax.imshow(gray, cmap=&#39;gray&#39;)
+for (y, x), r in zip(centers, radii):
+    circle = plt.Circle((x, y), r, color=&#39;r&#39;, fill=False, linewidth=1)
+    ax.add_patch(circle)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_26_0.png" src="../_images/tests_find_circles_26_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="2-Combine-the-steps">
+<h2>2 Combine the steps<a class="headerlink" href="#2-Combine-the-steps" title="Link to this heading"></a></h2>
+<p>Let’s now combine all the 5 steps in a function. First, let’s plan the parameters.</p>
+<p>A very important parameter is the <strong>initial smoothing size</strong>, which I believe should be considered as preprocessing. However, to simplify the use of the function, it is desired that we minimize the number of lines. So, I’m going to include the smoothing to the function, and provide an optional argument for the smoothing window size.</p>
+<p>For the edge detection, let’s fix the gradient kernel to 3, i.e. do not allow user to adjust it.</p>
+<p>We need to determine a threshold for strong edge. Only the strong edges will be used to construct the accumulator. Later in step 5, the strong edges will also be used to determine a threshold for edge brightness. Here, tentatively, we fix the threshold for strong edge as the mean of the magnitude map.</p>
+<p>To construct the accumulator, <code class="docutils literal notranslate"><span class="pre">min_radius</span></code> and <code class="docutils literal notranslate"><span class="pre">max_radius</span></code> are needed. They are given in a 2-array.</p>
+<p>The accumulator is smoothed with a Gaussian filter, whose size is determined as <code class="docutils literal notranslate"><span class="pre">(min_radius//10)*2+1</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">peak_local_max</span></code> has two optional arguments: <code class="docutils literal notranslate"><span class="pre">min_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">threshold_abs</span></code>. We determine the <code class="docutils literal notranslate"><span class="pre">min_distance</span></code> as the <code class="docutils literal notranslate"><span class="pre">min_radius</span></code>, as the actual minimum distance used is <code class="docutils literal notranslate"><span class="pre">2*min_dist+1</span></code>. We also fix <code class="docutils literal notranslate"><span class="pre">threshold_abs</span></code> at 0.1, as the result is not very sensitive to it.</p>
+<p>Lastly, we choose to implement a <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> parameter, which determines how bright of a pixel that would consider it as an edge during the radius voting process. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.</p>
+<p>The results will be given as a DataFrame of x,y,r. <code class="docutils literal notranslate"><span class="pre">r=0</span></code> entries will be trimmed.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[269]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
+    &quot;&quot;&quot;
+    Find circles in an image using the Hough Transform.
+
+    Parameters:
+    - img: Input image (grayscale, 8-bit).
+    - radius: Radius of circles to detect. A list of 2 values, [minimum, maximum].
+    - smooth_window: Size of the Gaussian smoothing window for the image and the gradient images.
+    - sensitivity: Sensitivity for circle detection. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.
+
+    Returns:
+    df -- a dataframe with columns [&quot;x&quot;, &quot;y&quot;, &quot;r&quot;] for the centers and radii of detected circles.
+    &quot;&quot;&quot;
+    assert(img.ndim == 2), &quot;Input image must be grayscale&quot;
+    assert(img.dtype == np.uint8), &quot;Input image must be 8-bit&quot;
+
+    s = smooth_window // 2 * 2 + 1 # make sure the window size is odd
+
+    # preprocess the image
+    # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(5, 5))
+    # img = clahe.apply(img)
+    img = cv2.GaussianBlur(img, (s, s), 0)
+
+    # Compute image gradients (Sobel)
+    grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+
+    # smooth the gradient images
+    grad_x = cv2.GaussianBlur(grad_x, (s, s), 0)
+    grad_y = cv2.GaussianBlur(grad_y, (s, s), 0)
+
+    # Compute gradient magnitude and direction
+    magnitude = np.sqrt(grad_x**2 + grad_y**2)
+    direction = np.arctan2(grad_y, grad_x) + np.pi
+
+    # Normalize magnitude
+    magnitude /= (magnitude.max() + 1e-5)
+    # Thresholding for strong edges
+    strong_edges = magnitude &gt; magnitude.mean()
+
+    # Create accumulator using vectorized voting
+    height, width = img.shape
+    accumulator = np.zeros_like(img, dtype=np.float32)
+    # Get indices of strong edge points
+    y_idx, x_idx = np.where(strong_edges)
+    theta = direction[y_idx, x_idx]
+    # Precompute cosine and sine values for efficiency
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    # Loop through radius values, updating accumulator
+    min_radius, max_radius = radius
+    for r in range(min_radius, max_radius, 5):  # Step size of 5 for performance
+        x_shift = (r * cos_theta).astype(np.int32)
+        y_shift = (r * sin_theta).astype(np.int32)
+        xc = x_idx - x_shift
+        yc = y_idx - y_shift
+        # Validity check
+        valid = (xc &gt;= 0) &amp; (xc &lt; width) &amp; (yc &gt;= 0) &amp; (yc &lt; height)
+        accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
+
+    # Apply Gaussian smoothing to accumulator
+    accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
+    # Find local maxima
+    centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
+
+    # Estimate radii
+    score_thres = magnitude[strong_edges].max()
+
+    radii = []
+    angles = np.linspace(0, 2*np.pi, 8) # 8 angles
+    for y, x in centers:
+        radius_votes = []
+        scores = []
+        for r in range(min_radius, max_radius, 1):
+            dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
+            if (0 &lt;= x + dx).all() and (x + dx &lt; width).all() \
+                and (0 &lt;= y + dy).all and (y + dy &lt; height).all(): # validity check
+                score = magnitude[y + dy, x + dx].mean()
+                if score &gt; (1-sensitivity) * score_thres: # if shifted point is strong edge
+                    radius_votes.append(r)
+                    scores.append(score)
+        if scores:
+            best_radius = radius_votes[np.argmax(scores)]
+            radii.append(best_radius)
+        else:
+            radii.append(0)
+
+    # construct the dataframe for centers and radii
+    df = pd.DataFrame(centers, columns=[&quot;y&quot;, &quot;x&quot;])
+    df[&quot;r&quot;] = radii
+
+    # keep only the circles with radius &gt; 0
+    df = df[df[&quot;r&quot;] &gt; 0]
+
+    return df
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># read image
+img = io.imread(&quot;test_files/find_circles.jpg&quot;)
+# convert to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[277]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>df = imfindcircles(gray, [50, 100], sensitivity=0.7, smooth_window=21)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[278]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(dpi=300)
+plt.imshow(gray, cmap=&#39;gray&#39;)
+for _, row in df.iterrows():
+    circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
+    plt.gca().add_patch(circ)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tests_find_circles_31_0.png" src="../_images/tests_find_circles_31_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[186]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>folder = r&quot;F:\F\02202025\params\blur&quot;
+for sr in range(1, 61, 10):
+    blurred_frame = cv2.GaussianBlur(gray, (sr, sr), 0)
+    df = imfindcircles(blurred_frame, [50, 120], sensitivity=0.7)
+    plt.figure(dpi=300)
+    plt.imshow(gray, cmap=&#39;gray&#39;)
+    for _, row in df.iterrows():
+        circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
+        plt.gca().add_patch(circ)
+    plt.axis(&#39;off&#39;)
+    plt.savefig(os.path.join(folder, f&quot;blurred_{sr}.svg&quot;))
+    plt.close()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[187]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>folder = r&quot;F:\F\02202025\params\sensitivity&quot;
+for st in np.linspace(0, .9, 5):
+    blurred_frame = cv2.GaussianBlur(gray, (21, 21), 0)
+    df = imfindcircles(blurred_frame, [50, 120], sensitivity=st)
+    plt.figure(dpi=300)
+    plt.imshow(gray, cmap=&#39;gray&#39;)
+    for _, row in df.iterrows():
+        circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
+        plt.gca().add_patch(circ)
+    plt.axis(&#39;off&#39;)
+    plt.savefig(os.path.join(folder, f&quot;senstivity_{st:.1f}.svg&quot;))
+    plt.close()
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="compact_PIV.html" class="btn btn-neutral float-left" title="compact_PIV tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test.html" class="btn btn-neutral float-right" title="Test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2025, Zhengyang Liu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

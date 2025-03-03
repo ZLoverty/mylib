@@ -8,10 +8,10 @@ myimagelib
 
 **myimagelib** is a Python library that hosts image processing and data analysis tools I developed to facilitate my research. Tools include file handling, image enhancement, object detection, and image format handling, etc.
 
-Contents
---------
-
 .. toctree::
+   :maxdepth: 2
+   :caption: Contents
 
-  usage
-  api
+   installation
+   api
+   examples

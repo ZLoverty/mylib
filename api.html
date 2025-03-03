@@ -16,10 +16,12 @@
       <script src="_static/documentation_options.js?v=aaadad1f"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Usage" href="usage.html" /> 
+    <link rel="next" title="myImageLib" href="myImageLib.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,9 +43,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="myImageLib.html">myImageLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pivLib.html">pivLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corrLib.html">corrLib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
         </div>
@@ -72,52 +81,47 @@
              
   <section id="api">
 <h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
-<p class="rubric">Convenience tools</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/myimagelib.readdata.html#myimagelib.readdata" title="myimagelib.readdata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.readdata</span></code></a>(folder[, ext, mode])</p></td>
-<td><p>Read all files in a folder with certain extension.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/myimagelib.bestcolor.html#myimagelib.bestcolor" title="myimagelib.bestcolor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.bestcolor</span></code></a>(n)</p></td>
-<td><p>Default plot color scheme of Matplotlib and Matlab.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/myimagelib.show_progress.html#myimagelib.show_progress" title="myimagelib.show_progress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.show_progress</span></code></a>(progress[, label, ...])</p></td>
-<td><p>Display a progress bar in command line environment, which looks like</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/myimagelib.xy_bin.html#myimagelib.xy_bin" title="myimagelib.xy_bin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.xy_bin</span></code></a>(xo, yo[, n, mode, bins])</p></td>
-<td><p>Bin x, y data on log or linear scale.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Image processing</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/myimagelib.to8bit.html#myimagelib.to8bit" title="myimagelib.to8bit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.to8bit</span></code></a>(img)</p></td>
-<td><p>Auto adjust the contrast of an image and convert it to 8-bit.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/myimagelib.rawImage.html#myimagelib.rawImage" title="myimagelib.rawImage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.rawImage</span></code></a>(file_dir)</p></td>
-<td><p>Convert raw images (e.g. nd2) to tif sequences.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/myimagelib.imfindcircles.html#myimagelib.imfindcircles" title="myimagelib.imfindcircles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.imfindcircles</span></code></a>(img, radius[, ...])</p></td>
-<td><p>Find circles in images.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">PIV</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/myimagelib.compact_PIV.html#myimagelib.compact_PIV" title="myimagelib.compact_PIV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myimagelib.compact_PIV</span></code></a>(data)</p></td>
-<td><p>Compact PIV data structure.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="myImageLib.html">myImageLib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.readdata.html">myimagelib.myImageLib.readdata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.show_progress.html">myimagelib.myImageLib.show_progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.to8bit.html">myimagelib.myImageLib.to8bit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.bestcolor.html">myimagelib.myImageLib.bestcolor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.imfindcircles.html">myimagelib.myImageLib.imfindcircles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.rawImage.html">myimagelib.myImageLib.rawImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.xy_bin.html">myimagelib.myImageLib.xy_bin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.myImageLib.dirrec.html">myimagelib.myImageLib.dirrec</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pivLib.html">pivLib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.pivLib.PIV.html">myimagelib.pivLib.PIV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.pivLib.apply_mask.html">myimagelib.pivLib.apply_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.pivLib.read_piv.html">myimagelib.pivLib.read_piv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.pivLib.to_matrix.html">myimagelib.pivLib.to_matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.pivLib.compact_PIV.html">myimagelib.pivLib.compact_PIV</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="corrLib.html">corrLib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.corrS.html">myimagelib.corrLib.corrS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.divide_windows.html">myimagelib.corrLib.divide_windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.distance_corr.html">myimagelib.corrLib.distance_corr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.density_fluctuation.html">myimagelib.corrLib.density_fluctuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.local_df.html">myimagelib.corrLib.local_df</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.energy_spectrum.html">myimagelib.corrLib.energy_spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/myimagelib.corrLib.autocorr1d.html">myimagelib.corrLib.autocorr1d</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="myImageLib.html" class="btn btn-neutral float-right" title="myImageLib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
