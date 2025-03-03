@@ -1,8 +1,6 @@
 import os
 import numpy as np
 from scipy import fft
-from scipy.signal import medfilt2d, convolve2d, fftconvolve
-from scipy.optimize import curve_fit
 import pandas as pd
 import psutil
 from skimage import io
@@ -12,6 +10,46 @@ from nd2reader import ND2Reader
 import cv2
 from scipy.ndimage import gaussian_filter
 from skimage.feature import peak_local_max
+
+def readdata(folder, ext='csv', mode="i"):
+    """
+    Read all files in a folder with certain extension. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
+
+    :param folder: the folder to read files from.
+    :type folder: str
+    :param ext: optional param, default to ``"csv"``, specifies the extension of files to be read.
+    :type ext: str
+    :param mode: ``"i"`` for immediate, ``"r"`` for recursive. Default to ``"i"``
+    :type mode: str
+    :return: a 2-column ``pandas.DataFrame`` table containing file names ``"Name"`` and the corresponding full directories ``"Dir"``.
+    :rtype: ``pandas.DataFrame``
+
+    >>> from myimagelib import readdata
+    >>> readdata("path/to/folder", ext="csv")
+    >>> readdata("path/to/folder", ext="csv", mode="r")
+
+    .. rubric:: Edit
+
+    * Nov 15, 2022 -- Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.
+    """
+    dataDirs = dirrec(folder, '*.' + ext)
+    dataDirsCopy = dataDirs.copy()
+    if mode == "i":
+        for dataDir in dataDirsCopy:
+            relpath = dataDir.replace(folder, "").strip(os.sep)
+            if os.sep in relpath:
+                dataDirs.remove(dataDir)
+    nameList = []
+    dirList = []
+    for dataDir in dataDirs:
+        path, file = os.path.split(dataDir)
+        name, ext = os.path.splitext(file)
+        nameList.append(name)
+        dirList.append(dataDir)
+    fileList = pd.DataFrame()
+    fileList = fileList.assign(Name=nameList, Dir=dirList)
+    fileList = fileList.sort_values(by=['Name']).reset_index(drop=True)
+    return fileList
 
 def dirrec(path, filename):
     """
@@ -28,18 +66,13 @@ def dirrec(path, filename):
 
        :code:`filename` can be partially specified, e.g. :code:`*.py` to search for all the files that end with *.py*. Similarly, setting :code:`filename` as :code:`*track*` will search for all files starting with *track*.
 
-    .. testsetup::
-       
-       from myimagelib.myImageLib import *
+    .. note::
 
-    .. testcode::
+        It is generally recommended to use :py:func:`readdata` instead of :py:func:`dirrec` if you are looking for files with a specific extension.
 
-       print(1+1)
-
-    .. testoutput::
-       
-       3
-       
+    >>> from myimagelib import dirrec
+    >>> dirrec("path/to/folder", filename="*.csv")
+    
     .. rubric:: Edit
 
     * Nov 15, 2022 -- Fix a bug, which falsely uses :py:func:`dirrec` within itself to iterate over subdirectories.
@@ -70,6 +103,9 @@ def to8bit(img):
     :return: 8-bit image with contrast enhanced.
     :rtype: 2D numpy.array (uint8)
 
+    >>> from myimagelib import to8bit
+    >>> img8 = to8bit(img)
+
     .. rubric:: Edit
 
     * Feb 27, 2023 -- change ``img.max()`` to ``np.nanmax(img)`` to handle NaN values. 
@@ -87,48 +123,17 @@ def to8bit(img):
     img8 = (img - minn) / (maxx - minn) * 255
     return img8.astype('uint8')
 
-def bpass(*args):
-    """
-    Apply bandpass filter on images. Useful when raw images have long wavelength intensity gradient.
-
-    :param img: 8-bit image
-    :type img: 2d array
-    :param low: lower limit wavelength
-    :type low: int
-    :param high: upper limit wavelength
-    :type high: int
-    :return: processed image with low and high wavelength signals filtered
-    :rtype: 2d array
-    """
-    img8 = args[0]
-    low = args[1]
-    high = args[2]
-    def gen_filter(img, low, high):
-        filt = np.zeros(img.shape)
-        h, w = img.shape
-        center = [int(w/2), int(h/2)]
-        Y, X = np.ogrid[:h, :w]
-        dist = ((X - center[0])**2 + (Y-center[1])**2)**.5
-
-        filt[(dist>low)&(dist<=high)] = 1
-        return filt
-    filt = gen_filter(img8, low, high)
-    filt = fft.ifftshift(filt)
-    im_fft = fft.fft2(img8)
-    im_fft_filt = im_fft * filt
-    im_new = fft.ifft2(im_fft_filt).real
-    im_new = im_new - im_new.min()
-    im_new = np.floor_divide(im_new, (im_new.max()+1)/256)
-    return im_new.astype('uint8')
-
 def bestcolor(n):
     """
-    Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_.
+    Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_. 
 
     :param n: integer from 0 to 9, specifying the index of the color in the list
     :type n: int
     :return: the hex code of the specified color
     :rtype: str
+
+    >>> from myimagelib import bestcolor
+    >>> bestcolor(0)
     """
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
               '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -152,7 +157,7 @@ def wowcolor(n):
 
 def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     """
-    Find circles in images. The algorithm is based on Hough Transform and the idea of `Atherton and Kerbyson 1999 <https://www.sciencedirect.com/science/article/pii/S0262885698001607>`_, using the edge orientation information to improve the performance on noisy images.
+    Find circles in images. The algorithm is based on Hough Transform and the idea of `Atherton and Kerbyson 1999 <https://www.sciencedirect.com/science/article/pii/S0262885698001607>`_, using the edge orientation information to improve the performance on noisy images. See `step-by-step phase code find circles <../tests/find_circles.html>`_ for more details about this method.
 
     :param img: Input image. Note that it has to be grayscale and 8-bit, otherwise the function will raise an error.
     :type img: numpy array
@@ -162,6 +167,11 @@ def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     :type sensitivity: float
     :return: DataFrame with columns [x, y, r] for the centers and radii of detected circles.
     :rtype: pandas.DataFrame
+
+    >>> from myimagelib import imfindcircles
+    >>> circles = imfindcircles(img, [10, 20])
+    >>> circles = imfindcircles(img, [10, 20], smooth_window=5)
+    >>> circles = imfindcircles(img, [10, 20], smooth_window=5, sensitivity=0.9)
 
     .. rubric:: Edit
     
@@ -271,46 +281,15 @@ def show_progress(progress, label='', bar_length=60):
     :param bar_length: length of the progress bar, in the unit of characters. Default to :code:`60`.
     :type bar_length: int
     :return: None
+
+    >>> from myimagelib import show_progress
+    >>> show_progress(0.5, label='Processing')
+    >>> show_progress(0.75, label='Processing', bar_length=80)
     """
     N_finish = int(progress*bar_length)
     N_unfinish = bar_length - N_finish
     print('{0} [{1}{2}] {3:.1f}%'.format(label, '#'*N_finish, '-'*N_unfinish, progress*100), end="\r")
 
-def readdata(folder, ext='csv', mode="i"):
-    """
-    Read all files in a folder with certain extension. Instead of returning a list of directories as :py:func:`dirrec` does, :py:func:`readdata` puts the file names and corresponding full directories in a :code:`pandas.DataFrame`. The table will be sorted by the file names (strings), so the order would likely be correct. In the worst case, it is still easier to resort the :code:`pandas.DataFrame`, compared to the list of strings returned by :py:func:`dirrec`.
-
-    :param folder: the folder to read files from
-    :type folder: str
-    :param ext: optional param, default to ``"csv"``, specifies the extension of files to be read
-    :type ext: str
-    :param mode: ``"i"`` for immediate, ``"r"`` for recursive. Default to ``"i"``
-    :type mode: str
-    :return: a 2-column table containing file names and the corresponding full directories
-    :rtype: pandas.DataFrame
-
-    .. rubric:: Edit
-
-    * Nov 15, 2022 -- Add mode optional argument, to specify whether to read data only in the immediate folder, or read recursively.
-    """
-    dataDirs = dirrec(folder, '*.' + ext)
-    dataDirsCopy = dataDirs.copy()
-    if mode == "i":
-        for dataDir in dataDirsCopy:
-            relpath = dataDir.replace(folder, "").strip(os.sep)
-            if os.sep in relpath:
-                dataDirs.remove(dataDir)
-    nameList = []
-    dirList = []
-    for dataDir in dataDirs:
-        path, file = os.path.split(dataDir)
-        name, ext = os.path.splitext(file)
-        nameList.append(name)
-        dirList.append(dataDir)
-    fileList = pd.DataFrame()
-    fileList = fileList.assign(Name=nameList, Dir=dirList)
-    fileList = fileList.sort_values(by=['Name']).reset_index(drop=True)
-    return fileList
 
 def xy_bin(xo, yo, n=100, mode='log', bins=None):
     """
@@ -325,6 +304,10 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
     :return: binned x, and mean y in the bins.
     :rtype: 2-tuple of array-likes
 
+    >>> from myimagelib import xy_bin
+    >>> x, y = xy_bin(xo, yo, n=100)
+    >>> x, y = xy_bin(xo, yo, n=100, mode='lin')
+    >>> x, y = xy_bin(xo, yo, bins=np.linspace(0, 100)')
 
     .. rubric:: Edit
 
@@ -348,13 +331,132 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
     yb = top[ind] / bot[ind]
     return xb, yb
 
+def subpixel_correction(original_circle, raw_img, range_factor=0.5, plot=False, thres=5, method="gaussian", sample=5, sample_range=(0, 2*np.pi), ax=None):
+    """Use gaussian fitting of cross-boundary pixel intensities to give circle detections subpixel accuracy. 
+    Args:
+    original_circle -- dict of {"x", "y", "r"}
+    raw_img -- raw image where circles are detected
+    range_factor -- the range of the cross-boundary pixel intensity profile to be fitted.
+                    For example, 0.6 means 0.6*r on both sides of the boundary pixel (in and out of the circle, 1.2*r in total)".
+    Returns:
+    corrected_circle -- dict of {"x", "y", "r"}
+    Edit:
+    06152022 -- Initial commit.
+    06162022 -- If the peak value is too far away from the original one, drop it.
+    06172022 -- 1) add boundary protection,
+                2) use gaussian smoothing, instead of savgol
+                3) convert pixel data type to "float64" to avoid memory overflow
+                4) put fitting part together
+                5) merge gaussian and minimum fitting in the same function, adding "method" argument, change name to subpixel_correction
+    06212022 -- Sample more profiles for more accurate correction.
+                Note that sometimes more profiles does not mean more accuracy.
+                If the outer droplet boundary is very dark, 
+                and some profiles contain the outer droplet boundary,
+                significant deviation will result.
+    06282022 -- Add argument "sample_range".
+                In most DE images, the upper boundary of inner and outer droplets overlap.
+                As a result, when sampling across the upper boundaries, the profile will likely include both boundaries.
+                This leads to big error for the "minimum" method.
+                Therefore, it is desired to sample bottom boundaries.
+                sample_range allows specifying the range of boundary samples (in terms of angle).
+                The x-axis corresponds to 0 in sample_range. Then it increases in the CW direction.
+                Up to 2*np.pi where it comes back to the x-axis.
+    07132022 -- Use linear method for circle fitting, for better efficiency and less susceptibility to outliers.
+    07192022 -- i) Back to "naive" fitting
+                ii) Add cross-boundary lines, chosen peaks on the profiles, fitted corrected circles to plot
+                iii) add argument ax for making subplots outside the function
+                iv) set default of plot param to False
+    """
+    
+    
+    if ax == None and plot:
+        fig, ax = plt.subplots(dpi=150)
+    if plot:
+        ax.imshow(raw_img, cmap="gray")
+        
+    x0, y0, r0 = original_circle["x"], original_circle["y"], original_circle["r"]
+    # samples
+    new_points = []
+    for t in np.linspace(*sample_range, sample, endpoint=True):
+        xc = x0 + r0 * np.cos(t)
+        yc = y0 + r0 * np.sin(t)
+        x1 = xc - r0 * range_factor * np.cos(t)
+        x2 = xc + r0 * range_factor * np.cos(t)
+        y1 = yc - r0 * range_factor * np.sin(t)
+        y2 = yc + r0 * range_factor * np.sin(t)
+        x1 = int(np.round(x1))
+        x2 = int(np.round(x2))
+        y1 = int(np.round(y1))
+        y2 = int(np.round(y2))
+        
+        y, x = draw.line(y1, x1, y2, x2)
+        if plot:
+            ax.plot(x, y, color="yellow")
+        indx = (x >= 0) & (x < raw_img.shape[1])
+        indy = (y >= 0) & (y < raw_img.shape[0])
+        ind = indx * indy
+        y = y[ind]
+        x = x[ind]
+        p = raw_img[y, x]
+        p_smooth = gaussian_filter1d(p, sigma=3/4)
+        if method == "minimum":
+            minind = np.argmin(p_smooth)
+            xmin, ymin = x[minind], y[minind]
+            distsq = (xmin - xc) ** 2 + (ymin - yc) ** 2 
+            if distsq > thres ** 2:
+                new_points.append((xc, yc))
+            else:
+                new_points.append((xmin, ymin))
+        elif method == "gaussian":
+            raise ValueError("Method not yet implemented")
+            
+    # fit circle
+    xy = np.array(new_points)
+    c, n_iter = fit_circle(xy[:, 0], xy[:, 1], method="naive")
+    corrected_circle = {"x": c["a"], "y": c["b"], "r": c["r"]}
+    
+    if plot:
+        points = np.array(new_points)
+        ax.scatter(points[:, 0], points[:, 1], s=10, color="red")
+        ocirc = mpatch.Circle((x0, y0), r0, fill=False, color="red", lw=1)
+        ax.add_patch(ocirc)
+        ccirc = mpatch.Circle((c["a"], c["b"]), c["r"], fill=False, color="green", lw=1)
+        ax.add_patch(ccirc)
+        
+    return corrected_circle
+
+def circle_quality_std(raw_img, circle):
+    """Quantify circle detection quality by computing boundary pixel standard deviation.
+    Args:
+    raw_img -- raw image
+    circle -- dict of {"x", "y", "r"}
+    distsq_thres -- distance threshold for determining if a pixel is on a circle or not
+    Returns:
+    quality -- 1 - (circle pixel std) / (image pixel std)
+                The idea is to normalize the results from images of different contrast,
+                and larger quality value means better tracking.
+    Edit:
+    06282022 -- use skimage.draw to get circle perimeter pixel coords
+    """
+    x, y, r = circle["x"], circle["y"], circle["r"]
+    # 1. make X, Y coordinates of all image pixels
+    Y, X = np.mgrid[0:raw_img.shape[0], 0:raw_img.shape[1]]
+    # 2. compute distance (square) matrix from each pixel to circle center
+    dist = (X-x) ** 2 + (Y-y) ** 2 - r ** 2 
+    # 3. get all the pixel intensity values on the detected circle
+    circle_pixels = raw_img[draw.circle_perimeter(int(np.round(y)), int(np.round(x)), int(np.round(r)), shape=raw_img.shape)]
+    # 4. compute standard deviation of circle_pixels
+    std = circle_pixels.std()
+    std_img = raw_img.std()
+    
+    return 1 - std / std_img
+
+
 class rawImage:
     """
     Convert raw images (e.g. nd2) to tif sequences. Throughout my research, I have mostly worked with two raw image formats: *\*.nd2* and *\*.raw*. Typically, they are tens of GB large, and are not feasible to load into the memory of a PC as a whole. Therefore, the starting point of my workflow is to convert raw images into sequences of *\*.tif* images. 
     
     This class is designed to have a unified interface for different raw image formats. The class is initialized with the directory of a raw image file, and the :py:func:`extract_tif` method will convert the raw image to tif sequences. The tif sequences are saved in a subfolder named *raw* and *8-bit* under the folder where the raw image file is located.
-    
-    .. rubric:: Syntax
     
     .. code-block:: python
 
@@ -516,3 +618,4 @@ class rawImage:
         ds = shutil.disk_usage(d)[2] / 2**30
         print("File size {0:.1f} GB, Disk size {1:.1f} GB".format(fs, ds))
         return ds > 2 * fs
+

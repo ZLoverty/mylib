@@ -1,6 +1,6 @@
-### myimagelib release note
+# myimagelib release note
 
-#### v1.5
+## v1.5
 
 - Lose weight project: the current package spreads very broadly. The reuse rates of most functions are quite low. Therefore, I'm planning to remove functions that are not useful any more, and figure out a focus of this package.
   - remove `xcorr_funcs.py` and `fit_circle_utils.py`
@@ -8,7 +8,11 @@
 - clean up the imports
 - add a function `imfindcircles()` based on Atherton 1999
 
-#### v1.4
+### v1.5.1
+
+- Reorganize the documentation.
+
+## v1.4
 
 - Implement doctest to test the code automatically.
 - Add release note.
@@ -17,15 +21,15 @@
 - Add `to_csv` to `compact_PIV`.
 - Handle NaN values in `to8bit`.
 
-#### v1.3 
+## v1.3 
 
 1. Fix the documentation. Due to the folder structure change, autodoc does not work correctly, and all the documentations currently are not working. Fix it in the next release. 
 
-#### v1.2 
+## v1.2 
 
 1. Reorganize the repo as a PyPI package and publish on PyPI.
 
-#### v1.1 
+## v1.1 
 
 1. All the functions and scripts that output PIV data should put PIV in a .mat container, which only save x, y, mask, labels in formation once, and save u, v as 3D arrays. 
 

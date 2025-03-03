@@ -15,10 +15,13 @@ def corrS(X, Y, U, V):
 
         We only consider half of the length in each dimension, so x, y are different from the input X, Y.
 
+    >>> from myimagelib.corrLib import corrS
+    >>> X, Y, CA, CV = corrS(x, y, u, v)
+
     .. rubric:: Edit
 
-    * Dec 13, 2021 -- i) Replace all the `mean()` function to nanmean, to handle masked PIV data. ii) Add doc string.
-    * Dec 15, 2021 -- if norm `vsqrt` is 0, set it to np.nan to avoid divided by zero warning!
+    * Dec 13, 2021 -- i) Replace all the ``mean()`` function to ``nanmean``, to handle masked PIV data. ii) Add doc string.
+    * Dec 15, 2021 -- if norm ``vsqrt==0``, set it to np.nan to avoid divided by zero warning!
     * Dec 16, 2021 -- Shift the output X, Y origin to 0, 0, so that 0 distance will have the correlation function = 1. More intuitive.
     * Jan 05, 2023 -- Adapt myimagelib import style.
     """
@@ -71,10 +74,12 @@ def corrI(X, Y, I):
                 CI[yin, xin] = (I[yin:, xin:] * I_shift[yin:, xin:]).mean() / normalizer
     return XI, YI, CI
 
-
 def divide_windows(img, windowsize=[20, 20], step=10):
     """
     Divide an image into windows with specified size and step. Size and step can be different, so that we generate a downsampled image with either overlap or gaps.
+
+    >>> from myimagelib.corrLib import divide_windows
+    >>> X, Y, I = divide_windows(img, windowsize=[20, 20], step=10)
 
     :param img: image
     :type img: 2d array
@@ -97,7 +102,6 @@ def divide_windows(img, windowsize=[20, 20], step=10):
     I = util.view_as_windows(img, windowsize, step=step).mean(axis=(2, 3))
     return X, Y, I
 
-
 def distance_corr(X, Y, C):
     """ Convert 2d correlation matrix into 1d.
 
@@ -105,11 +109,12 @@ def distance_corr(X, Y, C):
     :param C: correlation matrix, can be either 2d matrices or flattened matrices
     :return: a DataFrame of ["R", "C"].
 
+    >>> from myimagelib.corrLib import distance_corr
+    >>> r_corr = distance_corr(X, Y, C)
+
     .. rubric:: Edit
 
-    :12162021:
-     * check input dimension, if it's 1, do not use `flatten`,
-     * add doc string
+    * Dec 16, 2021 -- (i) check input dimension, if it's 1, do not use `flatten`; (ii) add doc string
     """
     if len(X.shape) == 2:
         r_corr = pd.DataFrame({'R': (X.flatten()**2 + Y.flatten()**2) ** 0.5, 'C': C.flatten()}).sort_values(by='R')
@@ -117,150 +122,7 @@ def distance_corr(X, Y, C):
         r_corr = pd.DataFrame({'R': (X**2 + Y**2) ** 0.5, 'C': C}).sort_values(by='R')
     return r_corr
 
-
-
-def density_fluctuation(img8):
-    """
-    This is the first attempt to calculate density fluctuations in bacterial suspensions. There exists 2 methods: i) compute the spatial variation in each image, with respect to various box size, then average over time; ii) compute temporal variation in at different spot, with respect to various box size, then average over space.
-
-    Method implemented in this function is the first one. It turned out that even for a static video, we can easily measure a very strong density fluctuation, which cannot be true. We later realize that, this is due to the intrinsic spatial light variation of the bright field microscopy.
-
-    One way to solve this problem is to subtract the intrinsic variation from the raw images. However, at that time we did not succeed in doing it (as I am writing this document, I konw better how to do it). So we chose the second way: to use method (ii) for the density fluctuation calculation. Different from method (i), method (ii) is not sensitive to the spatial variation in each image, but considers how the intensities evolve over time. Therefore, we can get density fluctuations that make sense.
-
-    .. warning::
-
-        Currently, we deprecate this method. It is not used in our publication *Soft Matter* **17**: 10806–17. https://doi.org/10.1039/D1SM01183A.
-
-
-    :param img8: 8-bit grayscale image
-    :type img8: 2d array
-    :return: density fluctuation data, a 2-column table containing the box size (area) "n" and the intensity standard deviation over time "d"
-
-    """
-    row, col = img8.shape
-    l = min(row, col)
-    size_min = 5
-    boxsize = np.unique(np.floor(np.logspace(np.log10(size_min), np.log10((l-size_min)/2), 100)))
-    # Gradually increase box size and calculate dN=std(I) and N=mean(I)
-    # choose maximal box size to be (l-size_min)/2
-    # to guarantee we have multiple boxes for each calculation, so that
-    # the statistical quantities are meaningful.
-    # Step is chosen as 5*size_min to guarantee speed as well as good statistics
-    # instead of box size. When box size is large, number of boxes is too small
-    # to get good statistics.
-    # Papers by Narayan et al. used different method to calculate density fluctuation
-    # Igor Aranson commented on the averaging methods saying that in a spatially
-    # homogeneous system (small spatial temporal correlation) two methods should match.
-    # This suggests that I need to test both methods.
-
-    NList = []
-    dNList = []
-    for bs in boxsize:
-        X, Y, I = divide_windows(img8, windowsize=[bs, bs], step=bs)
-        N = bs*bs
-        # dN = np.log10(I).std()*bs*bs
-        dN = I.std()*bs*bs
-        NList.append(N)
-        dNList.append(dN)
-    df_data = pd.DataFrame().assign(n=NList, d=dNList)
-    return df_data
-
-
-def div_field(img, pivData, winsize, step):
-    """
-    Compute multiple divergence fields from PIV data and microscopy image.
-
-    :param img: 2d array
-    :param pivData: DataFrame with columns (x, y, u, v)
-    :param winsize: window size of PIV data
-    :param step: step size of PIV data
-
-    .. note::
-
-        :code:`winsize` and :code:`step` should be consistent with the parameters of pivData, be extra coutious!
-
-    :return: divergence fields of given data. (c, v, divcn, divcv, divv). *c* is concentration inferred from the image.
-
-
-    """
-    X, Y, I = divide_windows(img, windowsize=[winsize, winsize], step=step)
-    # concentration field
-    I0 = 255
-    c = I0 - I
-
-    # calculation for divcn and divcv
-    row, col = I.shape
-    vx = np.array(pivData.u).reshape(I.shape)
-    vy = np.array(pivData.v).reshape(I.shape)
-    v = (vx**2 + vy**2)**.5
-    nx = np.array(pivData.u / (pivData.u**2 + pivData.v**2)**.5).reshape(I.shape)
-    ny = np.array(pivData.v / (pivData.u**2 + pivData.v**2)**.5).reshape(I.shape)
-    cnx = c * nx
-    cny = c * ny
-    cvx = c * vx
-    cvy = c * vy
-    divcn = np.zeros(I.shape)
-    divcv = np.zeros(I.shape)
-    divv = np.zeros(I.shape)
-    for x in range(0, col-1):
-        for y in range(0, row-1):
-            divcn[y, x] = cnx[y,x+1] - cnx[y,x] + cny[y+1,x] - cny[y,x]
-            divcv[y, x] = cvx[y,x+1] - cvx[y,x] + cvy[y+1,x] - cvy[y,x]
-            divv[y, x] = vx[y,x+1] - vx[y,x] + vy[y+1,x] - vy[y,x]
-    return c, v, divcn, divcv, divv
-
-
-def df2(imgstack, size_min=5, step=250, method='linear'):
-    """
-    This is used for small scale test of temporal variation based density fluctuation analysis.
-    Here the input is a 3 dimensional array that contains all the images in a video [stack_index, height, width].
-    For larger scale application, use the script df2.py or a later implementation of df2 which can take directory as argument 1.
-
-    :param imgstack: 3-D array with dimensions [stack_index, height, width]
-    :param size_min: minimal box size to sample
-    :param step: distance between adjacent boxes in a frame
-    :param method: use pixel intensity directly as concentration ('linear'), or use the log of it ('log')
-
-    :return: the spatial average of temporal variations
-    """
-
-    L = min(imgstack.shape[1:3])
-    boxsize = np.unique(np.floor(np.logspace(np.log10(size_min),
-                        np.log10((L-size_min)/2),100)))
-
-    df = pd.DataFrame()
-    for i, img in enumerate(imgstack):
-        framedf = pd.DataFrame()
-        for bs in boxsize:
-            X, Y, I = divide_windows(img, windowsize=[bs, bs], step=step)
-            tempdf = pd.DataFrame().assign(I=I.flatten(), t=int(i), size=bs,
-                           number=range(0, len(I.flatten())))
-            framedf = framedf.append(tempdf)
-        df = df.append(framedf)
-
-    if method == 'log':
-        df['I'] = np.log(df['I'])
-
-    df_out = pd.DataFrame()
-    for number in df.number.drop_duplicates():
-        subdata1 = df.loc[df.number==number]
-        for s in subdata1['size'].drop_duplicates():
-            subdata = subdata1.loc[subdata1['size']==s]
-
-            d = s**2 * np.array(subdata.I).std()
-            n = s**2
-            tempdf = pd.DataFrame().assign(n=[n], d=d, size=s, number=number)
-            df_out = df_out.append(tempdf)
-
-    average = pd.DataFrame()
-    for s in df_out['size'].drop_duplicates():
-        subdata = df_out.loc[df_out['size']==s]
-        avg = subdata.drop(columns=['size', 'number']).mean().to_frame().T
-        average = average.append(avg)
-
-    return average
-
-def df2_(img_stack, boxsize=None, size_min=5, step=250):
+def density_fluctuation(img_stack, boxsize=None, size_min=5, step=250):
     """
     Compute number fluctuations of an image stack (3D np.array, frame*h*w)
 
@@ -270,6 +132,10 @@ def df2_(img_stack, boxsize=None, size_min=5, step=250):
     :param step: step used when dividing image into windows
 
     :return: DataFrame of n and d, where n is box area (px^2) and d is total number fluctuations (box_area*dI)
+    :rtype: ``pandas.DataFrame``
+
+    >>> from myimagelib.corrLib import density_fluctuation
+    >>> df = density_fluctuation(img_stack, boxsize=None, size_min=5, step=250)
     """
     L = min(img_stack.shape[1:3])
     if boxsize == None:
@@ -283,148 +149,6 @@ def df2_(img_stack, boxsize=None, size_min=5, step=250):
 
     return pd.DataFrame({'n': np.array(boxsize)**2, 'd': dI_list})
 
-def divide_stack(img_stack, winsize=[50, 50], step=25):
-    """
-    Divide image stack into several evenly spaced windows of stack. Average the pixel intensity within each window. For example, a 30*30*30 image stack, if we apply a divide_stack, with winsize=[15, 15] and step=15, the resulting divided stack will be (30, 4).
-
-    :param img_stack: a stack of image, a 3D array, axis0 should be frame number
-    :param winsize: division scheme, default to [50, 50]
-    :param step: division scheme, default ot 25
-
-    :return: the result
-    """
-    length = img_stack.shape[0]
-    divide = util.view_as_windows(img_stack, window_shape=[length, *winsize], step=step).mean(axis=(-1, -2))
-    # reshape
-    divided_array = divide.reshape((np.prod(divide.shape[:3]), length)).transpose()
-
-    return divided_array
-
-def plot_gnf(gnf_data):
-    """
-    Used for small scale test of gnf analysis. It incorporates the guide of the eye slope already in the function, which usually needs further adjustment when preparing paper figures.
-
-    :param gnf_data: gnf data generated by df2()
-
-    :return ax: axis on which the data are plotted
-    :return slope: the slope of the gnf_data curve
-    """
-    x = gnf_data.n / 100
-    y = gnf_data.d / x ** 0.5
-    y = y / y.iat[0]
-    fig = plt.figure()
-    ax = fig.add_axes([0,0,1,1])
-    ax.plot(x, y)
-    xf, yf, xt, yt, slope = label_slope(x, y, location='n')
-    ax.plot(xf, yf, ls='--', color='black')
-    ax.text(xt, yt, '{:.2f}'.format(slope))
-    ax.loglog()
-    ax.set_xlabel('$l^2/l_b^2$')
-    ax.set_ylabel('$\Delta N/\sqrt{N}$')
-    return ax, slope
-
-def vorticity(pivData, step=None, shape=None):
-    """
-    Compute vorticity field based on piv data (x, y, u, v)
-
-    :param pivData: DataFrame of (x, y, u, v)
-    :param step: distance (pixel) between adjacent PIV vectors
-
-    :return: vorticity field of the velocity field. unit: [u]/pixel, [u] is the unit of u, usually px/s
-    """
-    x = pivData.sort_values(by=['x']).x.drop_duplicates()
-    if step == None:
-        # Need to infer the step size from pivData
-        step = x.iat[1] - x.iat[0]
-
-    if shape == None:
-        # Need to infer shape from pivData
-        y = pivData.y.drop_duplicates()
-        shape = (len(y), len(x))
-
-    X = np.array(pivData.x).reshape(shape)
-    Y = np.array(pivData.y).reshape(shape)
-    U = np.array(pivData.u).reshape(shape)
-    V = np.array(pivData.v).reshape(shape)
-
-    dudy = np.gradient(U, step, axis=0)
-    dvdx = np.gradient(V, step, axis=1)
-    vort = dvdx - dudy
-
-    return vort
-
-def convection(pivData, image, winsize, step=None, shape=None):
-    """
-    Compute convection term u.grad(c) based on piv data (x, y, u, v) and image.
-
-    :param pivData: -- DataFrame of (x, y, u, v)
-    :param image: -- the image corresponding to pivData
-    :param winsize: -- coarse-graining scheme of image
-    :param step: -- (optional) distance (pixel) between adjacent PIV vectors
-    :param shape: -- (optional) shape of piv matrices
-
-    :return: convection term u.grad(c). unit: [u][c]/pixel, [u] is the unit of u, usually px/s, [c] is the unit of concentration measured from image intensity, arbitrary.
-    """
-    x = pivData.sort_values(by=['x']).x.drop_duplicates()
-    if step == None:
-        # Need to infer the step size from pivData
-        step = x.iat[1] - x.iat[0]
-
-    if shape == None:
-        # Need to infer shape from pivData
-        y = pivData.y.drop_duplicates()
-        shape = (len(y), len(x))
-
-    # check coarse-grained image shape
-    X, Y, I = divide_windows(image, windowsize=[winsize, winsize], step=step)
-    assert(I.shape==shape)
-
-    X = np.array(pivData.x).reshape(shape)
-    Y = np.array(pivData.y).reshape(shape)
-    U = np.array(pivData.u).reshape(shape)
-    V = np.array(pivData.v).reshape(shape)
-
-    # compute gradient of concentration
-    # NOTE: concentration is negatively correlated with intensity.
-    # When computing gradient of concentration, the shifting direction should reverse.
-
-    dcx = np.gradient(I, -step, axis=1)
-    dcy = np.gradient(I, -step, axis=0)
-
-    udc = U * dcx + V * dcy
-
-    return udc
-
-def divergence(pivData, step=None, shape=None):
-    """
-    Compute divergence field based on piv data (x, y, u, v)
-
-    :param pivData: DataFrame of (x, y, u, v)
-    :param step: distance (pixel) between adjacent PIV vectors
-
-    :return: vorticity field of the velocity field. unit: [u]/pixel, [u] is the unit of u, usually px/s
-    """
-    x = pivData.sort_values(by=['x']).x.drop_duplicates()
-    if step == None:
-        # Need to infer the step size from pivData
-        step = x.iat[1] - x.iat[0]
-
-    if shape == None:
-        # Need to infer shape from pivData
-        y = pivData.y.drop_duplicates()
-        shape = (len(y), len(x))
-
-    X = np.array(pivData.x).reshape(shape)
-    Y = np.array(pivData.y).reshape(shape)
-    U = np.array(pivData.u).reshape(shape)
-    V = np.array(pivData.v).reshape(shape)
-
-    dudx = np.gradient(U, step, axis=1)
-    dvdy = np.gradient(V, step, axis=0)
-    div = dudx + dvdy
-
-    return div
-
 def local_df(img_folder, seg_length=50, winsize=50, step=25):
     """
     Compute local density fluctuations of given image sequence in img_folder
@@ -435,6 +159,10 @@ def local_df(img_folder, seg_length=50, winsize=50, step=25):
     :param step: step between adjacent windows
 
     :return: dict containing 't' and 'local_df', 't' is a list of time (frame), 'std' is a list of 2d array with local standard deviations corresponding to 't'
+    :rtype: ``dict``
+
+    >>> from myimagelib.corrLib import local_df
+    >>> local_df = local_df(img_folder, seg_length=50, winsize=50, step=25)
     """
 
     l = readseq(img_folder)
@@ -559,12 +287,16 @@ def energy_spectrum(pivData, d=25*0.33):
     :param d: sample spacing. This is the distance between adjacent samples, for example, velocities in PIV. The resulting frequency space has the unit which is inverse of the unit of d. The default unit of d is um.
 
     :return: energy spectrum, DataFrame (k, E)
+    :rtype: ``pandas.DataFrame``
+
+    >>> from myimagelib import energy_spectrum
+    >>> es = energy_spectrum(pivData, d=25*0.33)
 
     .. rubric:: Edit
 
-    :10192020: add argument d as sample spacing
-    :11112020: add area constant, see details `here <https://zloverty.github.io/research/DF/blogs/energy_spectrum_2_methods_11112020.html>`_
-    :11302020: The energy spectrum calculated by this function shows a factor of ~3 difference when comparing \int E(k) dk with v**2.sum()/2
+    * Oct 19, 2020 -- add argument d as sample spacing
+    * Nov 11, 2020 -- add area constant, see details `here <https://zloverty.github.io/research/DF/blogs/energy_spectrum_2_methods_11112020.html>`_
+    * Nov 30, 2020 -- The energy spectrum calculated by this function shows a factor of ~3 difference when comparing \int E(k) dk with v**2.sum()/2
     """
 
     row = len(pivData.y.drop_duplicates())
@@ -586,13 +318,15 @@ def autocorr1d(x, t):
 
     :param x: 1-D signal,
     :param t: the corresponding time of the signal, should be np.array 1d
-    :return:
-        * corr -- correlation array, with lag time as index
-        * lagt -- lag time of the correlation function
+    :return: DataFrame of (corr, t), where corr is the autocorrelation and t is the time lag.
+    :rtype: ``pandas.DataFrame``
+
+    >>> from myimagelib import autocorr1d
+    >>> corr = autocorr1d(x, t)
 
     .. rubric:: Edit
 
-    :07272022: Handle time series with missing values.
+    * July 27, 2022 -- Handle time series with missing values.
     """
     if any(np.isnan(x)):
         xn = x - np.nanmean(x)
@@ -613,14 +347,14 @@ def vacf_piv(vstack, dt, mode="direct"):
     """
     Compute averaged vacf from PIV data. This is a wrapper of function autocorr_t(), adding the averaging over all the velocity spots.
 
-    :param vstack: a 2-D np array of velocity data. axis-0 is time and axes-1,2 are spots in velocity field. Usually, this stack can be constracted by `np.stack(u_list)` and then reshape to flatten axes 1 and 2.
+    :param vstack: a 2-D np array of velocity data. axis-0 is time and axes-1,2 are spots in velocity field. Usually, this stack can be constracted by ``np.stack(u_list)`` and then reshape to flatten axes 1 and 2.
     :param dt: time between two data points
-    :param mode: the averaging method, can be "direct" or "weighted". "weighted" will use mean velocity as the averaging weight, whereas "direct" uses 1.
+    :param mode: the averaging method, can be ``"direct"`` or ``"weighted"``. ``"weighted"`` will use mean velocity as the averaging weight, whereas ``"direct"`` uses 1.
     :return: DataFrame of (corr, t)
 
     .. rubric:: Edit
 
-    :10262022: add condition :code:`x.sum() != 0`, avoids nan in all-zero columns.
+    * Oct 26, 2022 -- add condition :code:`x.sum() != 0`, avoids nan in all-zero columns.
     """
     # rearrange vstack
     assert(len(vstack.shape)==3)
@@ -640,7 +374,3 @@ def vacf_piv(vstack, dt, mode="direct"):
     corr_mean = np.stack(corr_list, axis=0).sum(axis=0) / normalizer
 
     return pd.DataFrame({"c": corr_mean, "t": np.arange(len(corr_mean)) * dt}).set_index("t")
-
-if __name__ == '__main__':
-    img = io.imread(r'I:\Github\Python\Correlation\test_images\GNF\stat\40-1.tif')
-    df_data = density_fluctuation(img)
