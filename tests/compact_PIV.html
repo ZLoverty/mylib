@@ -103,16 +103,16 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import os
-import sys
-sys.path.append(os.path.abspath(&quot;../src&quot;))
-from io import BytesIO
-from myimagelib import compact_PIV, readdata
-from skimage.io import imread
-import zipfile
-import matplotlib.pyplot as plt
-import requests
-from scipy.io import loadmat
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;../src&quot;</span><span class="p">))</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib</span><span class="w"> </span><span class="kn">import</span> <span class="n">compact_PIV</span><span class="p">,</span> <span class="n">readdata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">imread</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
 </pre></div>
 </div>
 </div>
@@ -120,20 +120,20 @@ from scipy.io import loadmat
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># download the test data
-url = r&quot;  https://drive.google.com/uc?export=download&amp;id=12qHZ5Zx2idJTBohJEmA66uMPy5xTOl-_&quot;
-response = requests.get(url, stream=True)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># download the test data</span>
+<span class="n">url</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;  https://drive.google.com/uc?export=download&amp;id=12qHZ5Zx2idJTBohJEmA66uMPy5xTOl-_&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-# Download the zip file
-zip_path = &quot;data.zip&quot;
-with open(zip_path, &quot;wb&quot;) as f:
-    f.write(response.content)
+<span class="c1"># Download the zip file</span>
+<span class="n">zip_path</span> <span class="o">=</span> <span class="s2">&quot;data.zip&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
-# extract the zip file
-with zipfile.ZipFile(zip_path, &quot;r&quot;) as zip_ref:
-    zip_ref.extractall(&quot;PIV&quot;)
+<span class="c1"># extract the zip file</span>
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+    <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">)</span>
 
-os.remove(zip_path)
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">zip_path</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -147,8 +147,8 @@ os.remove(zip_path)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>l = readdata(&quot;PIV&quot;, &quot;csv&quot;)
-cpiv = compact_PIV(l)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">readdata</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -159,8 +159,8 @@ cpiv = compact_PIV(l)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cpiv_dict = loadmat(r&quot;PIV\cpiv.mat&quot;)
-cpiv = compact_PIV(cpiv_dict)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv_dict</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">cpiv_dict</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -171,8 +171,8 @@ cpiv = compact_PIV(cpiv_dict)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = cpiv.get_frame(0, by=&quot;index&quot;)
-plt.quiver(x, y, u, v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -196,7 +196,7 @@ plt.quiver(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cpiv.get_labels()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">get_labels</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -213,8 +213,8 @@ plt.quiver(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = cpiv.get_frame(&quot;00000-00001&quot;, by=&quot;label&quot;)
-plt.quiver(x, y, u, v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="s2">&quot;00000-00001&quot;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -247,7 +247,7 @@ plt.quiver(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cpiv.to_mat(r&quot;PIV\cpiv.mat&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">to_mat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -260,7 +260,7 @@ plt.quiver(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cpiv.keys
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">keys</span>
 </pre></div>
 </div>
 </div>
@@ -279,9 +279,9 @@ dict_keys([&#39;__header__&#39;, &#39;__version__&#39;, &#39;__globals__&#39;, &
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mask = imread(r&quot;PIV\mask.tif&quot;)
-cpiv.update_mask(mask)
-cpiv.keys
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\mask.tif&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">update_mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">keys</span>
 </pre></div>
 </div>
 </div>
@@ -299,8 +299,8 @@ dict_keys([&#39;__header__&#39;, &#39;__version__&#39;, &#39;__globals__&#39;, &
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = cpiv.get_frame(0)
-plt.quiver(x, y, u, v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -328,9 +328,9 @@ plt.quiver(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cpiv_dict = loadmat(r&quot;PIV\cpiv.mat&quot;)
-cpiv = compact_PIV(cpiv_dict)
-cpiv.to_csv(&quot;PIV&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv_dict</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">cpiv_dict</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

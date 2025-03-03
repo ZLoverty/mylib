@@ -109,24 +109,24 @@ performance as <code class="docutils literal notranslate"><span class="pre">imfi
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from skimage import io
-import os
-import matplotlib
-matplotlib.rcParams[&quot;font.family&quot;] = &quot;STIXGeneral&quot;
-matplotlib.rcParams[&quot;mathtext.fontset&quot;] = &quot;stix&quot;
-matplotlib.rcParams[&quot;xtick.direction&quot;] = &quot;in&quot;
-matplotlib.rcParams[&quot;ytick.direction&quot;] = &quot;in&quot;
-plt.rcParams[&#39;xtick.major.size&#39;] = 2  # Length of major ticks
-plt.rcParams[&#39;ytick.major.size&#39;] = 2  # Length of major ticks
-plt.rcParams[&#39;xtick.minor.size&#39;] = 1  # Length of minor ticks
-plt.rcParams[&#39;ytick.minor.size&#39;] = 1  # Length of minor ticks
-from myimagelib.myImageLib import readdata
-from scipy.ndimage import gaussian_filter
-from skimage.feature import peak_local_max
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.family&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;STIXGeneral&quot;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;mathtext.fontset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stix&quot;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;xtick.direction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;ytick.direction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.major.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Length of major ticks</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.major.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Length of major ticks</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.minor.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Length of minor ticks</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.minor.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Length of minor ticks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib.myImageLib</span><span class="w"> </span><span class="kn">import</span> <span class="n">readdata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.feature</span><span class="w"> </span><span class="kn">import</span> <span class="n">peak_local_max</span>
 <br/></pre></div>
 </div>
 </div>
@@ -139,14 +139,14 @@ from skimage.feature import peak_local_max
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[225]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># read image
-img = io.imread(&quot;test_files/find_circles.jpg&quot;)
-# convert to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-enhanced_gray = clahe.apply(gray)
-# blur the image
-blurred_frame = cv2.GaussianBlur(enhanced_gray, (11, 11), 0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># read image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;test_files/find_circles.jpg&quot;</span><span class="p">)</span>
+<span class="c1"># convert to grayscale</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2GRAY</span><span class="p">)</span>
+<span class="n">clahe</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">createCLAHE</span><span class="p">(</span><span class="n">clipLimit</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">tileGridSize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">enhanced_gray</span> <span class="o">=</span> <span class="n">clahe</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">gray</span><span class="p">)</span>
+<span class="c1"># blur the image</span>
+<span class="n">blurred_frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">enhanced_gray</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -154,7 +154,7 @@ blurred_frame = cv2.GaussianBlur(enhanced_gray, (11, 11), 0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[226]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(blurred_frame, cmap=&#39;gray&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">blurred_frame</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -181,17 +181,17 @@ blurred_frame = cv2.GaussianBlur(enhanced_gray, (11, 11), 0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Compute image gradients (Sobel)
-grad_x = cv2.Sobel(blurred_frame, cv2.CV_64F, 1, 0, ksize=3)
-grad_y = cv2.Sobel(blurred_frame, cv2.CV_64F, 0, 1, ksize=3)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute image gradients (Sobel)</span>
+<span class="n">grad_x</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">blurred_frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_64F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ksize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">grad_y</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">blurred_frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_64F</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ksize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-# smooth the gradient images
-grad_x = cv2.GaussianBlur(grad_x, (21, 21), 0)
-grad_y = cv2.GaussianBlur(grad_y, (21, 21), 0)
+<span class="c1"># smooth the gradient images</span>
+<span class="n">grad_x</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">grad_x</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">grad_y</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
-# Compute gradient magnitude and direction
-magnitude = np.sqrt(grad_x**2 + grad_y**2)
-direction = np.arctan2(grad_y, grad_x) + np.pi
+<span class="c1"># Compute gradient magnitude and direction</span>
+<span class="n">magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">grad_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 </pre></div>
 </div>
 </div>
@@ -199,7 +199,7 @@ direction = np.arctan2(grad_y, grad_x) + np.pi
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(magnitude)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">magnitude</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -223,7 +223,7 @@ direction = np.arctan2(grad_y, grad_x) + np.pi
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(direction)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -247,11 +247,11 @@ direction = np.arctan2(grad_y, grad_x) + np.pi
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[230]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Normalize magnitude
-magnitude /= (magnitude.max() + 1e-5)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize magnitude</span>
+<span class="n">magnitude</span> <span class="o">/=</span> <span class="p">(</span><span class="n">magnitude</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-5</span><span class="p">)</span>
 
-# Thresholding for strong edges
-strong_edges = magnitude &gt; magnitude.mean()
+<span class="c1"># Thresholding for strong edges</span>
+<span class="n">strong_edges</span> <span class="o">=</span> <span class="n">magnitude</span> <span class="o">&gt;</span> <span class="n">magnitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -259,7 +259,7 @@ strong_edges = magnitude &gt; magnitude.mean()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(strong_edges)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">strong_edges</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -286,13 +286,13 @@ strong_edges = magnitude &gt; magnitude.mean()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[232]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Create accumulator using vectorized voting
-height, width = gray.shape
-accumulator = np.zeros_like(gray, dtype=np.float32)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create accumulator using vectorized voting</span>
+<span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">gray</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">accumulator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-# Get indices of strong edge points
-y_idx, x_idx = np.where(strong_edges)
-theta = direction[y_idx, x_idx]
+<span class="c1"># Get indices of strong edge points</span>
+<span class="n">y_idx</span><span class="p">,</span> <span class="n">x_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">strong_edges</span><span class="p">)</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">direction</span><span class="p">[</span><span class="n">y_idx</span><span class="p">,</span> <span class="n">x_idx</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -300,9 +300,9 @@ theta = direction[y_idx, x_idx]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[233]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Precompute cosine and sine values for efficiency
-cos_theta = np.cos(theta)
-sin_theta = np.sin(theta)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Precompute cosine and sine values for efficiency</span>
+<span class="n">cos_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<span class="n">sin_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -310,17 +310,17 @@ sin_theta = np.sin(theta)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[234]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Loop through radius values, updating accumulator
-min_radius, max_radius = 50, 90
-for r in range(min_radius, max_radius, 2):  # Step size of 5 for performance
-    x_shift = (r * cos_theta).astype(np.int32)
-    y_shift = (r * sin_theta).astype(np.int32)
-    xc = x_idx - x_shift
-    yc = y_idx - y_shift
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loop through radius values, updating accumulator</span>
+<span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">90</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>  <span class="c1"># Step size of 5 for performance</span>
+    <span class="n">x_shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">cos_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">y_shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">sin_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">xc</span> <span class="o">=</span> <span class="n">x_idx</span> <span class="o">-</span> <span class="n">x_shift</span>
+    <span class="n">yc</span> <span class="o">=</span> <span class="n">y_idx</span> <span class="o">-</span> <span class="n">y_shift</span>
 
-    # Validity check
-    valid = (xc &gt;= 0) &amp; (xc &lt; width) &amp; (yc &gt;= 0) &amp; (yc &lt; height)
-    accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
+    <span class="c1"># Validity check</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">xc</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">xc</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">yc</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">yc</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">accumulator</span><span class="p">[</span><span class="n">yc</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">xc</span><span class="p">[</span><span class="n">valid</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">y_idx</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">x_idx</span><span class="p">[</span><span class="n">valid</span><span class="p">]]</span>
 </pre></div>
 </div>
 </div>
@@ -328,7 +328,7 @@ for r in range(min_radius, max_radius, 2):  # Step size of 5 for performance
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[235]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(accumulator, cmap=&#39;hot&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">accumulator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -352,8 +352,8 @@ for r in range(min_radius, max_radius, 2):  # Step size of 5 for performance
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[236]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Apply Gaussian smoothing
-accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply Gaussian smoothing</span>
+<span class="n">accumulator_smooth</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">accumulator</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="n">min_radius</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -361,7 +361,7 @@ accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[237]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(accumulator_smooth, cmap=&#39;hot&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">accumulator_smooth</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -388,8 +388,8 @@ accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[238]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Find local maxima
-centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find local maxima</span>
+<span class="n">centers</span> <span class="o">=</span> <span class="n">peak_local_max</span><span class="p">(</span><span class="n">accumulator_smooth</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">threshold_abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -397,11 +397,11 @@ centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[239]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(dpi=300)
-plt.imshow(gray, cmap=&#39;gray&#39;)
-for (x, y) in centers:
-    circ = plt.Circle((y, x), 60, color=&#39;r&#39;, fill=False)
-    plt.gca().add_patch(circ)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">centers</span><span class="p">:</span>
+    <span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="mi">60</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -419,8 +419,8 @@ for (x, y) in centers:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[240]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>score_thres = magnitude[strong_edges].mean()
-sensitivity = 0.8
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">score_thres</span> <span class="o">=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">strong_edges</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sensitivity</span> <span class="o">=</span> <span class="mf">0.8</span>
 </pre></div>
 </div>
 </div>
@@ -428,25 +428,25 @@ sensitivity = 0.8
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[241]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Estimate radii
-radii = []
-angles = np.linspace(0, 2*np.pi, 20) # 8 angles
-for y, x in centers:
-    radius_votes = []
-    scores = []
-    for r in range(min_radius, max_radius, 1):
-        dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
-        if (0 &lt;= x + dx).all() and (x + dx &lt; width).all() \
-            and (0 &lt;= y + dy).all and (y + dy &lt; height).all(): # validity check
-            score = magnitude[y + dy, x + dx].mean()
-            if score &gt; (1-sensitivity) * score_thres: # if shifted point is strong edge
-                radius_votes.append(r)
-                scores.append(score)
-    if scores:
-        best_radius = radius_votes[np.argmax(scores)]
-        radii.append(best_radius)
-    else:
-        radii.append(0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimate radii</span>
+<span class="n">radii</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="c1"># 8 angles</span>
+<span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">centers</span><span class="p">:</span>
+    <span class="n">radius_votes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> \
+            <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span><span class="o">.</span><span class="n">all</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span> <span class="c1"># validity check</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">sensitivity</span><span class="p">)</span> <span class="o">*</span> <span class="n">score_thres</span><span class="p">:</span> <span class="c1"># if shifted point is strong edge</span>
+                <span class="n">radius_votes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">scores</span><span class="p">:</span>
+        <span class="n">best_radius</span> <span class="o">=</span> <span class="n">radius_votes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+        <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_radius</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -454,13 +454,13 @@ for y, x in centers:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[242]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Visualize results
-fig, ax = plt.subplots(dpi=300)
-ax.imshow(gray, cmap=&#39;gray&#39;)
-for (y, x), r in zip(centers, radii):
-    circle = plt.Circle((x, y), r, color=&#39;r&#39;, fill=False, linewidth=1)
-    ax.add_patch(circle)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span> <span class="n">radii</span><span class="p">):</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -488,101 +488,101 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[269]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
-    &quot;&quot;&quot;
-    Find circles in an image using the Hough Transform.
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">imfindcircles</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">sensitivity</span><span class="o">=</span><span class="mf">0.85</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find circles in an image using the Hough Transform.</span>
 
-    Parameters:
-    - img: Input image (grayscale, 8-bit).
-    - radius: Radius of circles to detect. A list of 2 values, [minimum, maximum].
-    - smooth_window: Size of the Gaussian smoothing window for the image and the gradient images.
-    - sensitivity: Sensitivity for circle detection. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.
+<span class="sd">    Parameters:</span>
+<span class="sd">    - img: Input image (grayscale, 8-bit).</span>
+<span class="sd">    - radius: Radius of circles to detect. A list of 2 values, [minimum, maximum].</span>
+<span class="sd">    - smooth_window: Size of the Gaussian smoothing window for the image and the gradient images.</span>
+<span class="sd">    - sensitivity: Sensitivity for circle detection. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.</span>
 
-    Returns:
-    df -- a dataframe with columns [&quot;x&quot;, &quot;y&quot;, &quot;r&quot;] for the centers and radii of detected circles.
-    &quot;&quot;&quot;
-    assert(img.ndim == 2), &quot;Input image must be grayscale&quot;
-    assert(img.dtype == np.uint8), &quot;Input image must be 8-bit&quot;
+<span class="sd">    Returns:</span>
+<span class="sd">    df -- a dataframe with columns [&quot;x&quot;, &quot;y&quot;, &quot;r&quot;] for the centers and radii of detected circles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;Input image must be grayscale&quot;</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="s2">&quot;Input image must be 8-bit&quot;</span>
 
-    s = smooth_window // 2 * 2 + 1 # make sure the window size is odd
+    <span class="n">s</span> <span class="o">=</span> <span class="n">smooth_window</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># make sure the window size is odd</span>
 
-    # preprocess the image
-    # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(5, 5))
-    # img = clahe.apply(img)
-    img = cv2.GaussianBlur(img, (s, s), 0)
+    <span class="c1"># preprocess the image</span>
+    <span class="c1"># clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(5, 5))</span>
+    <span class="c1"># img = clahe.apply(img)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
-    # Compute image gradients (Sobel)
-    grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
-    grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+    <span class="c1"># Compute image gradients (Sobel)</span>
+    <span class="n">grad_x</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_64F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ksize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">grad_y</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_64F</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ksize</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-    # smooth the gradient images
-    grad_x = cv2.GaussianBlur(grad_x, (s, s), 0)
-    grad_y = cv2.GaussianBlur(grad_y, (s, s), 0)
+    <span class="c1"># smooth the gradient images</span>
+    <span class="n">grad_x</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">grad_x</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">grad_y</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
-    # Compute gradient magnitude and direction
-    magnitude = np.sqrt(grad_x**2 + grad_y**2)
-    direction = np.arctan2(grad_y, grad_x) + np.pi
+    <span class="c1"># Compute gradient magnitude and direction</span>
+    <span class="n">magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">grad_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
-    # Normalize magnitude
-    magnitude /= (magnitude.max() + 1e-5)
-    # Thresholding for strong edges
-    strong_edges = magnitude &gt; magnitude.mean()
+    <span class="c1"># Normalize magnitude</span>
+    <span class="n">magnitude</span> <span class="o">/=</span> <span class="p">(</span><span class="n">magnitude</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-5</span><span class="p">)</span>
+    <span class="c1"># Thresholding for strong edges</span>
+    <span class="n">strong_edges</span> <span class="o">=</span> <span class="n">magnitude</span> <span class="o">&gt;</span> <span class="n">magnitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
-    # Create accumulator using vectorized voting
-    height, width = img.shape
-    accumulator = np.zeros_like(img, dtype=np.float32)
-    # Get indices of strong edge points
-    y_idx, x_idx = np.where(strong_edges)
-    theta = direction[y_idx, x_idx]
-    # Precompute cosine and sine values for efficiency
-    cos_theta = np.cos(theta)
-    sin_theta = np.sin(theta)
-    # Loop through radius values, updating accumulator
-    min_radius, max_radius = radius
-    for r in range(min_radius, max_radius, 5):  # Step size of 5 for performance
-        x_shift = (r * cos_theta).astype(np.int32)
-        y_shift = (r * sin_theta).astype(np.int32)
-        xc = x_idx - x_shift
-        yc = y_idx - y_shift
-        # Validity check
-        valid = (xc &gt;= 0) &amp; (xc &lt; width) &amp; (yc &gt;= 0) &amp; (yc &lt; height)
-        accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
+    <span class="c1"># Create accumulator using vectorized voting</span>
+    <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">accumulator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="c1"># Get indices of strong edge points</span>
+    <span class="n">y_idx</span><span class="p">,</span> <span class="n">x_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">strong_edges</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">direction</span><span class="p">[</span><span class="n">y_idx</span><span class="p">,</span> <span class="n">x_idx</span><span class="p">]</span>
+    <span class="c1"># Precompute cosine and sine values for efficiency</span>
+    <span class="n">cos_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">sin_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="c1"># Loop through radius values, updating accumulator</span>
+    <span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span> <span class="o">=</span> <span class="n">radius</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>  <span class="c1"># Step size of 5 for performance</span>
+        <span class="n">x_shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">cos_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">y_shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">sin_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">xc</span> <span class="o">=</span> <span class="n">x_idx</span> <span class="o">-</span> <span class="n">x_shift</span>
+        <span class="n">yc</span> <span class="o">=</span> <span class="n">y_idx</span> <span class="o">-</span> <span class="n">y_shift</span>
+        <span class="c1"># Validity check</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">xc</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">xc</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">yc</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">yc</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">accumulator</span><span class="p">[</span><span class="n">yc</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">xc</span><span class="p">[</span><span class="n">valid</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">y_idx</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">x_idx</span><span class="p">[</span><span class="n">valid</span><span class="p">]]</span>
 
-    # Apply Gaussian smoothing to accumulator
-    accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
-    # Find local maxima
-    centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
+    <span class="c1"># Apply Gaussian smoothing to accumulator</span>
+    <span class="n">accumulator_smooth</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">accumulator</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="n">min_radius</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Find local maxima</span>
+    <span class="n">centers</span> <span class="o">=</span> <span class="n">peak_local_max</span><span class="p">(</span><span class="n">accumulator_smooth</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">threshold_abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
-    # Estimate radii
-    score_thres = magnitude[strong_edges].max()
+    <span class="c1"># Estimate radii</span>
+    <span class="n">score_thres</span> <span class="o">=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">strong_edges</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-    radii = []
-    angles = np.linspace(0, 2*np.pi, 8) # 8 angles
-    for y, x in centers:
-        radius_votes = []
-        scores = []
-        for r in range(min_radius, max_radius, 1):
-            dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
-            if (0 &lt;= x + dx).all() and (x + dx &lt; width).all() \
-                and (0 &lt;= y + dy).all and (y + dy &lt; height).all(): # validity check
-                score = magnitude[y + dy, x + dx].mean()
-                if score &gt; (1-sensitivity) * score_thres: # if shifted point is strong edge
-                    radius_votes.append(r)
-                    scores.append(score)
-        if scores:
-            best_radius = radius_votes[np.argmax(scores)]
-            radii.append(best_radius)
-        else:
-            radii.append(0)
+    <span class="n">radii</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="c1"># 8 angles</span>
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">centers</span><span class="p">:</span>
+        <span class="n">radius_votes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> \
+                <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span><span class="o">.</span><span class="n">all</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span> <span class="c1"># validity check</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">magnitude</span><span class="p">[</span><span class="n">y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">sensitivity</span><span class="p">)</span> <span class="o">*</span> <span class="n">score_thres</span><span class="p">:</span> <span class="c1"># if shifted point is strong edge</span>
+                    <span class="n">radius_votes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                    <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scores</span><span class="p">:</span>
+            <span class="n">best_radius</span> <span class="o">=</span> <span class="n">radius_votes</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+            <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_radius</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    # construct the dataframe for centers and radii
-    df = pd.DataFrame(centers, columns=[&quot;y&quot;, &quot;x&quot;])
-    df[&quot;r&quot;] = radii
+    <span class="c1"># construct the dataframe for centers and radii</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">radii</span>
 
-    # keep only the circles with radius &gt; 0
-    df = df[df[&quot;r&quot;] &gt; 0]
+    <span class="c1"># keep only the circles with radius &gt; 0</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
 
-    return df
+    <span class="k">return</span> <span class="n">df</span>
 </pre></div>
 </div>
 </div>
@@ -590,10 +590,10 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># read image
-img = io.imread(&quot;test_files/find_circles.jpg&quot;)
-# convert to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># read image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;test_files/find_circles.jpg&quot;</span><span class="p">)</span>
+<span class="c1"># convert to grayscale</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2GRAY</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -601,7 +601,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[277]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>df = imfindcircles(gray, [50, 100], sensitivity=0.7, smooth_window=21)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">imfindcircles</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="n">sensitivity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -609,11 +609,11 @@ gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[278]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(dpi=300)
-plt.imshow(gray, cmap=&#39;gray&#39;)
-for _, row in df.iterrows():
-    circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
-    plt.gca().add_patch(circ)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -628,18 +628,18 @@ for _, row in df.iterrows():
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[186]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>folder = r&quot;F:\F\02202025\params\blur&quot;
-for sr in range(1, 61, 10):
-    blurred_frame = cv2.GaussianBlur(gray, (sr, sr), 0)
-    df = imfindcircles(blurred_frame, [50, 120], sensitivity=0.7)
-    plt.figure(dpi=300)
-    plt.imshow(gray, cmap=&#39;gray&#39;)
-    for _, row in df.iterrows():
-        circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
-        plt.gca().add_patch(circ)
-    plt.axis(&#39;off&#39;)
-    plt.savefig(os.path.join(folder, f&quot;blurred_{sr}.svg&quot;))
-    plt.close()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">folder</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;F:\F\02202025\params\blur&quot;</span>
+<span class="k">for</span> <span class="n">sr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">blurred_frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">sr</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">imfindcircles</span><span class="p">(</span><span class="n">blurred_frame</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span> <span class="n">sensitivity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;blurred_</span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -647,18 +647,18 @@ for sr in range(1, 61, 10):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[187]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>folder = r&quot;F:\F\02202025\params\sensitivity&quot;
-for st in np.linspace(0, .9, 5):
-    blurred_frame = cv2.GaussianBlur(gray, (21, 21), 0)
-    df = imfindcircles(blurred_frame, [50, 120], sensitivity=st)
-    plt.figure(dpi=300)
-    plt.imshow(gray, cmap=&#39;gray&#39;)
-    for _, row in df.iterrows():
-        circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
-        plt.gca().add_patch(circ)
-    plt.axis(&#39;off&#39;)
-    plt.savefig(os.path.join(folder, f&quot;senstivity_{st:.1f}.svg&quot;))
-    plt.close()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">folder</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;F:\F\02202025\params\sensitivity&quot;</span>
+<span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">blurred_frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">imfindcircles</span><span class="p">(</span><span class="n">blurred_frame</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span> <span class="n">sensitivity</span><span class="o">=</span><span class="n">st</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;senstivity_</span><span class="si">{</span><span class="n">st</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

@@ -115,19 +115,19 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import os
-cwd = os.getcwd()
-import sys
-sys.path.insert(0, os.path.abspath(os.path.join(cwd, &quot;..&quot;, &quot;..&quot;, &quot;..&quot;, &quot;src&quot;)))
-import requests
-import matplotlib.pyplot as plt
-from io import BytesIO
-from skimage.io import imread
-google_download_handle = &quot;https://drive.google.com/uc?export=download&amp;id={}&quot;
-import numpy as np
-import cv2
-from myimagelib import readdata, show_progress, to8bit, bestcolor, rawImage, imfindcircles, xy_bin, PIV, compact_PIV, apply_mask
-import pandas as pd
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;src&quot;</span><span class="p">)))</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">imread</span>
+<span class="n">google_download_handle</span> <span class="o">=</span> <span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=</span><span class="si">{}</span><span class="s2">&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib</span><span class="w"> </span><span class="kn">import</span> <span class="n">readdata</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span> <span class="n">to8bit</span><span class="p">,</span> <span class="n">bestcolor</span><span class="p">,</span> <span class="n">rawImage</span><span class="p">,</span> <span class="n">imfindcircles</span><span class="p">,</span> <span class="n">xy_bin</span><span class="p">,</span> <span class="n">PIV</span><span class="p">,</span> <span class="n">compact_PIV</span><span class="p">,</span> <span class="n">apply_mask</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </pre></div>
 </div>
 </div>
@@ -139,8 +139,8 @@ import pandas as pd
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>l = readdata(&quot;.&quot;, &quot;ipynb&quot;)
-l
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">readdata</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;ipynb&quot;</span><span class="p">)</span>
+<span class="n">l</span>
 </pre></div>
 </div>
 </div>
@@ -198,7 +198,7 @@ l
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>show_progress(0.5, label=&quot;test&quot;, bar_length=80)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_progress</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">bar_length</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -220,10 +220,10 @@ test [########################################----------------------------------
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
-url = google_download_handle.format(&quot;1OTTXhvSrfgPmFcqjTQEaam9e5vgSEP79&quot;)  # replace with your image URL
-response = requests.get(url, stream=True)
-img = imread(BytesIO(response.content))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download condensation image from the cloud</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">google_download_handle</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;1OTTXhvSrfgPmFcqjTQEaam9e5vgSEP79&quot;</span><span class="p">)</span>  <span class="c1"># replace with your image URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -234,15 +234,15 @@ img = imread(BytesIO(response.content))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1, 2, figsize=(6, 4))
-ax[0].imshow(img, cmap=&quot;gray&quot;)
-ax[0].set_title(&quot;Raw image&quot;)
-ax[0].axis(&quot;off&quot;)
-# Convert to 8-bit and enhance contrast
-img8 = to8bit(img)
-ax[1].imshow(img8, cmap=&quot;gray&quot;)
-ax[1].set_title(&quot;8-bit image&quot;)
-ax[1].axis(&quot;off&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Raw image&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="c1"># Convert to 8-bit and enhance contrast</span>
+<span class="n">img8</span> <span class="o">=</span> <span class="n">to8bit</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;8-bit image&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -272,10 +272,10 @@ ax[1].axis(&quot;off&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
-url = google_download_handle.format(&quot;1LFRt5ozQjJ_WVrWBoPQOFVNl5ZWb8ytP&quot;)  # replace with your image URL
-response = requests.get(url, stream=True)
-img = imread(BytesIO(response.content))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download condensation image from the cloud</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">google_download_handle</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;1LFRt5ozQjJ_WVrWBoPQOFVNl5ZWb8ytP&quot;</span><span class="p">)</span>  <span class="c1"># replace with your image URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -283,15 +283,15 @@ img = imread(BytesIO(response.content))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># convert to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-plt.imshow(gray, cmap=&quot;gray&quot;)
-# find circles
-circles = imfindcircles(gray, [50, 100], sensitivity=0.7, smooth_window=21)
-for _, row in circles.iterrows():
-    circ = plt.Circle((row[&quot;x&quot;], row[&quot;y&quot;]), row[&quot;r&quot;], color=&#39;r&#39;, fill=False)
-    plt.gca().add_patch(circ)
-plt.axis(&quot;off&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert to grayscale</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2GRAY</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+<span class="c1"># find circles</span>
+<span class="n">circles</span> <span class="o">=</span> <span class="n">imfindcircles</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="n">sensitivity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">circles</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -321,15 +321,15 @@ plt.axis(&quot;off&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># craete a dense data
-s = int(1e6)
-x = np.arange(s)
-y = np.sin(0.00001*x) + np.random.rand(s)*.1
-# plot
-plt.plot(x, y, label=&quot;raw&quot;)
-xb, yb = xy_bin(x, y, n=50, mode=&quot;lin&quot;)
-plt.scatter(xb, yb, color=bestcolor(1), label=&quot;binned&quot;, zorder=10)
-plt.legend(frameon=False)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># craete a dense data</span>
+<span class="n">s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.00001</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="mf">.1</span>
+<span class="c1"># plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;raw&quot;</span><span class="p">)</span>
+<span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">xy_bin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lin&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">bestcolor</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;binned&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -356,8 +356,8 @@ plt.legend(frameon=False)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for i in range(10):
-    plt.scatter(i, 0, s=100, color=bestcolor(i))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">bestcolor</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -378,13 +378,13 @@ plt.legend(frameon=False)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Download condensation image from the cloud
-url = google_download_handle.format(&quot;1lc5JlOipgvTGRtvSEavF82xe26iLyHFX&quot;)  # replace with your image URL
-response = requests.get(url, stream=True)
-I0 = imread(BytesIO(response.content))
-url = google_download_handle.format(&quot;1QXTD6glGy_MAF2sSp9tiv6KeEEeuVz1q&quot;)  # replace with your image URL
-response = requests.get(url, stream=True)
-I1 = imread(BytesIO(response.content))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download condensation image from the cloud</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">google_download_handle</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;1lc5JlOipgvTGRtvSEavF82xe26iLyHFX&quot;</span><span class="p">)</span>  <span class="c1"># replace with your image URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">I0</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">google_download_handle</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;1QXTD6glGy_MAF2sSp9tiv6KeEEeuVz1q&quot;</span><span class="p">)</span>  <span class="c1"># replace with your image URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">I1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -392,9 +392,9 @@ I1 = imread(BytesIO(response.content))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = PIV(I0, I1, 32)
-plt.imshow(I0, cmap=&quot;gray&quot;)
-plt.quiver(x, y, u, -v, color=&quot;yellow&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">PIV</span><span class="p">(</span><span class="n">I0</span><span class="p">,</span> <span class="n">I1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -421,9 +421,9 @@ plt.quiver(x, y, u, -v, color=&quot;yellow&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.pivLib import to_dataframe
-pivData = to_dataframe(x, y, u, v)
-pivData.head()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib.pivLib</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_dataframe</span>
+<span class="n">pivData</span> <span class="o">=</span> <span class="n">to_dataframe</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">pivData</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -503,9 +503,9 @@ pivData.head()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>url = google_download_handle.format(&quot;1r4Ry9eR-eKQoeTjxmJS9ZZ1aSaiHr-df&quot;)  # replace with your image URL
-response = requests.get(url, stream=True)
-mask = imread(BytesIO(response.content))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">google_download_handle</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;1r4Ry9eR-eKQoeTjxmJS9ZZ1aSaiHr-df&quot;</span><span class="p">)</span>  <span class="c1"># replace with your image URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -513,9 +513,9 @@ mask = imread(BytesIO(response.content))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pivData = to_dataframe(x, y, u, v)
-masked_pivData = apply_mask(pivData, mask)
-masked_pivData.head()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pivData</span> <span class="o">=</span> <span class="n">to_dataframe</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">masked_pivData</span> <span class="o">=</span> <span class="n">apply_mask</span><span class="p">(</span><span class="n">pivData</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+<span class="n">masked_pivData</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -601,8 +601,8 @@ masked_pivData.head()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.pivLib import to_matrix
-x, y, u, v = to_matrix(masked_pivData)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib.pivLib</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_matrix</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">to_matrix</span><span class="p">(</span><span class="n">masked_pivData</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -614,9 +614,9 @@ x, y, u, v = to_matrix(masked_pivData)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from myimagelib.corrLib import corrS, corrI, divide_windows, distance_corr, \
-    density_fluctuation, local_df, compute_energy_density, compute_wavenumber_field, \
-        energy_spectrum, autocorr1d, vacf_piv
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib.corrLib</span><span class="w"> </span><span class="kn">import</span> <span class="n">corrS</span><span class="p">,</span> <span class="n">corrI</span><span class="p">,</span> <span class="n">divide_windows</span><span class="p">,</span> <span class="n">distance_corr</span><span class="p">,</span> \
+    <span class="n">density_fluctuation</span><span class="p">,</span> <span class="n">local_df</span><span class="p">,</span> <span class="n">compute_energy_density</span><span class="p">,</span> <span class="n">compute_wavenumber_field</span><span class="p">,</span> \
+        <span class="n">energy_spectrum</span><span class="p">,</span> <span class="n">autocorr1d</span><span class="p">,</span> <span class="n">vacf_piv</span>
 </pre></div>
 </div>
 </div>
@@ -626,8 +626,8 @@ x, y, u, v = to_matrix(masked_pivData)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, y, u, v = to_matrix(pivData)
-X, Y, CA, CV = corrS(x, y, u, v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">to_matrix</span><span class="p">(</span><span class="n">pivData</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CA</span><span class="p">,</span> <span class="n">CV</span> <span class="o">=</span> <span class="n">corrS</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -635,9 +635,9 @@ X, Y, CA, CV = corrS(x, y, u, v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1, 2, figsize=(6, 4))
-ax[0].imshow(CA), ax[0].axis(&quot;off&quot;)
-ax[1].imshow(CV), ax[1].axis(&quot;off&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">CA</span><span class="p">),</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">CV</span><span class="p">),</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -664,7 +664,7 @@ ax[1].imshow(CV), ax[1].axis(&quot;off&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X, Y, I = divide_windows(I0, windowsize=[32, 32])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">divide_windows</span><span class="p">(</span><span class="n">I0</span><span class="p">,</span> <span class="n">windowsize</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -672,8 +672,8 @@ ax[1].imshow(CV), ax[1].axis(&quot;off&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(I)
-plt.axis(&quot;off&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -700,9 +700,9 @@ plt.axis(&quot;off&quot;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X, Y, CA, CV = corrS(x, y, u, v)
-dc = distance_corr(X, Y, CV)
-plt.plot(dc.R, dc.C)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CA</span><span class="p">,</span> <span class="n">CV</span> <span class="o">=</span> <span class="n">corrS</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">dc</span> <span class="o">=</span> <span class="n">distance_corr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CV</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dc</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -729,7 +729,7 @@ plt.plot(dc.R, dc.C)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>es = energy_spectrum(pivData, d=25*0.33)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">es</span> <span class="o">=</span> <span class="n">energy_spectrum</span><span class="p">(</span><span class="n">pivData</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">25</span><span class="o">*</span><span class="mf">0.33</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -737,7 +737,7 @@ plt.plot(dc.R, dc.C)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(es.k, es.E)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">es</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">es</span><span class="o">.</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -764,9 +764,9 @@ plt.plot(dc.R, dc.C)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t = np.linspace(0, 10)
-x = np.sin(t)
-corr, t = autocorr1d(x, t)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">corr</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">autocorr1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -774,7 +774,7 @@ corr, t = autocorr1d(x, t)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(t, corr)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
