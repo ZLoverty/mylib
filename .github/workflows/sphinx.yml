@@ -17,7 +17,13 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Install dependencies
         run: |
           sudo apt install pandoc
@@ -26,13 +32,6 @@ jobs:
           pip-compile --output-file=requirements.txt pyproject.toml
           python -m pip install -r requirements.txt
           python -m pip install sphinx sphinx_rtd_theme nbsphinx pygments ipython
-      - name: Debug Python & Pip
-        run: |
-          which python
-          python --version
-          pip --version
-      - name: Verify Installed Packages
-        run: python -m pip list | tee installed_packages.txt
 
       - name: Build HTML
         run: sphinx-build -b html docs/source/ docs/build/html
