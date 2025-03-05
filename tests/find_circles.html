@@ -65,6 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#2-Combine-the-steps">2 Combine the steps</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#3-Development">3 Development</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#3.1-Radius-voting">3.1 Radius voting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#3.2-Multi-stage-find-circle">3.2 Multi-stage find circle</a></li>
 </ul>
 </li>
 </ul>
@@ -733,6 +734,11 @@ array([[1435, 2177],
 <section id="3-Development">
 <h2>3 Development<a class="headerlink" href="#3-Development" title="Link to this heading"></a></h2>
 <p>This section documents the new developments.</p>
+<ul class="simple">
+<li><p>use gradient magnitude in evaluating the radius_vote (done)</p></li>
+<li><p>smooth the score as a function of radius (done)</p></li>
+<li><p>multi-stage</p></li>
+</ul>
 <section id="3.1-Radius-voting">
 <h3>3.1 Radius voting<a class="headerlink" href="#3.1-Radius-voting" title="Link to this heading"></a></h3>
 <p>Currently, the radius voting only considers the highest score. This means all other lower scores are completely ignored. This is not a good use of the information. In this section, we observe more closely how the score varies with radius. Theoretically, an edge has some finite thickness, so that adjacent radii would all give rise to high scores. In contrast, a “fake” circle would have less consistent score in the vicinity. This idea is tested in this section.</p>
@@ -768,7 +774,7 @@ array([[1435, 2177],
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tests_find_circles_40_1.png" src="../_images/tests_find_circles_40_1.png" />
+<img alt="../_images/tests_find_circles_41_1.png" src="../_images/tests_find_circles_41_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -787,23 +793,6 @@ array([[1435, 2177],
         <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[162]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[162]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-4.666666666666667
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[166]:
@@ -858,11 +847,33 @@ array([[1435, 2177],
 68.38383838383838
 </pre></div></div>
 </div>
-<ul class="simple">
-<li><p>use gradient magnitude in evaluating the radius_vote (done)</p></li>
-<li><p>smooth the score as a function of radius (done)</p></li>
-<li><p>multi-stage</p></li>
-</ul>
+</section>
+<section id="3.2-Multi-stage-find-circle">
+<h3>3.2 Multi-stage find circle<a class="headerlink" href="#3.2-Multi-stage-find-circle" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -904,7 +915,7 @@ array([[1435, 2177],
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tests_find_circles_49_0.png" src="../_images/tests_find_circles_49_0.png" />
+<img alt="../_images/tests_find_circles_52_0.png" src="../_images/tests_find_circles_52_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
