@@ -10,6 +10,7 @@ from nd2reader import ND2Reader
 import cv2
 from scipy.ndimage import gaussian_filter
 from skimage.feature import peak_local_max
+from sklearn.cluster import DBSCAN
 
 def readdata(folder, ext='csv', mode="i"):
     """
@@ -155,7 +156,7 @@ def wowcolor(n):
               '#bcbd22', '#17becf']
     return colors[n]
 
-def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
+def imfindcircles(img, radius, edge_width=10, smooth_window=11, nIter=1):
     """
     Find circles in images. The algorithm is based on Hough Transform and the idea of `Atherton and Kerbyson 1999 <https://www.sciencedirect.com/science/article/pii/S0262885698001607>`_, using the edge orientation information to improve the performance on noisy images. See `step-by-step phase code find circles <../tests/find_circles.html>`_ for more details about this method.
 
@@ -163,26 +164,38 @@ def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     :type img: numpy array
     :param radius: Radius of circles to detect. A list of 2 values, [minimum, maximum].
     :type radius: list
-    :param sensitivity: Sensitivity for circle detection. The sensitivity takes values in (0, 1], and higher value leads to more detected circle.
-    :type sensitivity: float
+    :param edge_width: An estimated with of the edge in pixels. Default is 10.
+    :type edge_width: int
+    :param smooth_window: Size of the Gaussian window for smoothing the image / gradient field / accumulator. Default is 11.
+    :type smooth_window: int
+    :param nIter: Number of iterations for multi-stage detection. Default is 1. When nIter > 1, the function will run the detection multiple times with different radius ranges. This is useful when the circles have different sizes.
+    :type nIter: int
     :return: DataFrame with columns [x, y, r] for the centers and radii of detected circles.
     :rtype: pandas.DataFrame
 
     >>> from myimagelib import imfindcircles
-    >>> circles = imfindcircles(img, [10, 20])
-    >>> circles = imfindcircles(img, [10, 20], smooth_window=5)
-    >>> circles = imfindcircles(img, [10, 20], smooth_window=5, sensitivity=0.9)
+    >>> circles = imfindcircles(img, [50, 120])
+    >>> circles = imfindcircles(img, [50, 120], edge_width=5)
+    >>> circles = imfindcircles(img, [50, 120], edge_width=5, smooth_window=5)
+    >>> circles = imfindcircles(img, [50, 120], edge_width=5, smooth_window=5, nIter=4)
 
     .. rubric:: Edit
     
     * Feb 27, 2025 -- Initial commit.
     * Feb 28, 2025 -- (i) Add `smooth_window` argument, include the preprocessing step in this function to simplify the code on the user side; (ii) determine step size adaptively.
+    * Mar 04, 2025 -- Smooth the score before locating the peak.
+    * Mar 05, 2025 -- (i) Implement multi-stage detection. Add `nIter` argument to determine the number of iterations. (ii) Use threshold of magnitude (magnitude > mean + 2*std) to determine the strong edges.
     """
-    
+
     assert(img.ndim == 2), "Input image must be grayscale"
     assert(img.dtype == np.uint8), "Input image must be 8-bit"
 
-    s = smooth_window // 2 * 2 + 1 # make sure the window size is odd
+    # Loop through radius values, updating accumulator
+    min_radius, max_radius = radius
+    # estimate smooth sigma for score
+    sigma = edge_width / 100 * (max_radius - min_radius) / 3
+    # make sure the window size is odd
+    s = smooth_window // 2 * 2 + 1 
 
     # preprocess the image
     # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(5, 5))
@@ -200,69 +213,99 @@ def imfindcircles(img, radius, smooth_window=11, sensitivity=0.85):
     # Compute gradient magnitude and direction
     magnitude = np.sqrt(grad_x**2 + grad_y**2)
     direction = np.arctan2(grad_y, grad_x) + np.pi
-
-    # Normalize magnitude
-    magnitude /= (magnitude.max() + 1e-5)
-    # Thresholding for strong edges
-    strong_edges = magnitude > magnitude.mean()
-
-    # Create accumulator using vectorized voting
-    height, width = img.shape
-    accumulator = np.zeros_like(img, dtype=np.float32)
-    # Get indices of strong edge points
-    y_idx, x_idx = np.where(strong_edges)
-    theta = direction[y_idx, x_idx]
-    # Precompute cosine and sine values for efficiency
-    cos_theta = np.cos(theta)
-    sin_theta = np.sin(theta)
-    # Loop through radius values, updating accumulator
-    min_radius, max_radius = radius
-    # determine step size based on the radius range
-    step = max(1, (max_radius - min_radius) // 10)
-    for r in range(min_radius, max_radius, step):  # Step size of 5 for performance
-        x_shift = (r * cos_theta).astype(np.int32)
-        y_shift = (r * sin_theta).astype(np.int32)
-        xc = x_idx - x_shift
-        yc = y_idx - y_shift
-        # Validity check
-        valid = (xc >= 0) & (xc < width) & (yc >= 0) & (yc < height)
-        accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
-
-    # Apply Gaussian smoothing to accumulator
-    accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
-    # Find local maxima
-    centers = peak_local_max(accumulator_smooth, min_distance=min_radius, threshold_abs=0.1)
     
-    # Estimate radii
-    score_thres = magnitude[strong_edges].max()
+    # Thresholding for strong edges
+    # strong_edges = cv2.Canny(img, 100, 150) > 0
+    strong_edges = magnitude > magnitude.mean() + 2 * magnitude.std()
 
-    radii = []
-    angles = np.linspace(0, 2*np.pi, 8) # 8 angles
-    for y, x in centers:
-        radius_votes = []
+    def imfindcircles_one(magnitude, direction, strong_edges, min_radius, max_radius, sigma):
+        # Create accumulator using vectorized voting
+        height, width = magnitude.shape
+        accumulator = np.zeros_like(img, dtype=np.float32)
+        # Get indices of strong edge points
+        y_idx, x_idx = np.where(strong_edges)
+        theta = direction[y_idx, x_idx]
+        # Precompute cosine and sine values for efficiency
+        cos_theta = np.cos(theta)
+        sin_theta = np.sin(theta)
+        
+        for r in np.linspace(min_radius, max_radius, 10):  # Step size of 5 for performance
+            x_shift = (r * cos_theta).astype(np.int32)
+            y_shift = (r * sin_theta).astype(np.int32)
+            xc = x_idx - x_shift
+            yc = y_idx - y_shift
+            # Validity check
+            valid = (xc >= 0) & (xc < width) & (yc >= 0) & (yc < height)
+            accumulator[yc[valid], xc[valid]] += magnitude[y_idx[valid], x_idx[valid]]
+
+        # Apply Gaussian smoothing to accumulator
+        accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
+        # Find local maxima
+        centers = peak_local_max(accumulator_smooth, min_distance=int(min_radius), threshold_abs=0.1)
+
+        radii = []
         scores = []
-        for r in range(min_radius, max_radius, 1):
-            dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
-            if (0 <= x + dx).all() and (x + dx < width).all() \
-                and (0 <= y + dy).all and (y + dy < height).all(): # validity check
-                score = magnitude[y + dy, x + dx].mean() 
-                if score > (1-sensitivity) * score_thres: # if shifted point is strong edge
+        angles = np.linspace(0, 2*np.pi, 20) # 8 angles
+        for y, x in centers:
+            radius_votes = []
+            scores_tmp = []
+            for r in np.linspace(min_radius, max_radius, 100):
+                dx, dy = (r * np.cos(angles)).astype(int), (r * np.sin(angles)).astype(int)
+                if (0 <= x + dx).all() and (x + dx < width).all() \
+                    and (0 <= y + dy).all and (y + dy < height).all(): # validity check
+                    score = magnitude[y + dy, x + dx].mean() 
                     radius_votes.append(r)
-                    scores.append(score)
-        if scores:
-            best_radius = radius_votes[np.argmax(scores)]
-            radii.append(best_radius)
-        else:
-            radii.append(0)
+                    scores_tmp.append(score)
+            if scores_tmp:
+                scores_smooth = gaussian_filter(scores_tmp, sigma=sigma)
+                best_radius = radius_votes[np.argmax(scores_smooth)]
+                radii.append(best_radius)
+                scores.append(np.max(scores_smooth))
+            else:
+                radii.append(0)
+                scores.append(0)
 
-    # construct the dataframe for centers and radii
-    df = pd.DataFrame(centers, columns=["y", "x"])
-    df["r"] = radii
+        # construct the dataframe for centers and radii
+        df = pd.DataFrame(centers, columns=["y", "x"])
+        df["r"] = radii
+        df["score"] = scores
 
-    # keep only the circles with radius > 0
-    df = df[df["r"] > 0]
+        # keep only the circles with radius > 0
+        df = df[df["r"] > 0]
 
-    return df
+        return df
+
+    if nIter > 1:
+        min_r, max_r = radius
+        ranges, step = np.linspace(min_r, max_r, num=nIter, endpoint=False, retstep=True)
+        df_list = []
+        for min_radius in ranges:
+            max_radius = min_radius + step
+            df_tmp = imfindcircles_one(magnitude, direction, strong_edges, \
+                min_radius, max_radius, sigma)
+            df_list.append(df_tmp)
+        df = pd.concat(df_list).reset_index(drop=True)
+    else:
+        df = imfindcircles_one(magnitude, direction, strong_edges, min_radius, max_radius
+        , sigma)
+        return df.drop(columns=["score"])
+
+    # filter overlapping circles
+    # Define the threshold distance
+    threshold_distance = 60
+    # Apply DBSCAN clustering
+    db = DBSCAN(eps=threshold_distance, min_samples=1).fit(df[['x', 'y']])
+    df['cluster'] = db.labels_
+    # construct a new dataframe to store the final result
+    g_list = []
+    for c, g in df.groupby("cluster"):
+        g = g.loc[[g['score'].idxmax()]]
+        if len(g) > 1:
+            print(c, len(g))
+        g_list.append(g)
+    df_final = pd.concat(g_list)
+
+    return df_final.drop(columns=["cluster", "score"])
 
 def show_progress(progress, label='', bar_length=60):
     """

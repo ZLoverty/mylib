@@ -12,6 +12,10 @@
 
 - Reorganize the documentation.
 
+### v1.5.2
+
+- Improve `imfindcircles()` with new strong edge criterion and multi-stage detection.
+
 ## v1.4
 
 - Implement doctest to test the code automatically.
