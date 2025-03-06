@@ -25,7 +25,8 @@ dependencies = [
   "nd2reader",
   "psutil",
   "opencv-python",
-  "openpiv"
+  "openpiv",
+  "sklearn"
 ]
 
 [project.urls]
