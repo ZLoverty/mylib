@@ -16,6 +16,10 @@
 
 - Improve `imfindcircles()` with new strong edge criterion and multi-stage detection.
 
+### v1.5.3
+
+- Fix a distance filter bug.
+
 ## v1.4
 
 - Implement doctest to test the code automatically.

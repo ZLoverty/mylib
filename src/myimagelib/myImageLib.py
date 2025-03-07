@@ -292,7 +292,7 @@ def imfindcircles(img, radius, edge_width=10, smooth_window=11, nIter=1):
 
     # filter overlapping circles
     # Define the threshold distance
-    threshold_distance = 60
+    threshold_distance = min_r
     # Apply DBSCAN clustering
     db = DBSCAN(eps=threshold_distance, min_samples=1).fit(df[['x', 'y']])
     df['cluster'] = db.labels_
