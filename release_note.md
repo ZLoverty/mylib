@@ -20,6 +20,10 @@
 
 - Fix a distance filter bug.
 
+### v1.5.4
+
+- `imfindcircles()` now exclude overlap using `max_radius`
+
 ## v1.4
 
 - Implement doctest to test the code automatically.

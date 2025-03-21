@@ -241,7 +241,7 @@ def imfindcircles(img, radius, edge_width=10, smooth_window=11, nIter=1):
         # Apply Gaussian smoothing to accumulator
         accumulator_smooth = gaussian_filter(accumulator, sigma=(min_radius//10)*2+1)
         # Find local maxima
-        centers = peak_local_max(accumulator_smooth, min_distance=int(min_radius), threshold_abs=0.1)
+        centers = peak_local_max(accumulator_smooth, min_distance=int(max_radius), threshold_abs=0.1)
 
         radii = []
         scores = []
