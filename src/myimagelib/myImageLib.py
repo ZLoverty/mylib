@@ -126,7 +126,7 @@ def to8bit(img):
 
 def bestcolor(n):
     """
-    Default plot color scheme of Matplotlib and Matlab. It is the same as `the "tab10" colormap of Matplotlib.colormaps <https://matplotlib.org/stable/tutorials/colors/colormaps.html#qualitative>`_. 
+    A good colormap for categorical data plots. Color Universal Design (CUD) colorblind-safe.
 
     :param n: integer from 0 to 9, specifying the index of the color in the list
     :type n: int
@@ -136,8 +136,8 @@ def bestcolor(n):
     >>> from myimagelib import bestcolor
     >>> bestcolor(0)
     """
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-              '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    # colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    colors = ["#377eb8", "#ff7f00", "#4daf4a", "#f781bf", "#a65628", "#984ea3", "#999999", "#e41a1c", "#dede00"]
     return colors[n]
 
 def wowcolor(n):
