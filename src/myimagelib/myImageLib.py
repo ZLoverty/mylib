@@ -358,8 +358,12 @@ def xy_bin(xo, yo, n=100, mode='log', bins=None):
     * Nov 17, 2020 -- add bins kwarg, allow user to enter custom bins.
     * Dec 16, 2021 -- fix divided by 0 issue.
     * Nov 14, 2022 -- Move from ``corrLib`` to ``myImageLib``.
+    * Apr 01, 2025 -- Remove nan before binning, to avoid all-nan yb.
     """
-    assert(len(xo)==len(yo))
+    df = pd.DataFrame({"xo": xo, "yo": yo})
+    df.dropna(inplace=True)
+    xo = df.xo.values
+    yo = df.yo.values
     if bins is None:
         if mode == 'log':
             x = np.logspace(np.log10(xo[xo>0].min()), np.log10(xo.max()), n+1)

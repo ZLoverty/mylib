@@ -23,6 +23,7 @@
 ### v1.5.4
 
 - `imfindcircles()` now exclude overlap using `max_radius`
+- handle `nan` in `xy_bin`.
 
 ## v1.4
 
