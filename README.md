@@ -7,28 +7,22 @@ I understand that this package consists of code for many different purposes and 
 ## Installation
 
 ```
-pip install myimagelib
+pip install git+https://github.com/ZLoverty/mylib.git
 ```
 
 ## Examples of use
 
 ```python
->>> from myimagelib.myImageLib import readdata
->>> readdata(".", "py")
+>>> from myimagelib import show_progress
+>>> show_progress(0.5, label="test", bar_length=40)
 ```
 The result is:
 ```
-               Name                                                Dir
-0          __init__  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-1           corrLib  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-2         corrTrack  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-3             deLib  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-4  fit_circle_utils  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-5           miscLib  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-6        myImageLib  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-7            pivLib  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
-8       xcorr_funcs  C:\Users\liuzy\Miniconda3\envs\testpip\Lib\sit...
+
+```
+test [####################--------------------] 50.0%
 ```
 
+See [the documentation](https://zloverty.github.io/mylib/myImageLib.html) for more details!
 
 

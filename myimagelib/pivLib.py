@@ -1,29 +1,7 @@
 import numpy as np
 import pandas as pd
-from scipy.signal import medfilt2d
 import os
-import scipy
 from scipy.io import savemat
-from openpiv import pyprocess, validation, filters
-
-def read_piv(pivDir):
-    """
-    Read piv data from pivDir as X, Y, U, V. pivDir contains *\*.csv* files, which store PIV data of each image pair in a separated file. The data are organized in 4-column tables, (x, y, u, v). This function reconstructs the 2D data, by inferring the dimensions from data.
-
-    :param pivDir: directory of the folder hosting PIV data.
-    :return: x, y, u, v -- 2D PIV data.
-    :rtype: 4-tuple of 2D ``numpy.array``
-
-    >>> from myimagelib.pivLib import read_piv
-    >>> x, y, u, v = read_piv(pivDir)
-
-    .. rubric:: Edit
-
-    * Nov 17, 2022 -- Separate functions in two parts, and implement :py:func:`to_matrix`.
-    """
-    pivData = pd.read_csv(pivDir)
-
-    return to_matrix(pivData)
 
 def to_matrix(pivData):
     """
@@ -71,118 +49,6 @@ def to_dataframe(x, y, u, v):
     df["u"] = u.reshape(-1)
     df["v"] = v.reshape(-1)
     return df
-
-def PIV(I0, I1, winsize, overlap=None):
-    """
-    Standard PIV, consisting of replacing outliers, validate signal to noise ratio, and a smoothing with median filter of kernal shape (3, 3).
-
-    :param I0: The first image
-    :type I0: 2D ``numpy.array``
-    :param I1: The second iamge
-    :type I1: 2D ``numpy.array``
-    :param winsize: interrogation window size
-    :type winsize: int
-    :param overlap: distance between two windows, usually set to half of window size. By default, it is set to half of the window size.
-    :type overlap: int
-    :return: x, y, u, v -- 2D matrices of PIV data. The shape of x, y, u, v are the same. The shape is ``(row, col)``, where ``row = (I0.shape[0] - winsize) // overlap + 1`` and ``col = (I0.shape[1] - winsize) // overlap + 1``.
-    :rtype: 4-tuple of 2D ``numpy.array``
-
-    >>> from myimagelib import PIV
-    >>> PIV(I0, I1, 64)
-    >>> PIV(I0, I1, 64, 32)
-
-    .. rubric:: Edit
-
-    * Nov 17, 2022 -- (i) Turn off median filter. If needed, do it on the outcome, outside this function. (ii) Update the use of :py:func:`openpiv.pyprocess.get_coordinates`.
-    * Dec 06, 2022 -- Update syntax per the changes in the openpiv module. Copy from tutorial.
-    * Jan 12, 2023 -- Change ``sig2noise`` threshold to 1.
-    * Mar 02, 2025 -- (i) Remove ``dt`` parameter. ``dt`` is set to 1.0, so that the unit of velocity is always pixel/frame; (ii) set default value of ``overlap`` to half of the window size. Make ``overlap`` optional.
-    """
-
-    if overlap is None:
-        overlap = winsize // 2
-    
-    u0, v0, sig2noise = pyprocess.extended_search_area_piv(
-        I0.astype(np.int32),
-        I1.astype(np.int32),
-        window_size=winsize,
-        overlap=overlap,
-        dt=1.0,
-        search_area_size=winsize,
-        sig2noise_method='peak2peak',
-    )
-    # get x, y
-    x, y = pyprocess.get_coordinates(
-        image_size=I0.shape,
-        search_area_size=winsize,
-        overlap=overlap
-    )
-    invalid_mask = validation.sig2noise_val(
-        sig2noise,
-        threshold = 1.0,
-    )
-    # replace_outliers
-    u2, v2 = filters.replace_outliers(
-        u0, v0,
-        invalid_mask,
-        method='localmean',
-        max_iter=3,
-        kernel_size=3,
-    )
-    # median filter smoothing
-    # u3 = medfilt2d(u2, 3)
-    # v3 = medfilt2d(v2, 3)
-    return x, y, u2, v2
-
-def tangent_unit(point, center):
-    """
-    Compute tangent unit vector based on point coords and center coords.
-
-    :param point: coordinates of the point of interest, 2-tuple
-    :param center: coordinates of circle center, 2-tuple
-    :return: tangent unit vector
-    """
-    point = np.array(point)
-    # center = np.array(center)
-    r = np.array((point[0] - center[0], point[1] - center[1]))
-    # the following two lines set the initial value for the x of the tangent vector
-    ind = np.logical_or(r[1] > 0, np.logical_and(r[1] == 0, r[0] > 0))
-    x1 = np.ones(point.shape[1:])
-    x1[ind] = -1
-    y1 = np.zeros(point.shape[1:])
-    x1[(r[1]==0)] = 0
-    y1[(r[1]==0)&(r[0]>0)] = -1
-    y1[(r[1]==0)&(r[0]<0)] = 1
-
-    y1[r[1]!=0] = np.divide(x1 * r[0], r[1], where=r[1]!=0)[r[1]!=0]
-    length = (x1**2 + y1**2) ** 0.5
-    return np.divide(np.array([x1, y1]), length, out=np.zeros_like(np.array([x1, y1])), where=length!=0)
-
-def apply_mask(pivData, mask):
-    """
-    Apply a mask on PIV data, by adding a boolean column "mask" to the original x, y, u, v data file. Valid velocities are labeled ``True`` while invalid velocities are labeled ``False``.
-
-    :param pivData: PIV data (x, y, u, v)
-    :type pivData: pandas.DataFrame
-    :param mask: an image, preferrably binary, where large value denotes valid data and small value denote invalid data. The image will be converted to a boolean array by ``mask = mask > mask.mean()``.
-    :type mask: 2D array
-    :return: masked PIV data.
-    :rtype: ``pandas.DataFrame``
-
-    >>> from myimagelib import apply_mask
-    >>> masked_pivData = apply_mask(pivData, mask)
-
-    .. rubric:: Edit
-
-    * Nov 17, 2022 -- Initial commit.
-    * Nov 30, 2022 -- Instead of replacing invalid data with ``np.nan``, add an additional column, where the validity of data is specified.
-    * Dec 01, 2022 -- Remove the erosion step, since it is very obsecure to include this step here. If we want the mask to be more conservative (include less region to be sure that we are free from boundary effect), we can modify the mask in ImageJ and apply again on the PIV data.
-    * Dec 19, 2022 -- Modify docstring to be consistent with code action.
-    """
-    mask = mask > mask.mean()
-    ind = mask[pivData.y.astype("int"), pivData.x.astype("int")]
-    pivData["mask"] = ind
-    return pivData
 
 class compact_PIV:
     """
@@ -242,10 +108,13 @@ class compact_PIV:
             u[~self.data["mask"].astype("bool")] = np.nan
             v[~self.data["mask"].astype("bool")] = np.nan
         return self.data["x"], self.data["y"], u, v
+    
     def __repr__(self):
         return str(self.data)
+    
     def __getitem__(self, indices):
         return self.data[indices]
+    
     def _from_filelist(self, filelist):
         """
         Construct dict data from filelist of conventional PIV data.
@@ -275,6 +144,7 @@ class compact_PIV:
         compact_piv["v"] = np.stack(vl)
         compact_piv["labels"] = label
         return compact_piv
+    
     def get_labels(self): 
         """ 
         Returns filenames originally used for constructing this data.
@@ -286,6 +156,7 @@ class compact_PIV:
         Save the compact_PIV data to a .mat file.
         """
         savemat(fname, self.data)
+
     def update_mask(self, mask_img):
         """
         Update mask in the compact_PIV object. The mask is a binary image, where large values denote valid region. This method will update the mask in the compact_PIV object, by setting the mask value to False where the mask_img value is small. If the "mask" field does not exist, create it can set the value by the provided ``mask_img``.
@@ -293,6 +164,7 @@ class compact_PIV:
         mask = mask_img > mask_img.mean()
         ind = mask[self.data["y"].astype("int"), self.data["x"].astype("int")].reshape(self.data["x"].shape)
         self.data["mask"] = ind
+
     def to_csv(self, folder):
         """
         Save as .csv files to given folder. This is the reverse of the condensing process. It is intended to complete partially finished .mat data.

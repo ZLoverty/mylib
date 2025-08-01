@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "myimagelib"
-version = "1.5.4"
+version = "2.0.0"
 authors = [
   { name="Zhengyang Liu", email="liuzy19911112@gmail.com" },
 ]
 description = "Image IO, correlation, PIV, particle tracking tools collection."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,14 +18,12 @@ classifiers = [
 ]
 dependencies = [
   "numpy",
-  "matplotlib",
   "scikit-image",
   "pandas",
   "scipy",
   "nd2reader",
   "psutil",
   "opencv-python",
-  "openpiv",
   "scikit-learn"
 ]
 

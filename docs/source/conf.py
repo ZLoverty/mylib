@@ -13,7 +13,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join("..", "..", "src")))
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..", "myimagelib")))
 import myimagelib
 
 
@@ -25,7 +25,7 @@ copyright = '2022-2025, Zhengyang Liu'
 author = 'Zhengyang Liu'
 
 # The full version, including alpha/beta/rc tags
-release = '1.5'
+release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
