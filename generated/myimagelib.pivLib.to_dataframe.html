@@ -6,22 +6,22 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myimagelib.pivLib.apply_mask &mdash; myimagelib 1.5 documentation</title>
+  <title>myimagelib.pivLib.to_dataframe &mdash; myimagelib 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=aaadad1f"></script>
+      <script src="../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../_static/doctools.js?v=9a2dae69"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="myimagelib.pivLib.read_piv" href="myimagelib.pivLib.read_piv.html" />
-    <link rel="prev" title="myimagelib.pivLib.PIV" href="myimagelib.pivLib.PIV.html" /> 
+    <link rel="next" title="myimagelib.pivLib.to_matrix" href="myimagelib.pivLib.to_matrix.html" />
+    <link rel="prev" title="pivLib" href="../pivLib.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,12 +49,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../myImageLib.html">myImageLib</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../pivLib.html">pivLib</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="myimagelib.pivLib.PIV.html">myimagelib.pivLib.PIV</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">myimagelib.pivLib.apply_mask</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#myimagelib.pivLib.apply_mask"><code class="docutils literal notranslate"><span class="pre">apply_mask()</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">myimagelib.pivLib.to_dataframe</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#myimagelib.pivLib.to_dataframe"><code class="docutils literal notranslate"><span class="pre">to_dataframe()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="myimagelib.pivLib.read_piv.html">myimagelib.pivLib.read_piv</a></li>
 <li class="toctree-l3"><a class="reference internal" href="myimagelib.pivLib.to_matrix.html">myimagelib.pivLib.to_matrix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="myimagelib.pivLib.compact_PIV.html">myimagelib.pivLib.compact_PIV</a></li>
 </ul>
@@ -81,9 +79,9 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">API</a></li>
           <li class="breadcrumb-item"><a href="../pivLib.html">pivLib</a></li>
-      <li class="breadcrumb-item active">myimagelib.pivLib.apply_mask</li>
+      <li class="breadcrumb-item active">myimagelib.pivLib.to_dataframe</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/generated/myimagelib.pivLib.apply_mask.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/myimagelib.pivLib.to_dataframe.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -91,36 +89,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="myimagelib-pivlib-apply-mask">
-<h1>myimagelib.pivLib.apply_mask<a class="headerlink" href="#myimagelib-pivlib-apply-mask" title="Link to this heading"></a></h1>
+  <section id="myimagelib-pivlib-to-dataframe">
+<h1>myimagelib.pivLib.to_dataframe<a class="headerlink" href="#myimagelib-pivlib-to-dataframe" title="Link to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="myimagelib.pivLib.apply_mask">
-<span class="sig-prename descclassname"><span class="pre">myimagelib.pivLib.</span></span><span class="sig-name descname"><span class="pre">apply_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pivData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#myimagelib.pivLib.apply_mask" title="Link to this definition"></a></dt>
-<dd><p>Apply a mask on PIV data, by adding a boolean column “mask” to the original x, y, u, v data file. Valid velocities are labeled <code class="docutils literal notranslate"><span class="pre">True</span></code> while invalid velocities are labeled <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dt class="sig sig-object py" id="myimagelib.pivLib.to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">myimagelib.pivLib.</span></span><span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#myimagelib.pivLib.to_dataframe" title="Link to this definition"></a></dt>
+<dd><p>Convert PIV data from 2D numpy arrays to a pandas DataFrame [x, y, u, v].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pivData</strong> (<em>pandas.DataFrame</em>) – PIV data (x, y, u, v)</p></li>
-<li><p><strong>mask</strong> (<em>2D array</em>) – an image, preferrably binary, where large value denotes valid data and small value denote invalid data. The image will be converted to a boolean array by <code class="docutils literal notranslate"><span class="pre">mask</span> <span class="pre">=</span> <span class="pre">mask</span> <span class="pre">&gt;</span> <span class="pre">mask.mean()</span></code>.</p></li>
+<li><p><strong>x</strong> – 2D numpy array of x-coordinates</p></li>
+<li><p><strong>y</strong> – 2D numpy array of y-coordinates</p></li>
+<li><p><strong>u</strong> – 2D numpy array of u-velocity components</p></li>
+<li><p><strong>v</strong> – 2D numpy array of v-velocity components</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>masked PIV data.</p>
+<dd class="field-even"><p>pandas DataFrame with columns [‘x’, ‘y’, ‘u’, ‘v’]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+<dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_mask</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">masked_pivData</span> <span class="o">=</span> <span class="n">apply_mask</span><span class="p">(</span><span class="n">pivData</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib.pivLib</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_dataframe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">Edit</p>
 <ul class="simple">
-<li><p>Nov 17, 2022 – Initial commit.</p></li>
-<li><p>Nov 30, 2022 – Instead of replacing invalid data with <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, add an additional column, where the validity of data is specified.</p></li>
-<li><p>Dec 01, 2022 – Remove the erosion step, since it is very obsecure to include this step here. If we want the mask to be more conservative (include less region to be sure that we are free from boundary effect), we can modify the mask in ImageJ and apply again on the PIV data.</p></li>
-<li><p>Dec 19, 2022 – Modify docstring to be consistent with code action.</p></li>
+<li><p>Mar 02, 2025 – Initial commit.</p></li>
 </ul>
 </dd></dl>
 
@@ -130,8 +127,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="myimagelib.pivLib.PIV.html" class="btn btn-neutral float-left" title="myimagelib.pivLib.PIV" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="myimagelib.pivLib.read_piv.html" class="btn btn-neutral float-right" title="myimagelib.pivLib.read_piv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../pivLib.html" class="btn btn-neutral float-left" title="pivLib" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="myimagelib.pivLib.to_matrix.html" class="btn btn-neutral float-right" title="myimagelib.pivLib.to_matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
