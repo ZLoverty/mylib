@@ -8,9 +8,7 @@ Convenience tools for PIV analysis. Core PIV functions are imported from the `Op
 .. autosummary::
     :toctree: generated
     
-    PIV
-    apply_mask
-    read_piv
+    to_dataframe
     to_matrix
     compact_PIV
 

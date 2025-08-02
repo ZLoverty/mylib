@@ -9,11 +9,9 @@ Convenience tools and image processing functions for my general research.
     :toctree: generated
     :recursive:
 
-    readdata
     show_progress
     to8bit
     bestcolor
     imfindcircles
     rawImage
     xy_bin
-    dirrec
