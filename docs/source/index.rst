@@ -14,4 +14,4 @@ myimagelib
 
    installation
    api
-   examples
+   notebooks

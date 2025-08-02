@@ -38,7 +38,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'nbsphinx'
+    'nbsphinx',
+    'myst_parser'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
