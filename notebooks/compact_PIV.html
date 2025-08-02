@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compact_PIV tutorial &mdash; myimagelib 2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=51b770b3"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Find circles" href="find_circles.html" />
+    <link rel="prev" title="Examples" href="../notebooks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            myimagelib
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">myimagelib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">compact_PIV tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#0-Packages">0 Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#1.-Construct-compact_PIV">1. Construct <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.-Retrieve-data-from-compact_PIV-instance">2. Retrieve data from <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code> instance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.-Save-data-to-.mat-file">3. Save data to .mat file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#4.-Update-mask">4. Update mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#5.-Save-to-csv">5. Save to csv</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="find_circles.html">Find circles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">Test</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">myimagelib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../notebooks.html">Examples</a></li>
+      <li class="breadcrumb-item active">compact_PIV tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/compact_PIV.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compact_PIV-tutorial">
+<h1>compact_PIV tutorial<a class="headerlink" href="#compact_PIV-tutorial" title="Link to this heading"></a></h1>
+<p>This tutorial gives examples of constructing <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code> instances and retrieve PIV data using it.</p>
+<p>The idea: More compact PIV data storage</p>
+<p>Currently, PIV data are stored in separate text files. A text file corresponds to a pair of frames. This leads to large file number when we have long videos. However, not all the information in the files are useful. For example, the x, y information are repetitive in all the N text files. Instead of keeping N copies, we can just keep 1 to save storage space. Moreover, the mask information is also repetitive. Therefore, we can seek more compact format to store PIV data.</p>
+<p>The compact data structure makes it less straightforward to access PIV data, due to the fact that x, y and u, v are not in the same shape, and we have to specify the index carefully to avoid making mistakes. I think it makes sense to write a class of <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code>, which defines the conversion between traditional PIV data structure and compact PIV data structure, and make retrieving data easier.</p>
+<section id="0-Packages">
+<h2>0 Packages<a class="headerlink" href="#0-Packages" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;../src&quot;</span><span class="p">))</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myimagelib</span><span class="w"> </span><span class="kn">import</span> <span class="n">compact_PIV</span><span class="p">,</span> <span class="n">readdata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">imread</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># download the test data</span>
+<span class="n">url</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;  https://drive.google.com/uc?export=download&amp;id=12qHZ5Zx2idJTBohJEmA66uMPy5xTOl-_&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Download the zip file</span>
+<span class="n">zip_path</span> <span class="o">=</span> <span class="s2">&quot;data.zip&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># extract the zip file</span>
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+    <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">zip_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="1.-Construct-compact_PIV">
+<h2>1. Construct <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code><a class="headerlink" href="#1.-Construct-compact_PIV" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>from conventional PIV data filelist</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">readdata</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>from a saved .mat file</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv_dict</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">cpiv_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Retrieve-data-from-compact_PIV-instance">
+<h2>2. Retrieve data from <code class="docutils literal notranslate"><span class="pre">compact_PIV</span></code> instance<a class="headerlink" href="#2.-Retrieve-data-from-compact_PIV-instance" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.quiver.Quiver at 0x249be1842e0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compact_PIV_11_1.png" src="../_images/notebooks_compact_PIV_11_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">get_labels</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[np.str_(&#39;00000-00001&#39;), np.str_(&#39;00002-00003&#39;), np.str_(&#39;00004-00005&#39;)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="s2">&quot;00000-00001&quot;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.quiver.Quiver at 0x249be233850&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compact_PIV_13_1.png" src="../_images/notebooks_compact_PIV_13_1.png" />
+</div>
+</div>
+</section>
+<section id="3.-Save-data-to-.mat-file">
+<h2>3. Save data to .mat file<a class="headerlink" href="#3.-Save-data-to-.mat-file" title="Link to this heading"></a></h2>
+<p>We can use the Matlab .mat file to save the PIV data. It has two advantages:</p>
+<ul class="simple">
+<li><p>it has no dimension restriction, so we can save x, y, mask data only once</p></li>
+<li><p>save one file for an image sequence, instead of one file per image, making the data more portable and maintainable</p></li>
+<li><p>easier to interface with Matlab users</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">to_mat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="4.-Update-mask">
+<h2>4. Update mask<a class="headerlink" href="#4.-Update-mask" title="Link to this heading"></a></h2>
+<p>Sometimes we want to update the mask in compact_PIV object. The idea is that (i) the original mask may include regions where image quality is bad, e.g. the bottom shadow region of droplet xz images; (ii) Sometimes we do not have access to the correct mask and we want to apply it later on.</p>
+<p>In these cases, we usually realize the problem after performing the PIV. And to refine the PIV data, we want to update the mask to make it more conservative (i.e. mask out the bad quality region). Therefore, a method is needed to update the “mask” entry in a compact_PIV object.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv</span><span class="o">.</span><span class="n">keys</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;__header__&#39;, &#39;__version__&#39;, &#39;__globals__&#39;, &#39;x&#39;, &#39;y&#39;, &#39;u&#39;, &#39;v&#39;, &#39;labels&#39;])
+</pre></div></div>
+</div>
+<p>It can be seen that currently we do not have “mask” entry in the <code class="docutils literal notranslate"><span class="pre">cpiv</span></code> object. Now we are going to add one, using <code class="docutils literal notranslate"><span class="pre">update_mask</span></code>. We will use the mask below:</p>
+<img alt="image.png" src="data:image/png;base64,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" />
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\mask.tif&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">update_mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">keys</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;__header__&#39;, &#39;__version__&#39;, &#39;__globals__&#39;, &#39;x&#39;, &#39;y&#39;, &#39;u&#39;, &#39;v&#39;, &#39;labels&#39;, &#39;mask&#39;])
+</pre></div></div>
+</div>
+<p>The masked velocity field can then be accessed:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cpiv</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.quiver.Quiver at 0x249be8963d0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compact_PIV_21_1.png" src="../_images/notebooks_compact_PIV_21_1.png" />
+</div>
+</div>
+</section>
+<section id="5.-Save-to-csv">
+<h2>5. Save to csv<a class="headerlink" href="#5.-Save-to-csv" title="Link to this heading"></a></h2>
+<p>Sometimes we want to unpack the .mat data back to the .csv sequence. For example, when the packed .mat is not finished, we can unpack so that the PIV script will not have to redo all the computation, but can pick up the job from the middle.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cpiv_dict</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;PIV\cpiv.mat&quot;</span><span class="p">)</span>
+<span class="n">cpiv</span> <span class="o">=</span> <span class="n">compact_PIV</span><span class="p">(</span><span class="n">cpiv_dict</span><span class="p">)</span>
+<span class="n">cpiv</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;PIV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../notebooks.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="find_circles.html" class="btn btn-neutral float-right" title="Find circles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2025, Zhengyang Liu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
