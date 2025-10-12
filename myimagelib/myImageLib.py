@@ -29,6 +29,7 @@ def to8bit(img):
     * Mar 16, 2023 -- use mean and std to infer upper bound. This makes the function more stable to images with spurious pixels with extremely large intensity. 
     * Mar 17, 2023 -- using upper bound that is smaller than the maximal pixel intensity causes dark "patches" in the rescaled images due to the data type change to "uint8". The solution is to ``clip`` the images with the determined bounds first, then apply the data type conversion. In this way, the over exposed pixels will just reach the saturation value 255.
     * Feb 27, 2025 -- convert the image to float32 before processing, to avoid overflow when the image is of int8 type when performing clipping.
+    * Oct 12, 2025 -- add a tiny number to both numerator and denominator, so that the rescaling is never invalid. E.g. for a uniform image, `maxx-minn=0` will now be the tiny number `eps`.
     """
 
     img = img.astype('float32')
@@ -37,7 +38,8 @@ def to8bit(img):
     maxx = min(mean + 5 * std, np.nanmax(img))
     minn = np.nanmin(img)
     img.clip(minn, maxx, out=img)
-    img8 = (img - minn) / (maxx - minn) * 255
+    eps = np.finfo(np.float32).tiny
+    img8 = (img - minn + eps) / (maxx - minn + eps) * 255
     return img8.astype('uint8')
 
 def bestcolor(n):
