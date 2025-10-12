@@ -119,6 +119,7 @@
 <li><p>Mar 16, 2023 – use mean and std to infer upper bound. This makes the function more stable to images with spurious pixels with extremely large intensity.</p></li>
 <li><p>Mar 17, 2023 – using upper bound that is smaller than the maximal pixel intensity causes dark “patches” in the rescaled images due to the data type change to “uint8”. The solution is to <code class="docutils literal notranslate"><span class="pre">clip</span></code> the images with the determined bounds first, then apply the data type conversion. In this way, the over exposed pixels will just reach the saturation value 255.</p></li>
 <li><p>Feb 27, 2025 – convert the image to float32 before processing, to avoid overflow when the image is of int8 type when performing clipping.</p></li>
+<li><p>Oct 12, 2025 – add a tiny number to both numerator and denominator, so that the rescaling is never invalid. E.g. for a uniform image, <cite>maxx-minn=0</cite> will now be the tiny number <cite>eps</cite>.</p></li>
 </ul>
 </dd></dl>
 
